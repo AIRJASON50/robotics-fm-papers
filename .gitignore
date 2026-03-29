@@ -1,0 +1,147 @@
+# ============================================
+# Cloned third-party code repositories
+# Re-clone with: ./scripts/setup.sh
+# ============================================
+
+# -- LLM repos --
+foundation_model/LLM/18_GPT/gpt-2/
+foundation_model/LLM/24_Qwen/qwen_repo/
+foundation_model/LLM/25_KimiK2/kimik2_repo/
+
+# -- methods repos --
+foundation_model/methods/20_DDPM/diffusion/
+foundation_model/methods/20_ViT/vision_transformer/
+foundation_model/methods/21_CLIP/CLIP/
+foundation_model/methods/21_DecisionTransformer/decision-transformer/
+foundation_model/methods/22_FlowMatching/flow_matching/
+foundation_model/methods/23_ACT/act/
+foundation_model/methods/23_DiT/DiT/
+foundation_model/methods/23_DreamerV3/dreamerv3/
+foundation_model/methods/23_OpenXEmbodiment/open_x_embodiment/
+foundation_model/methods/24_DiffusionPolicy/diffusion_policy/
+foundation_model/methods/24_Octo/octo/
+foundation_model/methods/24_OpenVLA/openvla/
+foundation_model/methods/24_pi0/openpi/
+foundation_model/methods/24_pi0/pi-data-sharing/
+foundation_model/methods/25_GR00T_N1/Isaac-GR00T/
+
+# -- surveys repos --
+foundation_model/surveys/24_AwesomeSurvey/Awesome-Robotics-Foundation-Models/
+
+# 25_AwesomeWorldModels: folder IS repo, keep only our files
+foundation_model/surveys/25_AwesomeWorldModels/*
+!foundation_model/surveys/25_AwesomeWorldModels/*_notes.md
+!foundation_model/surveys/25_AwesomeWorldModels/A_Comprehensive_Survey_on_World_Models_for_Embodied_AI.md
+!foundation_model/surveys/25_AwesomeWorldModels/README_clean.md
+!foundation_model/surveys/25_AwesomeWorldModels/slides/
+
+# -- humanoid repos (subfolder repos) --
+humanoid/18_DeepMimic/DeepMimic/
+humanoid/23_PHC/PHC/
+humanoid/24_H2O/human2humanoid/
+humanoid/25_BeyondMimic/whole_body_tracking/
+humanoid/25_FPO/code/
+humanoid/25_HDMI/HDMI/
+humanoid/25_SONIC/GR00T-WBC/
+
+# -- humanoid repos (folder IS repo, keep only our md files) --
+humanoid/25_ASAP/*
+!humanoid/25_ASAP/*.md
+humanoid/25_ASAP/README.md
+
+humanoid/25_OmniRetarget/*
+!humanoid/25_OmniRetarget/*.md
+humanoid/25_OmniRetarget/README.md
+humanoid/25_OmniRetarget/CODE_OF_CONDUCT.md
+humanoid/25_OmniRetarget/CONTRIBUTING.md
+humanoid/25_OmniRetarget/CONTRIBUTORS.md
+
+humanoid/25_RWM/*
+!humanoid/25_RWM/*.md
+humanoid/25_RWM/README.md
+
+humanoid/25_TWIST2/*
+!humanoid/25_TWIST2/*.md
+humanoid/25_TWIST2/README.md
+
+humanoid/Humanoid-Locomotion-Survey/*
+!humanoid/Humanoid-Locomotion-Survey/*.md
+humanoid/Humanoid-Locomotion-Survey/README.md
+
+# -- manip repos --
+manip/23_ArtiGrasp/artigrasp/
+manip/23_PhysHOI/PhysHOI/
+manip/24_BiDexHD/BiDexHD/
+manip/24_DexMachina/repo/
+manip/24_ManipTrans/repo/
+manip/24_ObjDexEnvs/ObjDexEnvs/
+manip/25_DexCanvas/code/
+manip/25_DexCanvas/dexcanvas_data/
+manip/25_DexTrack/DexTrack_code/
+manip/25_OmniReset/UWLab/
+manip/25_SimToolReal/simtoolreal/
+manip/26_Dex4D/Dex4D-Hardware/
+manip/26_Dex4D/Dex4D-Simulation/
+manip/26_Dex4D/Dex4D-Vision/
+manip/26_DexLatent/DexLatent/
+manip/26_HumDex/HumDex/
+manip/26_UltraDexGrasp/UltraDexGrasp/
+manip/QiHaoZhi/24_NeuralFeels/code/
+manip/QiHaoZhi/from_human_demo/25_AINA/code/
+manip/QiHaoZhi/from_human_demo/25_HOP/code/
+manip/QiHaoZhi/from_human_demo/25_SPIDER/spider/
+manip/QiHaoZhi/sim2real_hora/22_HORA/code/
+manip/QiHaoZhi/sim2real_hora/22_HORA/RMA/code/
+manip/QiHaoZhi/sim2real_hora/24_PenSpin/penspin/
+manip/QiHaoZhi/sim2real_hora/25_DexScrew/dexscrew/
+manip/QiHaoZhi/sim2real_other/24_TwistingLids/twisting-lids/
+manip/QiHaoZhi/sim2real_other/26_HandelBot/code/
+manip/QiHaoZhi/teleop_bc/24_HATO/code/
+manip/QiHaoZhi/teleop_bc/25_MinBC/code/
+
+# ============================================
+# html2aitext_convert (tool has own repo)
+# Keep src/ and arxiv2md.sh, ignore cache
+# ============================================
+html2aitext_convert/.git
+html2aitext_convert/html/
+html2aitext_convert/node_modules/
+
+# ============================================
+# Binary / large files
+# ============================================
+*.pdf
+*.pyc
+__pycache__/
+*.egg-info/
+*.parquet
+*.npy
+*.npz
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.bin
+*.so
+*.dylib
+*.dll
+*.a
+*.deb
+*.whl
+*.usd
+*.usda
+*.usdc
+*.mp4
+*.avi
+*.mov
+*.STL
+*.stl
+*.obj
+*.dae
+*.ply
+*.glb
+*.gltf
+.ruff_cache/
+.pytest_cache/
+wandb/
+.DS_Store

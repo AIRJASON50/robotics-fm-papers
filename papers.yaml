@@ -1,0 +1,575 @@
+# papers.yaml - Paper Library Manifest
+# All papers, arxiv IDs, and code repo URLs
+# Use `./scripts/setup.sh` to fetch papers and clone repos
+
+# ============================================================
+# Foundation Model - LLM
+# ============================================================
+foundation_model_llm:
+  - folder: foundation_model/LLM/12_RepresentationLearning
+    title: "Representation Learning: A Review and New Perspectives"
+    authors: Bengio et al.
+    year: 2012
+    arxiv: "1206.5538"
+    pdf: Representation_Learning_A_Review.pdf
+
+  - folder: foundation_model/LLM/17_Transformer
+    title: "Attention Is All You Need"
+    authors: Vaswani et al., Google
+    year: 2017
+    arxiv: "1706.03762"
+
+  - folder: foundation_model/LLM/18_GPT
+    title: "GPT Series (GPT-1/2/3/4)"
+    authors: Radford, Brown et al., OpenAI
+    year: 2018-2023
+    arxiv_ids:
+      gpt1: "1801.06146"  # Improving Language Understanding by Generative Pre-Training (no arxiv, use PDF)
+      gpt3: "2005.14165"
+      gpt4: "2303.08774"
+    repos:
+      - name: gpt-2
+        url: https://github.com/openai/gpt-2.git
+
+  - folder: foundation_model/LLM/24_Qwen
+    title: "Qwen Technical Report"
+    authors: Alibaba Cloud
+    year: 2023
+    arxiv: "2309.16609"
+    repos:
+      - name: qwen_repo
+        url: https://github.com/QwenLM/Qwen.git
+
+  - folder: foundation_model/LLM/25_KimiK2
+    title: "Kimi K2: Open Agentic Intelligence"
+    authors: Moonshot AI
+    year: 2025
+    repos:
+      - name: kimik2_repo
+        url: https://github.com/MoonshotAI/Kimi-K2.git
+
+# ============================================================
+# Foundation Model - Methods
+# ============================================================
+foundation_model_methods:
+  - folder: foundation_model/methods/20_DDPM
+    title: "Denoising Diffusion Probabilistic Models"
+    authors: Ho et al., Google
+    year: 2020
+    arxiv: "2006.11239"
+    repos:
+      - name: diffusion
+        url: https://github.com/hojonathanho/diffusion.git
+
+  - folder: foundation_model/methods/20_ViT
+    title: "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale"
+    authors: Dosovitskiy et al., Google
+    year: 2020
+    arxiv: "2010.11929"
+    repos:
+      - name: vision_transformer
+        url: https://github.com/google-research/vision_transformer.git
+
+  - folder: foundation_model/methods/21_CLIP
+    title: "Learning Transferable Visual Models From Natural Language Supervision"
+    authors: Radford et al., OpenAI
+    year: 2021
+    arxiv: "2103.00020"
+    repos:
+      - name: CLIP
+        url: https://github.com/openai/CLIP.git
+
+  - folder: foundation_model/methods/21_DecisionTransformer
+    title: "Decision Transformer: Reinforcement Learning via Sequence Modeling"
+    authors: Chen et al.
+    year: 2021
+    arxiv: "2106.01345"
+    repos:
+      - name: decision-transformer
+        url: https://github.com/kzl/decision-transformer.git
+
+  - folder: foundation_model/methods/22_FlowMatching
+    title: "Flow Matching for Generative Modeling"
+    authors: Lipman et al., Meta
+    year: 2022
+    arxiv: "2210.02747"
+    repos:
+      - name: flow_matching
+        url: https://github.com/facebookresearch/flow_matching.git
+
+  - folder: foundation_model/methods/22_RT1
+    title: "RT-1: Robotics Transformer for Real-World Control at Scale"
+    authors: Brohan et al., Google
+    year: 2022
+    arxiv: "2212.06817"
+
+  - folder: foundation_model/methods/23_ACT
+    title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
+    authors: Zhao et al., Stanford
+    year: 2023
+    arxiv: "2304.13705"
+    repos:
+      - name: act
+        url: https://github.com/tonyzhaozh/act.git
+
+  - folder: foundation_model/methods/23_DiT
+    title: "Scalable Diffusion Models with Transformers"
+    authors: Peebles & Xie
+    year: 2023
+    arxiv: "2212.09748"
+    repos:
+      - name: DiT
+        url: https://github.com/facebookresearch/DiT.git
+
+  - folder: foundation_model/methods/23_DreamerV3
+    title: "Mastering Diverse Domains through World Models"
+    authors: Hafner et al.
+    year: 2023
+    arxiv: "2301.04104"
+    repos:
+      - name: dreamerv3
+        url: https://github.com/danijar/dreamerv3.git
+
+  - folder: foundation_model/methods/23_OpenXEmbodiment
+    title: "Open X-Embodiment: Robotic Learning Datasets and RT-X Models"
+    authors: Open X-Embodiment Collaboration
+    year: 2023
+    arxiv: "2310.08864"
+    repos:
+      - name: open_x_embodiment
+        url: https://github.com/google-deepmind/open_x_embodiment.git
+
+  - folder: foundation_model/methods/23_RT2
+    title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control"
+    authors: Brohan et al., Google
+    year: 2023
+    arxiv: "2307.15818"
+
+  - folder: foundation_model/methods/24_DiffusionPolicy
+    title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    authors: Chi et al., Columbia/Stanford
+    year: 2024
+    arxiv: "2303.04137"
+    repos:
+      - name: diffusion_policy
+        url: https://github.com/real-stanford/diffusion_policy.git
+
+  - folder: foundation_model/methods/24_Octo
+    title: "Octo: An Open-Source Generalist Robot Policy"
+    authors: Ghosh, Walke, Pertsch et al., UC Berkeley
+    year: 2024
+    arxiv: "2405.12213"
+    repos:
+      - name: octo
+        url: https://github.com/octo-models/octo.git
+
+  - folder: foundation_model/methods/24_OpenVLA
+    title: "OpenVLA: An Open-Source Vision-Language-Action Model"
+    authors: Kim et al., Stanford
+    year: 2024
+    arxiv: "2406.09246"
+    repos:
+      - name: openvla
+        url: https://github.com/openvla/openvla.git
+
+  - folder: foundation_model/methods/24_PaliGemma
+    title: "PaliGemma: A versatile 3B VLM for transfer"
+    authors: Beyer et al., Google DeepMind
+    year: 2024
+    arxiv: "2407.07726"
+
+  - folder: foundation_model/methods/24_pi0
+    title: "pi_0: A Vision-Language-Action Flow Model for General Robot Control"
+    authors: Black, Pertsch et al., Physical Intelligence
+    year: 2024
+    arxiv: "2410.24164"
+    repos:
+      - name: openpi
+        url: https://github.com/Physical-Intelligence/openpi.git
+      - name: pi-data-sharing
+        url: https://github.com/Physical-Intelligence/pi-data-sharing.git
+
+  - folder: foundation_model/methods/25_GR00T_N1
+    title: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots"
+    authors: NVIDIA
+    year: 2025
+    arxiv: "2503.14734"
+    repos:
+      - name: Isaac-GR00T
+        url: https://github.com/NVIDIA/Isaac-GR00T.git
+
+# ============================================================
+# Foundation Model - Surveys
+# ============================================================
+foundation_model_surveys:
+  - folder: foundation_model/surveys/22_Chinchilla
+    title: "Training Compute-Optimal Large Language Models"
+    authors: Hoffmann et al., DeepMind
+    year: 2022
+    arxiv: "2203.15556"
+
+  - folder: foundation_model/surveys/23_FMRobotics
+    title: "Foundation Models in Robotics: Applications, Challenges, and the Future"
+    authors: Firoozi et al.
+    year: 2023
+    arxiv: "2312.07843"
+
+  - folder: foundation_model/surveys/23_GeneralPurposeRobots
+    title: "Toward General-Purpose Robots via Foundation Models: A Survey and Meta-Analysis"
+    authors: Hu et al.
+    year: 2023
+    arxiv: "2312.08782"
+
+  - folder: foundation_model/surveys/23_LangCondManip
+    title: "Bridging Language, Vision and Action: Multimodal VAEs in Robotic Manipulation"
+    authors: Shridhar et al.
+    year: 2024
+    arxiv: "2404.07933"
+
+  - folder: foundation_model/surveys/24_AwesomeSurvey
+    title: "Awesome Robotics Foundation Models"
+    authors: Community survey
+    year: 2024
+    repos:
+      - name: Awesome-Robotics-Foundation-Models
+        url: https://github.com/robotics-survey/Awesome-Robotics-Foundation-Models.git
+
+  - folder: foundation_model/surveys/24_LanguageGrounding
+    title: "A Survey of Robotic Language Grounding: Tradeoffs Between Symbols and Embeddings"
+    authors: Tellex et al.
+    year: 2024
+    arxiv: "2405.13245"
+
+  - folder: foundation_model/surveys/25_AwesomeWorldModels
+    title: "Awesome World Models for Embodied AI"
+    authors: Community survey
+    year: 2025
+    repos:
+      - name: "."
+        url: https://github.com/Li-Zn-H/AwesomeWorldModels.git
+
+  - folder: foundation_model/surveys/25_DynamicsModels
+    title: "Learned Dynamics Models for Robotics"
+    authors: Science Robotics
+    year: 2025
+
+  - folder: foundation_model/surveys/25_ScalingLaws
+    title: "Neural Scaling Laws in Robotics"
+    authors: meta-analysis (327 papers)
+    year: 2025
+    arxiv: "2503.07507"
+
+  - folder: foundation_model/surveys/25_TransferLearningAgriculture
+    title: "Transfer Learning in Agriculture Review"
+    year: 2025
+
+# ============================================================
+# Humanoid
+# ============================================================
+humanoid:
+  - folder: humanoid/18_DeepMimic
+    title: "DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills"
+    authors: Peng et al.
+    year: 2018
+    arxiv: "1804.02717"
+    repos:
+      - name: DeepMimic
+        url: https://github.com/xbpeng/DeepMimic.git
+
+  - folder: humanoid/23_PHC
+    title: "Perpetual Humanoid Control for Real-time Simulated Avatars"
+    authors: Luo et al.
+    year: 2023
+    arxiv: "2305.06456"
+    repos:
+      - name: PHC
+        url: https://github.com/ZhengyiLuo/PHC.git
+
+  - folder: humanoid/24_H2O
+    title: "H2O + OmniH2O: Learning Human-to-Humanoid Real-Time Whole-Body Teleoperation"
+    authors: He et al., CMU
+    year: 2024
+    arxiv: "2403.04436"
+    repos:
+      - name: human2humanoid
+        url: https://github.com/LeCAR-Lab/human2humanoid.git
+
+  - folder: humanoid/25_ASAP
+    title: "ASAP: Aligning Simulation and Real-World Physics for Learning Agile Humanoid Whole-Body Skills"
+    authors: He et al., CMU
+    year: 2025
+    arxiv: "2502.01143"
+    repos:
+      - name: "."
+        url: https://github.com/LeCAR-Lab/ASAP.git
+
+  - folder: humanoid/25_BeyondMimic
+    title: "BeyondMimic: Toward Versatile Humanoid Locomotion and Manipulation via Unified Whole-Body Control"
+    authors: HybridRobotics
+    year: 2025
+    repos:
+      - name: whole_body_tracking
+        url: https://github.com/HybridRobotics/whole_body_tracking.git
+
+  - folder: humanoid/25_FPO
+    title: "First-Person Operation of Robot Manipulators"
+    authors: Amazon FAR
+    year: 2025
+    repos:
+      - name: code
+        url: https://github.com/amazon-far/fpo-control.git
+
+  - folder: humanoid/25_HDMI
+    title: "HDMI: Interactive Humanoid Control from High-Definition Video"
+    authors: He et al., CMU
+    year: 2025
+    arxiv: "2502.07847"
+    repos:
+      - name: HDMI
+        url: https://github.com/LeCAR-Lab/HDMI.git
+
+  - folder: humanoid/25_OmniRetarget
+    title: "OmniRetarget + HoloSoma Framework"
+    authors: Amazon FAR
+    year: 2025
+    repos:
+      - name: "."
+        url: https://github.com/amazon-far/holosoma.git
+
+  - folder: humanoid/25_RWM
+    title: "Robotic World Model"
+    authors: ETH Zurich
+    year: 2025
+    repos:
+      - name: "."
+        url: https://github.com/leggedrobotics/robotic_world_model.git
+
+  - folder: humanoid/25_SONIC
+    title: "SONIC: Supersizing Optimal Control for Humanoid Locomotion"
+    authors: NVIDIA
+    year: 2025
+    repos:
+      - name: GR00T-WBC
+        url: https://github.com/NVlabs/GR00T-WholeBodyControl.git
+
+  - folder: humanoid/25_TWIST2
+    title: "TWIST2: Teleoperated Whole-Body Imitation with Stabilized Tracking"
+    authors: Amazon FAR
+    year: 2025
+    repos:
+      - name: "."
+        url: https://github.com/amazon-far/TWIST2.git
+
+  - folder: humanoid/Humanoid-Locomotion-Survey
+    title: "Evolution of Humanoid Locomotion Control"
+    year: 2025
+    repos:
+      - name: "."
+        url: https://github.com/purdue-tracelab/Humanoid-Locomotion-Survey.git
+
+# ============================================================
+# Dexterous Manipulation
+# ============================================================
+manip:
+  - folder: manip/23_ArtiGrasp
+    title: "ArtiGrasp: Physically Plausible Synthesis of Bi-Manual Dexterous Grasping and Articulation"
+    authors: Zhang et al.
+    year: 2023
+    arxiv: "2309.03891"
+    repos:
+      - name: artigrasp
+        url: https://github.com/zdchan/artigrasp.git
+
+  - folder: manip/23_PhysHOI
+    title: "PhysHOI: Physics-Based Imitation of Dynamic Human-Object Interaction"
+    authors: Wang et al.
+    year: 2023
+    repos:
+      - name: PhysHOI
+        url: https://github.com/wyhuai/PhysHOI.git
+
+  - folder: manip/24_BiDexHD
+    title: "BiDexHD: Teleoperation System for Bimanual Dexterous Manipulation"
+    authors: Zhou et al.
+    year: 2024
+    repos:
+      - name: BiDexHD
+        url: https://github.com/zhoubohan0/BiDexHD.git
+
+  - folder: manip/24_DexMachina
+    title: "DexMachina: Functional Grasp Synthesis"
+    authors: Zhao et al.
+    year: 2024
+    repos:
+      - name: repo
+        url: https://github.com/MandiZhao/dexmachina.git
+
+  - folder: manip/24_ManipTrans
+    title: "ManipTrans: Efficient Dexterous Bimanual Manipulation Transfer"
+    authors: ManipTrans team
+    year: 2024
+    repos:
+      - name: repo
+        url: https://github.com/ManipTrans/ManipTrans.git
+
+  - folder: manip/24_ObjDexEnvs
+    title: "ObjDexEnvs: Object Dexterous Manipulation Environments"
+    authors: Chen et al.
+    year: 2024
+    repos:
+      - name: ObjDexEnvs
+        url: https://github.com/cypypccpy/ObjDexEnvs.git
+
+  - folder: manip/25_DexCanvas
+    title: "DexCanvas: Dexterous Motion Tracking"
+    year: 2025
+    repos:
+      - name: code
+        url: https://github.com/dexrobot/dexcanvas.git
+
+  - folder: manip/25_DexTrack
+    title: "DexTrack: Dexterous Hand Tracking"
+    year: 2025
+    repos:
+      - name: DexTrack_code
+        url: https://github.com/Meowuu7/DexTrack.git
+
+  - folder: manip/25_OmniReset
+    title: "OmniReset: Emergent Dexterity via Diverse Resets and Large-Scale RL"
+    year: 2025
+    repos:
+      - name: UWLab
+        url: https://github.com/UW-Lab/UWLab.git
+
+  - folder: manip/25_RLToken
+    title: "RL Token: Dexterous Manipulation with Reinforcement Learning"
+    year: 2025
+
+  - folder: manip/25_SimToolReal
+    title: "SimToolReal: Sim-to-Real Tool Use"
+    year: 2025
+    repos:
+      - name: simtoolreal
+        url: https://github.com/tylerlum/simtoolreal.git
+
+  - folder: manip/26_Dex4D
+    title: "Dex4D: 4D Dexterous Manipulation"
+    year: 2026
+    repos:
+      - name: Dex4D-Hardware
+        url: https://github.com/Dex4D/Dex4D-Hardware.git
+      - name: Dex4D-Simulation
+        url: https://github.com/Dex4D/Dex4D-Simulation.git
+      - name: Dex4D-Vision
+        url: https://github.com/Dex4D/Dex4D-Vision.git
+
+  - folder: manip/26_DexLatent
+    title: "DexLatent: Dexterous Manipulation via Latent Representations"
+    year: 2026
+    repos:
+      - name: DexLatent
+        url: https://github.com/EmptyBlueBox/DexLatent.git
+
+  - folder: manip/26_HumDex
+    title: "HumDex: Human-like Dexterous Manipulation"
+    year: 2026
+    repos:
+      - name: HumDex
+        url: https://github.com/physical-superintelligence-lab/HumDex.git
+
+  - folder: manip/26_UltraDexGrasp
+    title: "UltraDexGrasp: Ultra-Dexterous Grasp Synthesis"
+    year: 2026
+    repos:
+      - name: UltraDexGrasp
+        url: https://github.com/InternRobotics/UltraDexGrasp.git
+
+  - folder: manip/QiHaoZhi/24_NeuralFeels
+    title: "NeuralFeels: Neural Tactile Perception"
+    year: 2024
+    repos:
+      - name: code
+        url: https://github.com/facebookresearch/neuralfeels.git
+
+  - folder: manip/QiHaoZhi/from_human_demo/25_AINA
+    title: "AINA: Dexterous Manipulation from Human Demo"
+    year: 2025
+    repos:
+      - name: code
+        url: https://github.com/facebookresearch/AINA.git
+
+  - folder: manip/QiHaoZhi/from_human_demo/25_HOP
+    title: "HOP: Hand-Object Pose Estimation"
+    year: 2025
+    repos:
+      - name: code
+        url: https://github.com/hgaurav2k/hop.git
+
+  - folder: manip/QiHaoZhi/from_human_demo/25_SPIDER
+    title: "SPIDER: Dexterous Manipulation"
+    year: 2025
+    repos:
+      - name: spider
+        url: https://github.com/facebookresearch/spider.git
+
+  - folder: manip/QiHaoZhi/sim2real_hora/22_HORA
+    title: "HORA: In-Hand Object Rotation"
+    year: 2022
+    arxiv: "2210.04887"
+    repos:
+      - name: code
+        url: https://github.com/haozhiqi/hora.git
+      - name: RMA/code
+        url: https://github.com/antonilo/rl_locomotion.git
+
+  - folder: manip/QiHaoZhi/sim2real_hora/24_PenSpin
+    title: "PenSpin: Pen Spinning with Dexterous Hand"
+    year: 2024
+    repos:
+      - name: penspin
+        url: https://github.com/HaozhiQi/penspin.git
+
+  - folder: manip/QiHaoZhi/sim2real_hora/25_DexScrew
+    title: "DexScrew: Dexterous Screw Manipulation"
+    year: 2025
+    repos:
+      - name: dexscrew
+        url: https://github.com/x-robotics-lab/dexscrew.git
+
+  - folder: manip/QiHaoZhi/sim2real_other/24_TwistingLids
+    title: "Twisting Lids Off with Two Hands"
+    year: 2024
+    repos:
+      - name: twisting-lids
+        url: https://github.com/ToruOwO/twisting-lids.git
+
+  - folder: manip/QiHaoZhi/sim2real_other/26_HandelBot
+    title: "HandelBot: Real-World Piano Playing with Dexterous Hands"
+    year: 2026
+    repos:
+      - name: code
+        url: https://github.com/amberxie88/handelbot.git
+
+  - folder: manip/QiHaoZhi/teleop_bc/24_HATO
+    title: "HATO: Hand-Arm Teleoperation"
+    year: 2024
+    repos:
+      - name: code
+        url: https://github.com/ToruOwO/hato.git
+
+  - folder: manip/QiHaoZhi/teleop_bc/25_MinBC
+    title: "MinBC: Minimal Behavior Cloning for Humanoid Manipulation"
+    year: 2025
+    repos:
+      - name: code
+        url: https://github.com/x-robotics-lab/minbc.git
+
+# ============================================================
+# Tools
+# ============================================================
+tools:
+  - folder: html2aitext_convert
+    title: "arxiv2md - arxiv HTML to Markdown converter"
+    repos:
+      - name: "."
+        url: https://github.com/AIRJASON50/html2aitext_convert.git
