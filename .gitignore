@@ -4,7 +4,7 @@
 # ============================================
 
 # -- LLM repos --
-foundation_model/LLM/18_GPT/gpt-2/
+foundation_model/LLM/GPT_Series/19_GPT2/code/
 foundation_model/LLM/24_Qwen/qwen_repo/
 foundation_model/LLM/25_KimiK2/kimik2_repo/
 

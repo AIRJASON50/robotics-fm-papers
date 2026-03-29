@@ -19,7 +19,7 @@ foundation_model_llm:
     year: 2017
     arxiv: "1706.03762"
 
-  - folder: foundation_model/LLM/18_GPT
+  - folder: foundation_model/LLM/GPT_Series
     title: "GPT Series (GPT-1/2/3/4)"
     authors: Radford, Brown et al., OpenAI
     year: 2018-2023
@@ -253,7 +253,7 @@ foundation_model_surveys:
     authors: Science Robotics
     year: 2025
 
-  - folder: foundation_model/surveys/25_ScalingLaws
+  - folder: foundation_model/surveys/25_RobotScalingLaws
     title: "Neural Scaling Laws in Robotics"
     authors: meta-analysis (327 papers)
     year: 2025

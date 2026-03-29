@@ -79,9 +79,12 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 ## 3. 渐进式阅读推荐
 
-### Level 0: 表示与编码基础
+**升级考试**: 每个 Level 完成后，做 [`note/level_exams.md`](note/level_exams.md) 中对应考试 (10 题)，80% 进入下一级。
+
+### Level 0: 表示与编码基础 (已通过, 90分)
 
 **目标**: 理解"为什么编码/表示方法如此重要"，建立 Transformer + autoregressive 直觉。
+**考试**: Level 0 -> 1 入门考试 | **讨论笔记**: [`note/Level0_discussion_notes.md`](note/Level0_discussion_notes.md)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
@@ -94,15 +97,15 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 1.1 | **GPT-1** (2018) | `LLM/18_GPT/GPT1_*.pdf` | Section 1-3: pre-train + fine-tune 范式确立 | 1h |
-| 1.2 | **GPT-2 代码** | `LLM/18_GPT/gpt-2/src/model.py` | 175 行代码理解完整 Transformer decoder | 2h |
-| 1.3 | **GPT-3** (选读) | `LLM/18_GPT/GPT3_*.pdf` | Section 1 (Figure 1.1-1.3): in-context learning 涌现; Section 2: scaling 趋势 | 2h |
-| 1.4 | **GPT 系列笔记** | `LLM/18_GPT/GPT_series_notes.md` | 已有的 GPT-1/2/3/4 全系列分析, 作为复习 | 1h |
-| 1.5 | **Chinchilla** (2022) | `surveys/22_Chinchilla/` | 核心结论: 模型和数据应等比缩放, 修正了 Kaplan 的"只放大模型"偏见 | 1h |
-| 1.6 | **Qwen 代码** | `LLM/24_Qwen/` | 阿里开源 LLM (1.8B-72B), 含完整训练/微调代码, 理解现代 LLM 工程实践 | 2h |
-| 1.7 | **Kimi-K2 Tech Report** | `LLM/25_KimiK2/tech_report.pdf` | 1T MoE 模型, Muon optimizer -- 理解 MoE 架构 (pi_0 的 action expert 本质也是 MoE) | 2h |
+| 1.1 | **GPT-1** (2018) | `LLM/GPT_Series/18_GPT1/` | Section 1-3: pre-train + fine-tune 范式确立 | 1h |
+| 1.2 | **GPT-2 代码** | `LLM/GPT_Series/19_GPT2/code/src/model.py` | 175 行代码理解完整 Transformer decoder | 2h |
+| 1.3 | **Scaling Laws** (2020) | `LLM/GPT_Series/20_ScalingLaws/` | power-law 关系, 为 GPT-3 的 175B 提供理论指导 | 1h |
+| 1.4 | **GPT-3** (选读) | `LLM/GPT_Series/20_GPT3/` | Section 1 (Figure 1.1-1.3): in-context learning 涌现; Section 2: scaling 趋势 | 2h |
+| 1.5 | **GPT 系列笔记** | `LLM/GPT_Series/GPT_series_notes.md` | GPT-1/2/3/4 + RLHF + Codex + InstructGPT 全系列分析 | 1h |
+| 1.6 | **Chinchilla** (2022) | `surveys/22_Chinchilla/` | 核心结论: 模型和数据应等比缩放, 修正了 Kaplan 的"只放大模型"偏见 | 1h |
+| 1.7 | **Kimi-K2 MoE 部分** (选读) | `LLM/25_KimiK2/` | 只需理解 MoE 架构: 稀疏激活思想, pi_0 的 action expert 本质也是 MoE | 1h |
 
-**Level 1 学习目标**: GPT 系列建立 autoregressive + scaling 直觉; Chinchilla 理解 data-compute 平衡; Qwen/Kimi-K2 理解现代工程实践和 MoE。
+**Level 1 学习目标**: GPT 系列建立 autoregressive + scaling 直觉; Chinchilla 理解 data-compute 平衡; Kimi-K2 MoE 理解稀疏激活 (选读)。
 
 ### Level 2: 视觉-语言 + 生成模型
 
@@ -142,10 +145,14 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 |------|------|---------|---------|---------|
 | 4.1 | **RT-1** (2022) | `methods/22_RT1/` | 第一个大规模 robot Transformer: EfficientNet + TokenLearner + Transformer | 1.5h |
 | 4.2 | **RT-2** (2023) | `methods/23_RT2/` | 第一个 VLA: VLM 直接输出离散动作 token, co-fine-tuning | 2h |
-| 4.3 | **pi_0** (2024) | `methods/24_pi0/` | Section IV: action expert + flow matching, 论文 vs 代码对照 | 3h |
-| 4.4 | **pi_0 代码** | `methods/24_pi0/openpi/src/openpi/models/pi0.py` | dual-expert attention, flow matching loss, KV cache 推理 | 3h |
-| 4.5 | **GR00T N1** (2025) | `methods/25_GR00T_N1/` | 双系统: VLM (System 2, 10Hz) + DiT (System 1, 120Hz) | 2h |
-| 4.6 | **GR00T N1 代码** | `methods/25_GR00T_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
+| 4.3 | **Open X-Embodiment** (2023) | `methods/23_OpenXEmbodiment/` | 跨机器人数据集 (22 robots, 527 skills), 所有 VLA 的训练数据基础 | 1.5h |
+| 4.4 | **PaliGemma** (2024) | `methods/24_PaliGemma/` | SigLIP + Gemma 2B, pi_0 的 VLM backbone -- 理解为什么选它 | 1.5h |
+| 4.5 | **Octo** (2024) | `methods/24_Octo/` | 开源 generalist robot policy, diffusion action head + readout tokens, pi_0 的前身 | 2h |
+| 4.6 | **OpenVLA** (2024) | `methods/24_OpenVLA/` | 开源 VLA baseline, discrete action tokens + LoRA fine-tuning | 2h |
+| 4.7 | **pi_0** (2024) | `methods/24_pi0/` | Section IV: action expert + flow matching, 论文 vs 代码对照 | 3h |
+| 4.8 | **pi_0 代码** | `methods/24_pi0/openpi/src/openpi/models/pi0.py` | dual-expert attention, flow matching loss, KV cache 推理 | 3h |
+| 4.9 | **GR00T N1** (2025) | `methods/25_GR00T_N1/` | 双系统: VLM (System 2, 10Hz) + DiT (System 1, 120Hz) | 2h |
+| 4.10 | **GR00T N1 代码** | `methods/25_GR00T_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
 
 ### Level 5: 综述 (建立全局视野, 按需阅读)
 
@@ -155,7 +162,7 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 |------|------|---------|---------|---------|
 | 5.1 | **Foundation Models in Robotics** | `surveys/23_FMRobotics/` | 三层分类: perception / decision / control | 2h |
 | 5.2 | **Bridging Language and Action** | `surveys/23_LangCondManip/` | 语言在控制回路中的四种角色 | 2h |
-| 5.3 | **Scaling Laws in Robotics** | `surveys/25_ScalingLaws/` | 机器人性能是否遵循 scaling law | 1.5h |
+| 5.3 | **Scaling Laws in Robotics** | `surveys/25_RobotScalingLaws/` | 机器人性能是否遵循 scaling law | 1.5h |
 | 5.4 | **World Models Survey** | `surveys/25_AwesomeWorldModels/` | 世界模型分类学 | 1.5h |
 | 5.5 | **Awesome Robotics FM** | `surveys/24_AwesomeSurvey/` | 索引式浏览, 按需深入 | 1h |
 | 5.6 | **Language Grounding** | `surveys/24_LanguageGrounding/` | 符号 vs 嵌入的 tradeoff | 1h |
@@ -210,7 +217,7 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 |------|------|---------|---------|
 | **Yoshua Bengio** | U. Montreal / CIFAR | 深度学习三巨头, 表示学习 | 你的 12_RepresentationLearning |
 | **Ashish Vaswani** | Google (2017) | Transformer 原作者 | 你的 17_Transformer |
-| **Alec Radford** | OpenAI | GPT-1/2, CLIP | 你的 18_GPT + 21_CLIP |
+| **Alec Radford** | OpenAI | GPT-1/2, CLIP | 你的 GPT_Series + 21_CLIP |
 | **Ilya Sutskever** | OpenAI/SSI | GPT-3 首席科学家 | Scaling 思想 |
 | **Kaiming He** | Meta/MIT | ResNet, MAE | 视觉特征学习 |
 | **Yann LeCun** | Meta | CNN 先驱, JEPA 世界模型 | 世界模型理论 |
@@ -231,7 +238,7 @@ foundation_model/
 ├── LLM/                              # LLM 基础 (按年份排列)
 │   ├── 12_RepresentationLearning/    # Bengio 表示学习综述 (PDF + notes)
 │   ├── 17_Transformer/               # Attention Is All You Need (md + notes)
-│   ├── 18_GPT/                       # GPT 全系列
+│   ├── GPT_Series/                       # GPT 全系列
 │   │   ├── GPT1_*.pdf + md           # GPT-1 论文
 │   │   ├── gpt-2/                    # GPT-2 官方代码 (OpenAI, TensorFlow)
 │   │   ├── GPT3_*.pdf + md           # GPT-3 论文
@@ -254,7 +261,7 @@ foundation_model/
 │   ├── 24_LanguageGrounding/         # Language Grounding survey
 │   ├── 25_AwesomeWorldModels/        # World Models survey
 │   ├── 25_DynamicsModels/            # Learned Dynamics Models (Science Robotics)
-│   └── 25_ScalingLaws/               # Scaling Laws in Robotics
+│   └── 25_RobotScalingLaws/               # Scaling Laws in Robotics
 ├── methods/                          # 具体方法论文 (17 篇, 含 15 个代码仓库)
 │   ├── 20_DDPM/                      # Diffusion 原论文 + 代码 (Ho et al.)
 │   ├── 20_ViT/                       # Vision Transformer + 代码 (Google)

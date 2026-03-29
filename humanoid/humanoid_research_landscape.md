@@ -509,7 +509,7 @@ humanoid 和 manip 两个目录的论文存在明确的交叉点:
 | `25_GR00T_N1` | SONIC 直接与 GR00T N1 集成 | 专用 humanoid VLA |
 | `23_DreamerV3` | RWM 继承了 latent world model 的思路 | World model → Humanoid |
 | `25_AwesomeWorldModels` | RWM 所在的更广泛 world model 研究背景 | 综述交叉 |
-| `25_ScalingLaws` | SONIC 展示了 humanoid control 的 scaling behavior | Scaling 验证 |
+| `25_RobotScalingLaws` | SONIC 展示了 humanoid control 的 scaling behavior | Scaling 验证 |
 
 **SONIC + GR00T N1 的集成路径**:
 

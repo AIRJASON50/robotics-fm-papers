@@ -111,10 +111,9 @@ Roadmap document: `CS2Robotics_Roadmap.md` -- CS (NLP/CV) to Robotics migration 
 
 | Folder | Paper | Year | Notes |
 |--------|-------|------|-------|
-| LLM/ (root) | GPT-1/2/3/4 Series (OpenAI) | 2018-2023 | LLM_notes.md |
+| LLM/GPT_Series | GPT full series: GPT-1/2/3/4 + Scaling Laws + RLHF-Summarize + Codex + WebGPT + InstructGPT | 2018-2023 | GPT_series_notes.md |
 | LLM/12_RepresentationLearning | Representation Learning: A Review (Bengio) | 2012 | RepresentationLearning_notes.md |
 | LLM/17_Transformer | Attention Is All You Need (Vaswani et al.) | 2017 | Transformer_notes.md |
-| LLM/gpt-2 | GPT-2 official code repo (OpenAI, TF) | 2019 | covered by LLM_notes.md |
 | LLM/25_KimiK2 | Kimi K2: Open Agentic Intelligence (Moonshot AI, 1T MoE) | 2025 | - |
 | LLM/24_Qwen | Qwen Technical Report (Alibaba, 1.8B-72B) | 2023 | Qwen_notes.md |
 
@@ -152,5 +151,5 @@ Roadmap document: `CS2Robotics_Roadmap.md` -- CS (NLP/CV) to Robotics migration 
 | surveys/24_LanguageGrounding | A Survey of Robotic Language Grounding: Symbols vs Embeddings | 2024 | LanguageGrounding_notes.md |
 | surveys/25_AwesomeWorldModels | Comprehensive Survey on World Models for Embodied AI (GitHub survey) | 2025 | AwesomeWorldModels_notes.md |
 | surveys/25_DynamicsModels | Learned Dynamics Models (Science Robotics) | 2025 | - |
-| surveys/25_ScalingLaws | Neural Scaling Laws in Robotics (meta-analysis, 327 papers) | 2025 | ScalingLaws_notes.md |
+| surveys/25_RobotScalingLaws | Neural Scaling Laws in Robotics (meta-analysis, 327 papers) | 2025 | ScalingLaws_notes.md |
 | surveys/25_TransferLearningAgriculture | Transfer Learning in Agriculture Review | 2025 | - |
