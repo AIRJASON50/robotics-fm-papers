@@ -56,7 +56,7 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 | Image classification | ViT (2020) | 视觉特征提取 | -- |
 | Vision-Language alignment | CLIP (2021) | 语言指令理解 + 视觉 grounding | CLIPort |
 | VLM | PaLM-E, PaliGemma | VLA 的视觉-语言 backbone | pi_0, GR00T N1 |
-| Open-vocabulary detection | OWL-ViT, Grounding DINO | 零样本物体检测 | 23_FMRobotics survey |
+| Open-vocabulary detection | OWL-ViT, Grounding DINO | 零样本物体检测 | surveys/robotics/23_FMRobotics |
 
 ### 路径 C: 生成模型 -> 动作生成
 
@@ -72,7 +72,7 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 | 阶段 | CS 原技术 | 机器人迁移 | 关键论文 |
 |------|---------|---------|--------|
 | Latent dynamics | VAE + RNN | 潜空间世界模型 | DreamerV3 |
-| Video prediction | Sora, video diffusion | 物理场景预测 | 25_AwesomeWorldModels survey |
+| Video prediction | Sora, video diffusion | 物理场景预测 | surveys/robotics/25_AwesomeWorldModels |
 | Imagination-based RL | 在世界模型中训练 policy | 减少真实交互需求 | DreamerV3 |
 
 ---
@@ -88,8 +88,8 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 0.1 | **Representation Learning** (Bengio 2012) | `methods/0_foundations/12_RepresentationLearning/` | Section 1-2, 5: 为什么好的表示 = 好的 AI; 好表示的先验列表 | 1h |
-| 0.2 | **Attention Is All You Need** (2017) | `methods/1_pretrain_gen/17_Transformer/` | Section 3: self-attention, multi-head, positional encoding -- 所有后续工作的根基 | 2h |
+| 0.1 | **Representation Learning** (Bengio 2012) | `foundations/12_RepresentationLearning/` | Section 1-2, 5: 为什么好的表示 = 好的 AI; 好表示的先验列表 | 1h |
+| 0.2 | **Attention Is All You Need** (2017) | `foundations/17_Transformer/` | Section 3: self-attention, multi-head, positional encoding -- 所有后续工作的根基 | 2h |
 
 ### Level 1: LLM -- 从 GPT 到现代大模型
 
@@ -97,16 +97,14 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 1.1 | **GPT-1** (2018) | `LLM/GPT_Series/18_GPT1/` | Section 1-3: pre-train + fine-tune 范式确立 | 1h |
-| 1.2 | **GPT-2 代码** | `LLM/GPT_Series/19_GPT2/code/src/model.py` | 175 行代码理解完整 Transformer decoder | 2h |
-| 1.3 | **Scaling Laws** (2020) | `LLM/GPT_Series/20_ScalingLaws/` | power-law 关系, 为 GPT-3 的 175B 提供理论指导 | 1h |
-| 1.4 | **GPT-3** (选读) | `LLM/GPT_Series/20_GPT3/` | Section 1 (Figure 1.1-1.3): in-context learning 涌现; Section 2: scaling 趋势 | 2h |
-| 1.5 | **GPT 系列笔记** | `LLM/GPT_Series/GPT_series_notes.md` | GPT-1/2/3/4 + RLHF + Codex + InstructGPT 全系列分析 + 商业逻辑 | 1h |
-| 1.6 | **Chinchilla** (2022) | `surveys/22_Chinchilla/` | 核心结论: 模型和数据应等比缩放, 修正了 Kaplan 的"只放大模型"偏见 | 1h |
-| 1.7 | **LLM→Robotics 技术路线** | `LLM/LLM_技术交织与机器人启示.md` | LLM 各项技术如何 distill 到 robotics, 技术分岔全景图 | 1h |
-| 1.8 | **Kimi/Qwen/DeepSeek 系列** (选读) | `LLM/kimi/`, `LLM/qwen/`, `LLM/deepseek/` | MoE 稀疏激活 (K2), Muon 优化器 (Moonlight), 数据飞轮 (Qwen) | 2h |
-
-**Level 1 学习目标**: GPT 系列建立 autoregressive + scaling 直觉; Chinchilla 理解 data-compute 平衡; LLM→Robotics Roadmap 建立技术迁移全景; 各系列笔记理解 MoE/优化器/数据策略 (选读)。
+| 1.1 | **GPT-1** (2018) | `LLM/families/GPT_Series/18_GPT1/` | Section 1-3: pre-train + fine-tune 范式确立 | 1h |
+| 1.2 | **GPT-2 代码** | `LLM/families/GPT_Series/19_GPT2/code/src/model.py` | 175 行代码理解完整 Transformer decoder | 2h |
+| 1.3 | **Scaling Laws** (2020) | `LLM/families/GPT_Series/20_ScalingLaws/` | power-law 关系, 为 GPT-3 的 175B 提供理论指导 | 1h |
+| 1.4 | **GPT-3** (选读) | `LLM/families/GPT_Series/20_GPT3/` | Section 1 (Figure 1.1-1.3): in-context learning 涌现 | 2h |
+| 1.5 | **GPT 系列笔记** | `LLM/families/GPT_Series/GPT_series_notes.md` | 全系列分析 + 商业逻辑 | 1h |
+| 1.6 | **Chinchilla** (2022) | `LLM/NLP_foundations/22_Chinchilla/` | 模型和数据应等比缩放 | 1h |
+| 1.7 | **LLM→Robotics 技术路线** | `LLM/LLM_技术交织与机器人启示.md` | LLM 技术分岔全景 + robotics distill 路径 | 1h |
+| 1.8 | **Kimi/Qwen/DeepSeek** (选读) | `LLM/families/kimi/`, `qwen/`, `deepseek/` | MoE (K2), Muon 优化器 (Moonlight), 数据飞轮 (Qwen) | 2h |
 
 ### Level 2: 视觉-语言 + 生成模型
 
@@ -114,16 +112,16 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 2.1 | **ViT** (2020) | `methods/1_pretrain_gen/20_ViT/` | patch embedding, position embedding, cls token -- 理解 CLIP/VLA 的视觉 backbone | 2h |
-| 2.2 | **ViT 代码** | `methods/1_pretrain_gen/20_ViT/vision_transformer/` | 模型实现, 与 ResNet 对比 | 1h |
-| 2.3 | **CLIP** (2021) | `methods/2_bridges/21_CLIP/` | contrastive learning, dual encoder, zero-shot transfer | 2h |
-| 2.4 | **CLIP 代码** | `methods/2_bridges/21_CLIP/CLIP/` | model.py: ViT + text encoder + contrastive loss | 1h |
-| 2.5 | **DDPM** (2020) | `methods/1_pretrain_gen/20_DDPM/` | forward noise process, reverse denoising, simplified loss L_simple | 2h |
-| 2.6 | **DDPM 代码** | `methods/1_pretrain_gen/20_DDPM/diffusion/` | U-Net + timestep embedding + 训练循环 | 1h |
-| 2.7 | **Flow Matching** (2022) | `methods/2_bridges/22_FlowMatching/` | ODE-based 生成, 比 diffusion 更简洁 -- pi_0 的核心技术 | 2h |
-| 2.8 | **Flow Matching 代码** | `methods/2_bridges/22_FlowMatching/flow_matching/` | Meta 官方库, 含教程 | 1h |
-| 2.9 | **DiT** (2023) | `methods/3_vla_perception/23_DiT/` | Transformer 替换 U-Net 做 diffusion backbone -- GR00T N1 的基础 | 2h |
-| 2.10 | **DiT 代码** | `methods/3_vla_perception/23_DiT/DiT/` | 模型结构 + adaLN-Zero 条件注入 | 1h |
+| 2.1 | **ViT** (2020) | `CV/0_backbone/20_ViT/` | patch embedding, position embedding, cls token | 2h |
+| 2.2 | **ViT 代码** | `CV/0_backbone/20_ViT/vision_transformer/` | 模型实现, 与 ResNet 对比 | 1h |
+| 2.3 | **CLIP** (2021) | `CV/2_vl_alignment/21_CLIP/` | contrastive learning, dual encoder, zero-shot transfer | 2h |
+| 2.4 | **CLIP 代码** | `CV/2_vl_alignment/21_CLIP/CLIP/` | model.py: ViT + text encoder + contrastive loss | 1h |
+| 2.5 | **DDPM** (2020) | `CV/1_generation/20_DDPM/` | forward noise, reverse denoising, simplified loss | 2h |
+| 2.6 | **DDPM 代码** | `CV/1_generation/20_DDPM/diffusion/` | U-Net + timestep embedding + 训练循环 | 1h |
+| 2.7 | **Flow Matching** (2022) | `CV/1_generation/22_FlowMatching/` | ODE-based 生成, pi_0 的核心技术 | 2h |
+| 2.8 | **Flow Matching 代码** | `CV/1_generation/22_FlowMatching/flow_matching/` | Meta 官方库 | 1h |
+| 2.9 | **DiT** (2023) | `CV/1_generation/23_DiT/` | Transformer 做 diffusion backbone, GR00T N1 的基础 | 2h |
+| 2.10 | **DiT 代码** | `CV/1_generation/23_DiT/DiT/` | adaLN-Zero 条件注入 | 1h |
 
 ### Level 3: 第一次迁移 -- RL/Robotics meets Transformer
 
@@ -131,12 +129,12 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 3.1 | **Decision Transformer** (2021) | `methods/2_bridges/21_DecisionTransformer/` | 核心思想: RL = sequence modeling, reward conditioning | 2h |
-| 3.2 | **DreamerV3** (2023) | `methods/3_vla_perception/23_DreamerV3/` | 世界模型: 学习物理规律, 在"想象"中训练 | 3h |
-| 3.3 | **ACT** (2023) | `methods/3_vla_perception/23_ACT/` | CVAE + action chunking: 一次预测多步动作, pi_0/Diffusion Policy 的核心思想来源 | 2h |
-| 3.4 | **ACT 代码** | `methods/3_vla_perception/23_ACT/act/` | 简洁的 imitation learning pipeline, CVAE + Transformer | 1h |
-| 3.5 | **Diffusion Policy** (2023) | `methods/4_frontier/24_DiffusionPolicy/` | Section 3-4: 条件去噪 + action chunk + receding horizon | 3h |
-| 3.6 | **Diffusion Policy 代码** | `methods/4_frontier/24_DiffusionPolicy/diffusion_policy/` | 完整 policy 实现 | 2h |
+| 3.1 | **Decision Transformer** (2021) | `robotics/policy_learning/21_DecisionTransformer/` | RL = sequence modeling, reward conditioning | 2h |
+| 3.2 | **DreamerV3** (2023) | `robotics/world_model/23_DreamerV3/` | 世界模型: 在"想象"中训练 | 3h |
+| 3.3 | **ACT** (2023) | `robotics/policy_learning/23_ACT/` | CVAE + action chunking | 2h |
+| 3.4 | **ACT 代码** | `robotics/policy_learning/23_ACT/act/` | 简洁的 imitation learning pipeline | 1h |
+| 3.5 | **Diffusion Policy** (2023) | `robotics/generative_policy/24_DiffusionPolicy/` | 条件去噪 + action chunk + receding horizon | 3h |
+| 3.6 | **Diffusion Policy 代码** | `robotics/generative_policy/24_DiffusionPolicy/diffusion_policy/` | 完整 policy 实现 | 2h |
 
 ### Level 4: VLA 统一模型 (当前前沿)
 
@@ -144,16 +142,16 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 4.1 | **RT-1** (2022) | `methods/2_bridges/22_RT1/` | 第一个大规模 robot Transformer: EfficientNet + TokenLearner + Transformer | 1.5h |
-| 4.2 | **RT-2** (2023) | `methods/3_vla_perception/23_RT2/` | 第一个 VLA: VLM 直接输出离散动作 token, co-fine-tuning | 2h |
-| 4.3 | **Open X-Embodiment** (2023) | `methods/3_vla_perception/23_OpenXEmbodiment/` | 跨机器人数据集 (22 robots, 527 skills), 所有 VLA 的训练数据基础 | 1.5h |
-| 4.4 | **PaliGemma** (2024) | `methods/4_frontier/24_PaliGemma/` | SigLIP + Gemma 2B, pi_0 的 VLM backbone -- 理解为什么选它 | 1.5h |
-| 4.5 | **Octo** (2024) | `methods/4_frontier/24_Octo/` | 开源 generalist robot policy, diffusion action head + readout tokens, pi_0 的前身 | 2h |
-| 4.6 | **OpenVLA** (2024) | `methods/4_frontier/24_OpenVLA/` | 开源 VLA baseline, discrete action tokens + LoRA fine-tuning | 2h |
-| 4.7 | **pi_0** (2024) | `methods/4_frontier/24_pi0/` | Section IV: action expert + flow matching, 论文 vs 代码对照 | 3h |
-| 4.8 | **pi_0 代码** | `methods/4_frontier/24_pi0/openpi/src/openpi/models/pi0.py` | dual-expert attention, flow matching loss, KV cache 推理 | 3h |
-| 4.9 | **GR00T N1** (2025) | `methods/4_frontier/25_GR00T_N1/` | 双系统: VLM (System 2, 10Hz) + DiT (System 1, 120Hz) | 2h |
-| 4.10 | **GR00T N1 代码** | `methods/4_frontier/25_GR00T_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
+| 4.1 | **RT-1** (2022) | `robotics/policy_learning/22_RT1/` | 第一个大规模 robot Transformer | 1.5h |
+| 4.2 | **RT-2** (2023) | `robotics/policy_learning/23_RT2/` | 第一个 VLA: VLM 直接输出离散动作 token | 2h |
+| 4.3 | **Open X-Embodiment** (2023) | `robotics/policy_learning/23_OpenXEmbodiment/` | 跨机器人数据集, 所有 VLA 的训练数据基础 | 1.5h |
+| 4.4 | **PaliGemma** (2024) | `CV/2_vl_alignment/24_PaliGemma/` | SigLIP + Gemma 2B, pi_0 的 VLM backbone | 1.5h |
+| 4.5 | **Octo** (2024) | `robotics/vla/24_Octo/` | 开源 generalist robot policy, pi_0 的前身 | 2h |
+| 4.6 | **OpenVLA** (2024) | `robotics/vla/24_OpenVLA/` | 开源 VLA baseline, LoRA fine-tuning | 2h |
+| 4.7 | **pi_0** (2024) | `robotics/generative_policy/24_pi0/` | action expert + flow matching | 3h |
+| 4.8 | **pi_0 代码** | `robotics/generative_policy/24_pi0/openpi/` | dual-expert attention, flow matching loss | 3h |
+| 4.9 | **GR00T N1** (2025) | `robotics/generative_policy/25_GR00T_N1/` | 双系统: VLM (10Hz) + DiT (120Hz) | 2h |
+| 4.10 | **GR00T N1 代码** | `robotics/generative_policy/25_GR00T_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
 
 ### Level 5: 综述 (建立全局视野, 按需阅读)
 
@@ -161,57 +159,56 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 5.1 | **Foundation Models in Robotics** | `surveys/23_FMRobotics/` | 三层分类: perception / decision / control | 2h |
-| 5.2 | **Bridging Language and Action** | `surveys/23_LangCondManip/` | 语言在控制回路中的四种角色 | 2h |
-| 5.3 | **Scaling Laws in Robotics** | `surveys/25_RobotScalingLaws/` | 机器人性能是否遵循 scaling law | 1.5h |
-| 5.4 | **World Models Survey** | `surveys/25_AwesomeWorldModels/` | 世界模型分类学 | 1.5h |
-| 5.5 | **Awesome Robotics FM** | `surveys/24_AwesomeSurvey/` | 索引式浏览, 按需深入 | 1h |
-| 5.6 | **Language Grounding** | `surveys/24_LanguageGrounding/` | 符号 vs 嵌入的 tradeoff | 1h |
-| 5.7 | **Learned Dynamics Models** | `surveys/25_DynamicsModels/` | 状态表示对学习的影响 | 1h |
-| 5.8 | **General-Purpose Robots** | `surveys/23_GeneralPurposeRobots/` | 五大挑战的 meta-analysis | 2h |
+| 5.1 | **Foundation Models in Robotics** | `surveys/robotics/23_FMRobotics/` | 三层分类: perception / decision / control | 2h |
+| 5.2 | **Bridging Language and Action** | `surveys/robotics/23_LangCondManip/` | 语言在控制回路中的四种角色 | 2h |
+| 5.3 | **Scaling Laws in Robotics** | `surveys/robotics/25_RobotScalingLaws/` | 机器人性能是否遵循 scaling law | 1.5h |
+| 5.4 | **World Models Survey** | `surveys/robotics/25_AwesomeWorldModels/` | 世界模型分类学 | 1.5h |
+| 5.5 | **Language Grounding** | `surveys/robotics/24_LanguageGrounding/` | 符号 vs 嵌入的 tradeoff | 1h |
+| 5.6 | **Learned Dynamics Models** | `surveys/robotics/25_DynamicsModels/` | 状态表示对学习的影响 | 1h |
+| 5.7 | **General-Purpose Robots** | `surveys/robotics/23_GeneralPurposeRobots/` | 五大挑战的 meta-analysis | 2h |
+| 5.8 | **CV Surveys** (按需) | `surveys/CV/` | ViT(TPAMI), SSL(TPAMI), VLM(TPAMI), Depth, MIM(IJCV), NeRF+3DGS, Video | 各1h |
 
 ---
 
-## 4. 你需要补齐的里程碑工作
+## 4. 已收录论文完整索引
 
-以下是 Roadmap 中提到但本库尚未收录的重要论文, 按优先级排序。
+### 必读 (直接影响 VLA 理解)
 
-### 必读 (直接影响你理解 VLA)
-
-| 论文 | 年份 | 作者/机构 | 理由 | 已收录? |
-|------|------|---------|------|:---:|
-| Attention Is All You Need | 2017 | Vaswani et al., Google | Transformer 根基 | 已有 |
-| GPT-1/2/3/4 | 2018-2023 | OpenAI | LLM 范式 | 已有 |
-| CLIP | 2021 | Radford et al., OpenAI | vision-language 对齐 | 已有 |
-| DDPM | 2020 | Ho et al., Google | diffusion 基础 | 已有 |
-| RT-1 / RT-2 | 2022-2023 | Google | robot transformer -> VLA | 已有 |
-| Chinchilla | 2022 | Hoffmann et al., DeepMind | compute-optimal scaling | 已有 |
-| **Flow Matching** | 2022 | Lipman et al., Meta | pi_0 的核心技术 | 已有 (`methods/2_bridges/22_FlowMatching/`) |
-| **PaliGemma** | 2024 | Beyer et al., Google | pi_0 的直接 backbone | 已有 (`methods/4_frontier/24_PaliGemma/`) |
+| 论文 | 年份 | 位置 |
+|------|------|------|
+| Transfer Learning Survey | 2010 | `foundations/10_TransferLearning/` |
+| Representation Learning | 2013 | `foundations/12_RepresentationLearning/` |
+| Transformer | 2017 | `foundations/17_Transformer/` |
+| GPT-1/2/3/4 + RLHF + Codex | 2018-2023 | `LLM/families/GPT_Series/` |
+| CLIP | 2021 | `CV/2_vl_alignment/21_CLIP/` |
+| DDPM | 2020 | `CV/1_generation/20_DDPM/` |
+| Flow Matching | 2022 | `CV/1_generation/22_FlowMatching/` |
+| RT-1 / RT-2 | 2022-2023 | `robotics/policy_learning/` |
+| Chinchilla | 2022 | `LLM/NLP_foundations/22_Chinchilla/` |
+| PaliGemma | 2024 | `CV/2_vl_alignment/24_PaliGemma/` |
 
 ### 推荐 (加深理解)
 
-| 论文 | 年份 | 作者/机构 | 理由 | 已收录? |
-|------|------|---------|------|:---:|
-| **ViT** | 2020 | Dosovitskiy et al., Google | Transformer 迁移到 CV | 已有 (`methods/1_pretrain_gen/20_ViT/`) |
-| **DiT** | 2023 | Peebles & Xie, NYU/Meta | GR00T N1 action head 基础 | 已有 (`methods/3_vla_perception/23_DiT/`) |
-| **ACT** | 2023 | Zhao et al., Stanford | action chunking 概念 | 已有 (`methods/3_vla_perception/23_ACT/`) |
-| **OpenVLA** | 2024 | Kim et al., Stanford | 开源 VLA baseline | 已有 (`methods/4_frontier/24_OpenVLA/`) |
-| **SayCan** | 2022 | Ahn et al., Google | LLM task planning + affordance | 已有 (`methods/2_bridges/22_SayCan/`) |
-| **Code-as-Policies** | 2022 | Liang et al., Google | GPT 直接生成 robot control code | 已有 (`methods/2_bridges/22_CodeAsPolicies/`) |
-| **Inner Monologue** | 2022 | Huang et al., Google | LLM 闭环语言反馈 | 已有 (`methods/2_bridges/22_InnerMonologue/`) |
-| **LLaVA** | 2023 | Liu et al., UW-Madison | 开源 VLM 训练范式 | 已有 (`methods/3_vla_perception/23_LLaVA/`) |
-| **Voyager** | 2023 | Wang et al., NVIDIA | GPT-4 open-ended agent | 已有 (`methods/3_vla_perception/23_Voyager/`) |
-| BERT | 2018 | Devlin et al., Google | 双向 vs 单向对比 | 待拉取 |
-| Flamingo | 2022 | Alayrac et al., DeepMind | 少样本多模态 | 待拉取 |
-
-### 了解 (扩展视野)
-
-| 论文 | 年份 | 作者/机构 | 理由 |
-|------|------|---------|------|
-| MAE | 2022 | He et al., Meta | 视觉自监督 |
-| SAM | 2023 | Kirillov et al., Meta | 视觉 foundation model |
-| Scaling Laws for Neural LMs | 2020 | Kaplan et al., OpenAI | Chinchilla 的前驱 |
+| 论文 | 年份 | 位置 | 状态 |
+|------|------|------|:---:|
+| ResNet | 2015 | `CV/0_backbone/15_ResNet/` | 已有 |
+| ViT | 2020 | `CV/0_backbone/20_ViT/` | 已有 |
+| BERT | 2018 | `LLM/NLP_foundations/18_BERT/` | 已有 |
+| DiT | 2023 | `CV/1_generation/23_DiT/` | 已有 |
+| ACT | 2023 | `robotics/policy_learning/23_ACT/` | 已有 |
+| OpenVLA | 2024 | `robotics/vla/24_OpenVLA/` | 已有 |
+| SayCan | 2022 | `robotics/llm_planning/22_SayCan/` | 已有 |
+| Code-as-Policies | 2022 | `robotics/llm_planning/22_CodeAsPolicies/` | 已有 |
+| Inner Monologue | 2022 | `robotics/llm_planning/22_InnerMonologue/` | 已有 |
+| LLaVA | 2023 | `CV/2_vl_alignment/23_LLaVA/` | 已有 |
+| Voyager | 2023 | `robotics/llm_planning/23_Voyager/` | 已有 |
+| MAE | 2021 | `CV/4_self_supervised/21_MAE/` | 已有 |
+| DINOv2 | 2023 | `CV/4_self_supervised/23_DINOv2/` | 已有 |
+| SAM | 2023 | `CV/5_detection_seg/23_SAM/` | 已有 |
+| PaLME | 2023 | `robotics/vla/23_PaLME/` | 已有 |
+| NeRF | 2020 | `CV/3_3d_vision/20_NeRF/` | 已有 |
+| 3D Gaussian Splatting | 2023 | `CV/3_3d_vision/23_3DGS/` | 已有 |
+| Depth Anything | 2024 | `CV/3_3d_vision/24_DepthAnything/` | 已有 |
 
 ---
 
@@ -219,18 +216,18 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 学者 | 机构 | 核心贡献 | 与你的关联 |
 |------|------|---------|---------|
-| **Yoshua Bengio** | U. Montreal / CIFAR | 深度学习三巨头, 表示学习 | 你的 12_RepresentationLearning |
-| **Ashish Vaswani** | Google (2017) | Transformer 原作者 | 你的 17_Transformer |
-| **Alec Radford** | OpenAI | GPT-1/2, CLIP | 你的 GPT_Series + 21_CLIP |
+| **Yoshua Bengio** | U. Montreal / CIFAR | 深度学习三巨头, 表示学习 | foundations/12_RepresentationLearning |
+| **Ashish Vaswani** | Google (2017) | Transformer 原作者 | foundations/17_Transformer |
+| **Alec Radford** | OpenAI | GPT-1/2, CLIP | LLM/families/GPT_Series + CV/21_CLIP |
 | **Ilya Sutskever** | OpenAI/SSI | GPT-3 首席科学家 | Scaling 思想 |
-| **Kaiming He** | Meta/MIT | ResNet, MAE | 视觉特征学习 |
+| **Kaiming He** | Meta/MIT | ResNet, MAE | CV/0_backbone + CV/4_self_supervised |
 | **Yann LeCun** | Meta | CNN 先驱, JEPA 世界模型 | 世界模型理论 |
-| **Sergey Levine** | UC Berkeley / PI | RL for Robotics, pi_0 | 你的 24_pi0 |
-| **Chelsea Finn** | Stanford / PI | Meta-learning, pi_0 | 你的 24_pi0 |
-| **Pieter Abbeel** | UC Berkeley | RL, mjlab, Playground | 你在用的 RL 框架 |
-| **Shuran Song** | Stanford (原 Columbia) | Diffusion Policy | 你的 24_DiffusionPolicy |
-| **Cheng Chi** | Stanford (原 Columbia) | Diffusion Policy 一作 | 你的 24_DiffusionPolicy |
-| **Dieter Fox** | NVIDIA/UW | GR00T N1 | 你的 25_GR00T_N1 |
+| **Sergey Levine** | UC Berkeley / PI | RL for Robotics, pi_0 | robotics/generative_policy/24_pi0 |
+| **Chelsea Finn** | Stanford / PI | Meta-learning, pi_0 | robotics/generative_policy/24_pi0 |
+| **Pieter Abbeel** | UC Berkeley | RL, mjlab, Playground | RL 框架 |
+| **Shuran Song** | Stanford (原 Columbia) | Diffusion Policy | robotics/generative_policy/24_DiffusionPolicy |
+| **Cheng Chi** | Stanford (原 Columbia) | Diffusion Policy 一作 | robotics/generative_policy/24_DiffusionPolicy |
+| **Dieter Fox** | NVIDIA/UW | GR00T N1 | robotics/generative_policy/25_GR00T_N1 |
 | **Jim Fan** | NVIDIA | GR00T N1, Foundation Agent | VLA 工业化 |
 
 ---
@@ -239,47 +236,38 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 ```
 foundation_model/
-├── LLM/                              # LLM 模型家族演进
-│   ├── GPT_Series/                   # GPT 全系列 (GPT-1/2/3/4 + Scaling Laws + RLHF + Codex + WebGPT + InstructGPT)
-│   │   └── GPT_series_notes.md       # 全系列分析 + 商业逻辑
-│   ├── kimi/                         # Kimi/Moonshot AI 全系列 (k1.5, MoBA, Moonlight, Audio, K2, K2.5)
-│   │   └── kimi_series_notes.md      # 全系列分析 + 技术分岔图
-│   ├── qwen/                         # Qwen/Alibaba 全系列 (Qwen 1/2/2.5/3/3.5, VL, Audio, Omni)
-│   │   └── qwen_series_notes.md      # 全系列分析
-│   ├── deepseek/                     # DeepSeek 全系列 (MoE, V2 MLA, V3, R1)
-│   │   └── deepseek_series_notes.md
-│   ├── llama/                        # Llama/Meta 全系列 (1/2/3/4)
-│   │   └── llama_series_notes.md
-│   └── LLM_技术交织与机器人启示.md   # LLM 技术分岔全景 + Robotics distill 路径
-├── surveys/                          # 综述论文 (9 篇)
-│   ├── 22_Chinchilla/                # Compute-Optimal Scaling (DeepMind)
-│   ├── 23_FMRobotics/                # Foundation Models in Robotics (IJRR)
-│   ├── 23_GeneralPurposeRobots/      # Toward General-Purpose Robots (CMU)
-│   ├── 23_LangCondManip/             # Bridging Language and Action
-│   ├── 24_AwesomeSurvey/             # Awesome Robotics FM (paper list)
-│   ├── 24_LanguageGrounding/         # Language Grounding survey
-│   ├── 25_AwesomeWorldModels/        # World Models survey
-│   ├── 25_DynamicsModels/            # Learned Dynamics Models (Science Robotics)
-│   └── 25_RobotScalingLaws/               # Scaling Laws in Robotics
-├── methods/                          # 具体方法论文 (17 篇, 含 15 个代码仓库)
-│   ├── 20_DDPM/                      # Diffusion 原论文 + 代码 (Ho et al.)
-│   ├── 20_ViT/                       # Vision Transformer + 代码 (Google)
-│   ├── 21_CLIP/                      # Vision-Language 对齐 + 代码 (OpenAI)
-│   ├── 21_DecisionTransformer/       # RL as sequence modeling + 代码
-│   ├── 22_FlowMatching/              # Flow Matching + 代码 (Meta)
-│   ├── 22_RT1/                       # 第一个 Robotics Transformer (Google)
-│   ├── 23_ACT/                       # Action Chunking Transformer + 代码 (Stanford)
-│   ├── 23_DiT/                       # Diffusion Transformer + 代码 (Meta)
-│   ├── 23_DreamerV3/                 # World model RL + 代码
-│   ├── 23_OpenXEmbodiment/           # 跨机器人数据集 + RT-X 模型 (Google DeepMind)
-│   ├── 23_RT2/                       # 第一个 VLA (Google)
-│   ├── 24_DiffusionPolicy/           # Diffusion for robot actions + 代码
-│   ├── 24_Octo/                      # 开源通用 robot policy + 代码 (Berkeley)
-│   ├── 24_OpenVLA/                   # 开源 VLA baseline + 代码 (Stanford)
-│   ├── 24_PaliGemma/                 # pi_0 的 VLM backbone (Google)
-│   ├── 24_pi0/                       # VLA + flow matching + 代码x2 (PI)
-│   └── 25_GR00T_N1/                  # Humanoid VLA + 代码 (NVIDIA)
-└── CS2Robotics_Roadmap.md            # 本文档
+├── foundations/                   # 通用 ML 基础 (3 篇)
+│   ├── 10_TransferLearning/
+│   ├── 12_RepresentationLearning/
+│   └── 17_Transformer/
+├── LLM/                          # LLM 知识体系
+│   ├── NLP_foundations/          # NLP 基础 (Word2Vec→BERT→Chinchilla)
+│   ├── families/                 # 模型家族
+│   │   ├── GPT_Series/          # GPT 全系列 + notes
+│   │   ├── kimi/                # Kimi/Moonshot 全系列 + notes
+│   │   ├── qwen/               # Qwen/Alibaba 全系列 + notes
+│   │   ├── deepseek/           # DeepSeek 全系列 + notes
+│   │   └── llama/              # Llama/Meta 全系列 + notes
+│   └── LLM_技术交织与机器人启示.md
+├── CV/                           # CV 知识体系 (按技术线)
+│   ├── 0_backbone/              # ResNet, ViT, TransferFeatures
+│   ├── 1_generation/            # VAE, DDPM, FlowMatching, DiT
+│   ├── 2_vl_alignment/          # CLIP, LLaVA, PaliGemma
+│   ├── 3_3d_vision/             # NeRF, 3DGS, DepthAnything
+│   ├── 4_self_supervised/       # MAE, DINOv2
+│   ├── 5_detection_seg/         # SAM
+│   └── 6_video/                 # (待填)
+├── robotics/                     # Robotics 应用 (按技术路线)
+│   ├── llm_planning/            # SayCan, CodeAsPolicies, InnerMonologue, Voyager
+│   ├── policy_learning/         # DT, RT-1, RT-2, ACT, OpenXEmbodiment
+│   ├── vla/                     # PaLME, Octo, OpenVLA
+│   ├── generative_policy/       # DiffusionPolicy, pi_0, GR00T N1
+│   └── world_model/             # DreamerV3
+├── surveys/
+│   ├── CV/                      # 7 篇 CV surveys (TPAMI/IJCV/TCSVT)
+│   └── robotics/               # 7 篇 Robotics surveys (IJRR + others)
+├── note/                         # 学习笔记与考试
+└── CS2Robotics_Roadmap.md        # 本文档
 ```
 
 ---
@@ -288,25 +276,31 @@ foundation_model/
 
 | 论文 | 迁移意义 |
 |------|---------|
+| Transfer Learning (2010) | pre-train + fine-tune 的理论根基, 所有 FM 的基本范式 |
 | Bengio 表示学习 (2012) | 确立了"好的表示 = 好的 AI"信念, 预言了 foundation model 的成功 |
 | Transformer (2017) | 去除循环依赖, attention 成为通用序列建模工具, 所有后续工作的根基 |
 | GPT-1/2/3/4 (2018-2023) | 确立 "pre-train + fine-tune/prompt" 范式, 被机器人直接继承 |
 | ViT (2020) | Transformer 从 NLP 迁移到 CV, patch embedding 成为所有 VLA 的视觉 backbone 基础 |
 | DDPM (2020) | 扩散模型用于连续分布生成, 为 Diffusion Policy 和 flow matching 提供理论基础 |
 | CLIP (2021) | 视觉-语言对齐, 使机器人能零样本理解语言指令 + 视觉场景 |
+| MAE (2021) | 掩码自编码器, 自监督视觉预训练, 不需要标注数据就能学好的视觉表示 |
 | Decision Transformer (2021) | 证明 Transformer 可处理 RL trajectory, 不需要 Bellman equation |
 | Chinchilla (2022) | 修正 scaling law: 数据和模型应等比缩放, 影响所有大模型训练策略 |
 | Flow Matching (2022) | 基于 ODE 的生成模型, 比 diffusion 更简洁高效, pi_0 的 action generation 核心 |
+| SayCan (2022) | LLM task planning + CLIP affordance → robot execution, LLM-as-planner 路线开创者 |
 | RT-1 (2022) | 第一个大规模 robot Transformer, 证明 130k 真实数据可以训练通用 robot policy |
 | ACT (2023) | action chunking 概念的来源: CVAE 一次预测多步动作, 减少 compounding error |
 | DiT (2023) | Transformer 替换 U-Net 做 diffusion backbone, GR00T N1 的 System 1 action head |
-| Open X-Embodiment (2023) | 22 个机器人, 527 种技能的跨机体数据集, 所有 VLA (Octo/OpenVLA/pi_0) 的训练基础 |
+| DINOv2 (2023) | 自监督视觉基础模型, 不需要文本也能学通用视觉特征, robot 视觉 backbone 候选 |
+| Open X-Embodiment (2023) | 22 个机器人, 527 种技能的跨机体数据集, 所有 VLA 的训练基础 |
 | RT-2 (2023) | 第一个 VLA, VLM 直接输出离散动作 token, 继承互联网知识到机器人 |
+| SAM (2023) | 通用图像分割, robot 场景理解的视觉基础 |
 | DreamerV3 (2023) | 学习的世界模型可替代物理引擎做 planning, 150+ 任务单一算法 |
 | Diffusion Policy (2023) | 图像 diffusion 直接用于机器人连续动作生成, 处理多模态动作分布 |
+| Depth Anything (2024) | 单目深度估计基础模型, robot 3D 场景理解的关键工具 |
 | Octo (2024) | 第一个开源通用 robot policy, diffusion action head + readout tokens, pi_0 的前身 |
 | OpenVLA (2024) | 开源 VLA baseline, 7B 参数击败 55B RT-2-X, LoRA 高效微调 |
 | PaliGemma (2024) | SigLIP + Gemma 2B 的 3B VLM, pi_0 选择的 backbone (小而能力足) |
 | pi_0 (2024) | VLM + flow matching action expert = 第一个大规模灵巧操作 VLA (10k 小时数据) |
 | GR00T N1 (2025) | 双系统 VLA: 慢思考 (VLM 10Hz) + 快执行 (DiT 120Hz), 面向人形机器人 |
-| Scaling Laws (2025) | 量化验证: 机器人性能也遵循 scaling law, 且比语言任务 scale 得更快 |
+| Robot Scaling Laws (2025) | 量化验证: 机器人性能也遵循 scaling law, 且比语言任务 scale 得更快 |

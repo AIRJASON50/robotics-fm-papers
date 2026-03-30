@@ -42,7 +42,7 @@
 
 3. Scaling law 的核心结论是什么？Chinchilla 修正了什么？"模型和数据等比缩放"对你理解 pi_0 的 10k 小时数据有什么启示？
 
-4. GPT-2 代码中 pre-norm 和 post-norm 有什么区别？为什么现代 LLM 都用 pre-norm？
+4. GPT-3 之后的 Codex、WebGPT、InstructGPT、ChatGPT 都是基于同一个 base model 做 fine-tune。这个 "一个 base model, 多种 fine-tune" 的模式对机器人领域有什么直接启示？
 
 5. 自回归生成 (autoregressive generation) 的基本流程是什么？它的根本限制是什么？这个限制如何导致了 RT-2 在灵巧操控上的困难？
 
@@ -179,7 +179,7 @@
 
 **3.** Kaplan (2020) 发现 loss 与 compute 之间存在 power law 关系，但建议主要增大模型。Chinchilla 修正：给定固定 compute，模型和数据应等比缩放（每增大模型 2x，数据也要增大 2x）。对 pi_0 的启示：10k 小时数据不是"堆得越多越好"，而是和模型规模 (3.3B) 匹配的结果。
 
-**4.** Pre-norm: 先 LayerNorm 再 attention/FFN，残差连接跳过 attention。Post-norm: 先 attention/FFN 再 LayerNorm。Pre-norm 训练更稳定，因为残差路径上没有 normalization，梯度可以直接流过，不会在深层网络中消失。现代 LLM (GPT-2+) 全部用 pre-norm。
+**4.** GPT-3 是通用 base model, 通过不同数据 fine-tune 获得不同能力: Codex (代码) / WebGPT (工具使用) / InstructGPT (指令遵循)。领域 fine-tune 效果远大于 scale: GPT-3 175B 不会写代码, 但 Codex 12B (小 14x) 经过代码 fine-tune 就能写。对机器人的直接映射: PaliGemma 3B 不会控制机器人, 通过机器人操作数据 fine-tune → pi_0, 就能控制机器人。核心启示: 不需要从零训练, 复用已有的 VLM base model + 你的领域数据 fine-tune 就够了。
 
 **5.** 逐个生成 token：预测第 1 个 -> 作为输入预测第 2 个 -> ... 。根本限制：(1) 每步只出一个 token，速度慢；(2) 连续值必须离散化为 token，丢失精度；(3) 不支持 action chunking（一次只能出一个动作 token）。RT-2 用 256 bins 离散化动作，50Hz 控制需要每秒预测 50x7=350 个 token，速度和精度都不够。
 
