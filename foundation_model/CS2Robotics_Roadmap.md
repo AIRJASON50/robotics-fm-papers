@@ -88,8 +88,8 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 0.1 | **Representation Learning** (Bengio 2012) | `LLM/12_RepresentationLearning/` | Section 1-2, 5: 为什么好的表示 = 好的 AI; 好表示的先验列表 | 1h |
-| 0.2 | **Attention Is All You Need** (2017) | `LLM/17_Transformer/` | Section 3: self-attention, multi-head, positional encoding -- 所有后续工作的根基 | 2h |
+| 0.1 | **Representation Learning** (Bengio 2012) | `methods/0_foundations/12_RepresentationLearning/` | Section 1-2, 5: 为什么好的表示 = 好的 AI; 好表示的先验列表 | 1h |
+| 0.2 | **Attention Is All You Need** (2017) | `methods/1_pretrain_gen/17_Transformer/` | Section 3: self-attention, multi-head, positional encoding -- 所有后续工作的根基 | 2h |
 
 ### Level 1: LLM -- 从 GPT 到现代大模型
 
@@ -101,11 +101,12 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 | 1.2 | **GPT-2 代码** | `LLM/GPT_Series/19_GPT2/code/src/model.py` | 175 行代码理解完整 Transformer decoder | 2h |
 | 1.3 | **Scaling Laws** (2020) | `LLM/GPT_Series/20_ScalingLaws/` | power-law 关系, 为 GPT-3 的 175B 提供理论指导 | 1h |
 | 1.4 | **GPT-3** (选读) | `LLM/GPT_Series/20_GPT3/` | Section 1 (Figure 1.1-1.3): in-context learning 涌现; Section 2: scaling 趋势 | 2h |
-| 1.5 | **GPT 系列笔记** | `LLM/GPT_Series/GPT_series_notes.md` | GPT-1/2/3/4 + RLHF + Codex + InstructGPT 全系列分析 | 1h |
+| 1.5 | **GPT 系列笔记** | `LLM/GPT_Series/GPT_series_notes.md` | GPT-1/2/3/4 + RLHF + Codex + InstructGPT 全系列分析 + 商业逻辑 | 1h |
 | 1.6 | **Chinchilla** (2022) | `surveys/22_Chinchilla/` | 核心结论: 模型和数据应等比缩放, 修正了 Kaplan 的"只放大模型"偏见 | 1h |
-| 1.7 | **Kimi-K2 MoE 部分** (选读) | `LLM/25_KimiK2/` | 只需理解 MoE 架构: 稀疏激活思想, pi_0 的 action expert 本质也是 MoE | 1h |
+| 1.7 | **LLM→Robotics 技术路线** | `LLM/LLM_技术交织与机器人启示.md` | LLM 各项技术如何 distill 到 robotics, 技术分岔全景图 | 1h |
+| 1.8 | **Kimi/Qwen/DeepSeek 系列** (选读) | `LLM/kimi/`, `LLM/qwen/`, `LLM/deepseek/` | MoE 稀疏激活 (K2), Muon 优化器 (Moonlight), 数据飞轮 (Qwen) | 2h |
 
-**Level 1 学习目标**: GPT 系列建立 autoregressive + scaling 直觉; Chinchilla 理解 data-compute 平衡; Kimi-K2 MoE 理解稀疏激活 (选读)。
+**Level 1 学习目标**: GPT 系列建立 autoregressive + scaling 直觉; Chinchilla 理解 data-compute 平衡; LLM→Robotics Roadmap 建立技术迁移全景; 各系列笔记理解 MoE/优化器/数据策略 (选读)。
 
 ### Level 2: 视觉-语言 + 生成模型
 
@@ -113,16 +114,16 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 2.1 | **ViT** (2020) | `methods/20_ViT/` | patch embedding, position embedding, cls token -- 理解 CLIP/VLA 的视觉 backbone | 2h |
-| 2.2 | **ViT 代码** | `methods/20_ViT/vision_transformer/` | 模型实现, 与 ResNet 对比 | 1h |
-| 2.3 | **CLIP** (2021) | `methods/21_CLIP/` | contrastive learning, dual encoder, zero-shot transfer | 2h |
-| 2.4 | **CLIP 代码** | `methods/21_CLIP/CLIP/` | model.py: ViT + text encoder + contrastive loss | 1h |
-| 2.5 | **DDPM** (2020) | `methods/20_DDPM/` | forward noise process, reverse denoising, simplified loss L_simple | 2h |
-| 2.6 | **DDPM 代码** | `methods/20_DDPM/diffusion/` | U-Net + timestep embedding + 训练循环 | 1h |
-| 2.7 | **Flow Matching** (2022) | `methods/22_FlowMatching/` | ODE-based 生成, 比 diffusion 更简洁 -- pi_0 的核心技术 | 2h |
-| 2.8 | **Flow Matching 代码** | `methods/22_FlowMatching/flow_matching/` | Meta 官方库, 含教程 | 1h |
-| 2.9 | **DiT** (2023) | `methods/23_DiT/` | Transformer 替换 U-Net 做 diffusion backbone -- GR00T N1 的基础 | 2h |
-| 2.10 | **DiT 代码** | `methods/23_DiT/DiT/` | 模型结构 + adaLN-Zero 条件注入 | 1h |
+| 2.1 | **ViT** (2020) | `methods/1_pretrain_gen/20_ViT/` | patch embedding, position embedding, cls token -- 理解 CLIP/VLA 的视觉 backbone | 2h |
+| 2.2 | **ViT 代码** | `methods/1_pretrain_gen/20_ViT/vision_transformer/` | 模型实现, 与 ResNet 对比 | 1h |
+| 2.3 | **CLIP** (2021) | `methods/2_bridges/21_CLIP/` | contrastive learning, dual encoder, zero-shot transfer | 2h |
+| 2.4 | **CLIP 代码** | `methods/2_bridges/21_CLIP/CLIP/` | model.py: ViT + text encoder + contrastive loss | 1h |
+| 2.5 | **DDPM** (2020) | `methods/1_pretrain_gen/20_DDPM/` | forward noise process, reverse denoising, simplified loss L_simple | 2h |
+| 2.6 | **DDPM 代码** | `methods/1_pretrain_gen/20_DDPM/diffusion/` | U-Net + timestep embedding + 训练循环 | 1h |
+| 2.7 | **Flow Matching** (2022) | `methods/2_bridges/22_FlowMatching/` | ODE-based 生成, 比 diffusion 更简洁 -- pi_0 的核心技术 | 2h |
+| 2.8 | **Flow Matching 代码** | `methods/2_bridges/22_FlowMatching/flow_matching/` | Meta 官方库, 含教程 | 1h |
+| 2.9 | **DiT** (2023) | `methods/3_vla_perception/23_DiT/` | Transformer 替换 U-Net 做 diffusion backbone -- GR00T N1 的基础 | 2h |
+| 2.10 | **DiT 代码** | `methods/3_vla_perception/23_DiT/DiT/` | 模型结构 + adaLN-Zero 条件注入 | 1h |
 
 ### Level 3: 第一次迁移 -- RL/Robotics meets Transformer
 
@@ -130,12 +131,12 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 3.1 | **Decision Transformer** (2021) | `methods/21_DecisionTransformer/` | 核心思想: RL = sequence modeling, reward conditioning | 2h |
-| 3.2 | **DreamerV3** (2023) | `methods/23_DreamerV3/` | 世界模型: 学习物理规律, 在"想象"中训练 | 3h |
-| 3.3 | **ACT** (2023) | `methods/23_ACT/` | CVAE + action chunking: 一次预测多步动作, pi_0/Diffusion Policy 的核心思想来源 | 2h |
-| 3.4 | **ACT 代码** | `methods/23_ACT/act/` | 简洁的 imitation learning pipeline, CVAE + Transformer | 1h |
-| 3.5 | **Diffusion Policy** (2023) | `methods/24_DiffusionPolicy/` | Section 3-4: 条件去噪 + action chunk + receding horizon | 3h |
-| 3.6 | **Diffusion Policy 代码** | `methods/24_DiffusionPolicy/diffusion_policy/` | 完整 policy 实现 | 2h |
+| 3.1 | **Decision Transformer** (2021) | `methods/2_bridges/21_DecisionTransformer/` | 核心思想: RL = sequence modeling, reward conditioning | 2h |
+| 3.2 | **DreamerV3** (2023) | `methods/3_vla_perception/23_DreamerV3/` | 世界模型: 学习物理规律, 在"想象"中训练 | 3h |
+| 3.3 | **ACT** (2023) | `methods/3_vla_perception/23_ACT/` | CVAE + action chunking: 一次预测多步动作, pi_0/Diffusion Policy 的核心思想来源 | 2h |
+| 3.4 | **ACT 代码** | `methods/3_vla_perception/23_ACT/act/` | 简洁的 imitation learning pipeline, CVAE + Transformer | 1h |
+| 3.5 | **Diffusion Policy** (2023) | `methods/4_frontier/24_DiffusionPolicy/` | Section 3-4: 条件去噪 + action chunk + receding horizon | 3h |
+| 3.6 | **Diffusion Policy 代码** | `methods/4_frontier/24_DiffusionPolicy/diffusion_policy/` | 完整 policy 实现 | 2h |
 
 ### Level 4: VLA 统一模型 (当前前沿)
 
@@ -143,16 +144,16 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 4.1 | **RT-1** (2022) | `methods/22_RT1/` | 第一个大规模 robot Transformer: EfficientNet + TokenLearner + Transformer | 1.5h |
-| 4.2 | **RT-2** (2023) | `methods/23_RT2/` | 第一个 VLA: VLM 直接输出离散动作 token, co-fine-tuning | 2h |
-| 4.3 | **Open X-Embodiment** (2023) | `methods/23_OpenXEmbodiment/` | 跨机器人数据集 (22 robots, 527 skills), 所有 VLA 的训练数据基础 | 1.5h |
-| 4.4 | **PaliGemma** (2024) | `methods/24_PaliGemma/` | SigLIP + Gemma 2B, pi_0 的 VLM backbone -- 理解为什么选它 | 1.5h |
-| 4.5 | **Octo** (2024) | `methods/24_Octo/` | 开源 generalist robot policy, diffusion action head + readout tokens, pi_0 的前身 | 2h |
-| 4.6 | **OpenVLA** (2024) | `methods/24_OpenVLA/` | 开源 VLA baseline, discrete action tokens + LoRA fine-tuning | 2h |
-| 4.7 | **pi_0** (2024) | `methods/24_pi0/` | Section IV: action expert + flow matching, 论文 vs 代码对照 | 3h |
-| 4.8 | **pi_0 代码** | `methods/24_pi0/openpi/src/openpi/models/pi0.py` | dual-expert attention, flow matching loss, KV cache 推理 | 3h |
-| 4.9 | **GR00T N1** (2025) | `methods/25_GR00T_N1/` | 双系统: VLM (System 2, 10Hz) + DiT (System 1, 120Hz) | 2h |
-| 4.10 | **GR00T N1 代码** | `methods/25_GR00T_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
+| 4.1 | **RT-1** (2022) | `methods/2_bridges/22_RT1/` | 第一个大规模 robot Transformer: EfficientNet + TokenLearner + Transformer | 1.5h |
+| 4.2 | **RT-2** (2023) | `methods/3_vla_perception/23_RT2/` | 第一个 VLA: VLM 直接输出离散动作 token, co-fine-tuning | 2h |
+| 4.3 | **Open X-Embodiment** (2023) | `methods/3_vla_perception/23_OpenXEmbodiment/` | 跨机器人数据集 (22 robots, 527 skills), 所有 VLA 的训练数据基础 | 1.5h |
+| 4.4 | **PaliGemma** (2024) | `methods/4_frontier/24_PaliGemma/` | SigLIP + Gemma 2B, pi_0 的 VLM backbone -- 理解为什么选它 | 1.5h |
+| 4.5 | **Octo** (2024) | `methods/4_frontier/24_Octo/` | 开源 generalist robot policy, diffusion action head + readout tokens, pi_0 的前身 | 2h |
+| 4.6 | **OpenVLA** (2024) | `methods/4_frontier/24_OpenVLA/` | 开源 VLA baseline, discrete action tokens + LoRA fine-tuning | 2h |
+| 4.7 | **pi_0** (2024) | `methods/4_frontier/24_pi0/` | Section IV: action expert + flow matching, 论文 vs 代码对照 | 3h |
+| 4.8 | **pi_0 代码** | `methods/4_frontier/24_pi0/openpi/src/openpi/models/pi0.py` | dual-expert attention, flow matching loss, KV cache 推理 | 3h |
+| 4.9 | **GR00T N1** (2025) | `methods/4_frontier/25_GR00T_N1/` | 双系统: VLM (System 2, 10Hz) + DiT (System 1, 120Hz) | 2h |
+| 4.10 | **GR00T N1 代码** | `methods/4_frontier/25_GR00T_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
 
 ### Level 5: 综述 (建立全局视野, 按需阅读)
 
@@ -185,20 +186,23 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 | DDPM | 2020 | Ho et al., Google | diffusion 基础 | 已有 |
 | RT-1 / RT-2 | 2022-2023 | Google | robot transformer -> VLA | 已有 |
 | Chinchilla | 2022 | Hoffmann et al., DeepMind | compute-optimal scaling | 已有 |
-| **Flow Matching** | 2022 | Lipman et al., Meta | pi_0 的核心技术 | 已有 (`methods/22_FlowMatching/`) |
-| **PaliGemma** | 2024 | Beyer et al., Google | pi_0 的直接 backbone | 已有 (`methods/24_PaliGemma/`) |
+| **Flow Matching** | 2022 | Lipman et al., Meta | pi_0 的核心技术 | 已有 (`methods/2_bridges/22_FlowMatching/`) |
+| **PaliGemma** | 2024 | Beyer et al., Google | pi_0 的直接 backbone | 已有 (`methods/4_frontier/24_PaliGemma/`) |
 
 ### 推荐 (加深理解)
 
 | 论文 | 年份 | 作者/机构 | 理由 | 已收录? |
 |------|------|---------|------|:---:|
-| **ViT** | 2020 | Dosovitskiy et al., Google | Transformer 迁移到 CV | 已有 (`methods/20_ViT/`) |
-| **DiT** | 2023 | Peebles & Xie, NYU/Meta | GR00T N1 action head 基础 | 已有 (`methods/23_DiT/`) |
-| **ACT** | 2023 | Zhao et al., Stanford | action chunking 概念 | 已有 (`methods/23_ACT/`) |
-| **OpenVLA** | 2024 | Kim et al., Stanford | 开源 VLA baseline | 已有 (`methods/24_OpenVLA/`) |
-| **SayCan** | 2022 | Ahn et al., Google | LLM task planning + affordance | 待拉取 |
+| **ViT** | 2020 | Dosovitskiy et al., Google | Transformer 迁移到 CV | 已有 (`methods/1_pretrain_gen/20_ViT/`) |
+| **DiT** | 2023 | Peebles & Xie, NYU/Meta | GR00T N1 action head 基础 | 已有 (`methods/3_vla_perception/23_DiT/`) |
+| **ACT** | 2023 | Zhao et al., Stanford | action chunking 概念 | 已有 (`methods/3_vla_perception/23_ACT/`) |
+| **OpenVLA** | 2024 | Kim et al., Stanford | 开源 VLA baseline | 已有 (`methods/4_frontier/24_OpenVLA/`) |
+| **SayCan** | 2022 | Ahn et al., Google | LLM task planning + affordance | 已有 (`methods/2_bridges/22_SayCan/`) |
+| **Code-as-Policies** | 2022 | Liang et al., Google | GPT 直接生成 robot control code | 已有 (`methods/2_bridges/22_CodeAsPolicies/`) |
+| **Inner Monologue** | 2022 | Huang et al., Google | LLM 闭环语言反馈 | 已有 (`methods/2_bridges/22_InnerMonologue/`) |
+| **LLaVA** | 2023 | Liu et al., UW-Madison | 开源 VLM 训练范式 | 已有 (`methods/3_vla_perception/23_LLaVA/`) |
+| **Voyager** | 2023 | Wang et al., NVIDIA | GPT-4 open-ended agent | 已有 (`methods/3_vla_perception/23_Voyager/`) |
 | BERT | 2018 | Devlin et al., Google | 双向 vs 单向对比 | 待拉取 |
-| LLaVA | 2023 | Liu et al., UW-Madison | 开源 VLM 训练范式 | 待拉取 |
 | Flamingo | 2022 | Alayrac et al., DeepMind | 少样本多模态 | 待拉取 |
 
 ### 了解 (扩展视野)
@@ -235,23 +239,18 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 ```
 foundation_model/
-├── LLM/                              # LLM 基础 (按年份排列)
-│   ├── 12_RepresentationLearning/    # Bengio 表示学习综述 (PDF + notes)
-│   ├── 17_Transformer/               # Attention Is All You Need (md + notes)
-│   ├── GPT_Series/                       # GPT 全系列
-│   │   ├── GPT1_*.pdf + md           # GPT-1 论文
-│   │   ├── gpt-2/                    # GPT-2 官方代码 (OpenAI, TensorFlow)
-│   │   ├── GPT3_*.pdf + md           # GPT-3 论文
-│   │   ├── GPT-4_Technical_Report.md # GPT-4 技术报告
-│   │   └── GPT_series_notes.md       # GPT 全系列分析笔记
-│   ├── 24_Qwen/                      # 通义千问 (阿里, 1.8B-72B)
-│   │   ├── Qwen_Technical_Report.pdf # Tech Report (arXiv:2309.16609)
-│   │   ├── Qwen_notes.md             # 分析笔记
-│   │   └── qwen_repo/               # 官方代码 (训练/微调/推理)
-│   └── 25_KimiK2/                    # Kimi K2 (月之暗面, 1T MoE)
-│       ├── KimiK2_Technical_Report.pdf
-│       ├── KimiK2_Open_Agentic_Intelligence.md
-│       └── kimik2_repo/              # 官方代码
+├── LLM/                              # LLM 模型家族演进
+│   ├── GPT_Series/                   # GPT 全系列 (GPT-1/2/3/4 + Scaling Laws + RLHF + Codex + WebGPT + InstructGPT)
+│   │   └── GPT_series_notes.md       # 全系列分析 + 商业逻辑
+│   ├── kimi/                         # Kimi/Moonshot AI 全系列 (k1.5, MoBA, Moonlight, Audio, K2, K2.5)
+│   │   └── kimi_series_notes.md      # 全系列分析 + 技术分岔图
+│   ├── qwen/                         # Qwen/Alibaba 全系列 (Qwen 1/2/2.5/3/3.5, VL, Audio, Omni)
+│   │   └── qwen_series_notes.md      # 全系列分析
+│   ├── deepseek/                     # DeepSeek 全系列 (MoE, V2 MLA, V3, R1)
+│   │   └── deepseek_series_notes.md
+│   ├── llama/                        # Llama/Meta 全系列 (1/2/3/4)
+│   │   └── llama_series_notes.md
+│   └── LLM_技术交织与机器人启示.md   # LLM 技术分岔全景 + Robotics distill 路径
 ├── surveys/                          # 综述论文 (9 篇)
 │   ├── 22_Chinchilla/                # Compute-Optimal Scaling (DeepMind)
 │   ├── 23_FMRobotics/                # Foundation Models in Robotics (IJRR)

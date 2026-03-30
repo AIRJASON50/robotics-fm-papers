@@ -114,7 +114,11 @@ Roadmap document: `CS2Robotics_Roadmap.md` -- CS (NLP/CV) to Robotics migration 
 | LLM/GPT_Series | GPT full series: GPT-1/2/3/4 + Scaling Laws + RLHF-Summarize + Codex + WebGPT + InstructGPT | 2018-2023 | GPT_series_notes.md |
 | LLM/12_RepresentationLearning | Representation Learning: A Review (Bengio) | 2012 | RepresentationLearning_notes.md |
 | LLM/17_Transformer | Attention Is All You Need (Vaswani et al.) | 2017 | Transformer_notes.md |
+| LLM/llama | Llama series: LLaMA 1, Llama 2, Llama 3/3.1/3.2, Llama 4 (Meta) | 2023-2025 | llama_series_notes.md |
+| LLM/deepseek | DeepSeek series: DeepSeekMoE, V2 (MLA+MoE), V3 (FP8, $5.5M), R1 (pure RL reasoning) | 2024-2025 | deepseek_series_notes.md |
+| LLM/kimi | Kimi series: k1.5, MoBA, Moonlight, Kimi-Audio, K2, K2.5 (Moonshot AI) | 2025-2026 | kimi_series_notes.md |
 | LLM/25_KimiK2 | Kimi K2: Open Agentic Intelligence (Moonshot AI, 1T MoE) | 2025 | - |
+| LLM/qwen | Qwen series: Qwen 1/2/2.5/3/3.5, VL, Audio, Omni (Alibaba) | 2023-2026 | qwen_series_notes.md |
 | LLM/24_Qwen | Qwen Technical Report (Alibaba, 1.8B-72B) | 2023 | Qwen_notes.md |
 
 #### foundation_model/methods/ (core method papers)
