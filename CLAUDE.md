@@ -105,55 +105,52 @@ Notes must include the following sections:
 
 ### foundation_model/
 
-Roadmap document: `CS2Robotics_Roadmap.md` -- CS (NLP/CV) to Robotics migration paths and reading order.
+Roadmap: `CS2Robotics_Roadmap.md` -- CS→Robotics migration paths and reading order.
 
-#### foundation_model/LLM/ (LLM foundations)
+#### foundations/ (universal ML foundations)
 
-| Folder | Paper | Year | Notes |
-|--------|-------|------|-------|
-| LLM/GPT_Series | GPT full series: GPT-1/2/3/4 + Scaling Laws + RLHF-Summarize + Codex + WebGPT + InstructGPT | 2018-2023 | GPT_series_notes.md |
-| LLM/12_RepresentationLearning | Representation Learning: A Review (Bengio) | 2012 | RepresentationLearning_notes.md |
-| LLM/17_Transformer | Attention Is All You Need (Vaswani et al.) | 2017 | Transformer_notes.md |
-| LLM/llama | Llama series: LLaMA 1, Llama 2, Llama 3/3.1/3.2, Llama 4 (Meta) | 2023-2025 | llama_series_notes.md |
-| LLM/deepseek | DeepSeek series: DeepSeekMoE, V2 (MLA+MoE), V3 (FP8, $5.5M), R1 (pure RL reasoning) | 2024-2025 | deepseek_series_notes.md |
-| LLM/kimi | Kimi series: k1.5, MoBA, Moonlight, Kimi-Audio, K2, K2.5 (Moonshot AI) | 2025-2026 | kimi_series_notes.md |
-| LLM/25_KimiK2 | Kimi K2: Open Agentic Intelligence (Moonshot AI, 1T MoE) | 2025 | - |
-| LLM/qwen | Qwen series: Qwen 1/2/2.5/3/3.5, VL, Audio, Omni (Alibaba) | 2023-2026 | qwen_series_notes.md |
-| LLM/24_Qwen | Qwen Technical Report (Alibaba, 1.8B-72B) | 2023 | Qwen_notes.md |
+| Folder | Paper | Year |
+|--------|-------|------|
+| 10_TransferLearning | A Survey on Transfer Learning (Pan & Yang, IEEE TKDE) | 2010 |
+| 12_RepresentationLearning | Representation Learning: A Review (Bengio, IEEE TPAMI) | 2013 |
+| 17_Transformer | Attention Is All You Need (Vaswani et al., NeurIPS) | 2017 |
 
-#### foundation_model/methods/ (core method papers)
+#### LLM/ (LLM knowledge base)
 
-| Folder | Paper | Year | Notes |
-|--------|-------|------|-------|
-| methods/20_DDPM | Denoising Diffusion Probabilistic Models (Ho et al.) | 2020 | DDPM_notes.md |
-| methods/20_ViT | ViT: An Image is Worth 16x16 Words (Dosovitskiy et al.) | 2020 | ViT_notes.md |
-| methods/21_CLIP | CLIP: Learning Transferable Visual Models (Radford et al.) | 2021 | CLIP_notes.md |
-| methods/21_DecisionTransformer | Decision Transformer: RL via Sequence Modeling | 2021 | DecisionTransformer_notes.md |
-| methods/22_FlowMatching | Flow Matching for Generative Modeling (Lipman et al., Meta) | 2022 | FlowMatching_notes.md |
-| methods/22_RT1 | RT-1: Robotics Transformer for Real-World Control (Brohan et al.) | 2022 | RT1_notes.md |
-| methods/23_ACT | ACT: Learning Fine-Grained Bimanual Manipulation (Zhao et al.) | 2023 | ACT_notes.md |
-| methods/23_DiT | DiT: Scalable Diffusion Models with Transformers (Peebles & Xie) | 2023 | DiT_notes.md |
-| methods/23_DreamerV3 | Mastering Diverse Domains through World Models (Hafner et al.) | 2023 | DreamerV3_notes.md |
-| methods/23_OpenXEmbodiment | Open X-Embodiment: Robotic Learning Datasets and RT-X Models | 2023 | OpenXEmbodiment_notes.md |
-| methods/23_RT2 | RT-2: Vision-Language-Action Models (Brohan et al.) | 2023 | RT2_notes.md |
-| methods/24_DiffusionPolicy | Diffusion Policy: Visuomotor Policy Learning via Action Diffusion | 2024 | DiffusionPolicy_notes.md |
-| methods/24_Octo | Octo: An Open-Source Generalist Robot Policy (Ghosh et al.) | 2024 | Octo_notes.md |
-| methods/24_OpenVLA | OpenVLA: Open-Source Vision-Language-Action Model (Kim et al.) | 2024 | OpenVLA_notes.md |
-| methods/24_PaliGemma | PaliGemma: A versatile 3B VLM for transfer (Beyer et al., Google) | 2024 | PaliGemma_notes.md |
-| methods/24_pi0 | pi_0: A VLA Flow Model for General Robot Control (Physical Intelligence) | 2024 | pi0_notes.md |
-| methods/25_GR00T_N1 | GR00T N1: Open Foundation Model for Humanoid Robots (NVIDIA) | 2025 | GR00T_N1_notes.md |
+| Folder | Content | Notes |
+|--------|---------|-------|
+| NLP_foundations/ | Word2Vec, Seq2Seq, BahdanauAttention, BERT, Chinchilla | 5 NLP-specific foundations |
+| families/GPT_Series/ | GPT-1/2/3/4 + Scaling Laws + RLHF + Codex + WebGPT + InstructGPT | GPT_series_notes.md |
+| families/kimi/ | k1.5, MoBA, Moonlight, Audio, K2, K2.5 (Moonshot AI) | kimi_series_notes.md |
+| families/qwen/ | Qwen 1/2/2.5/3/3.5, VL, Audio, Omni (Alibaba) | qwen_series_notes.md |
+| families/deepseek/ | DeepSeekMoE, V2 (MLA+MoE), V3, R1 | deepseek_series_notes.md |
+| families/llama/ | LLaMA 1, Llama 2/3/4 (Meta) | llama_series_notes.md |
 
-#### foundation_model/surveys/ (survey papers and meta-analyses)
+#### CV/ (CV knowledge base, by technique)
 
-| Folder | Paper | Year | Notes |
-|--------|-------|------|-------|
-| surveys/22_Chinchilla | Training Compute-Optimal LLMs (Hoffmann et al., DeepMind) | 2022 | Chinchilla_notes.md |
-| surveys/23_FMRobotics | Foundation Models in Robotics (Firoozi et al., IJRR) | 2023 | FMRobotics_notes.md |
-| surveys/23_GeneralPurposeRobots | Toward General-Purpose Robots via FM: Survey and Meta-Analysis | 2023 | GeneralPurposeRobots_notes.md |
-| surveys/23_LangCondManip | Bridging Language and Action: Language-Conditioned Robot Manipulation | 2024 | LangCondManip_notes.md |
-| surveys/24_AwesomeSurvey | Awesome-Robotics-Foundation-Models (GitHub survey) | 2024 | AwesomeSurvey_notes.md |
-| surveys/24_LanguageGrounding | A Survey of Robotic Language Grounding: Symbols vs Embeddings | 2024 | LanguageGrounding_notes.md |
-| surveys/25_AwesomeWorldModels | Comprehensive Survey on World Models for Embodied AI (GitHub survey) | 2025 | AwesomeWorldModels_notes.md |
-| surveys/25_DynamicsModels | Learned Dynamics Models (Science Robotics) | 2025 | - |
-| surveys/25_RobotScalingLaws | Neural Scaling Laws in Robotics (meta-analysis, 327 papers) | 2025 | ScalingLaws_notes.md |
-| surveys/25_TransferLearningAgriculture | Transfer Learning in Agriculture Review | 2025 | - |
+| Folder | Content |
+|--------|---------|
+| 0_backbone/ | ResNet, ViT, TransferFeatures |
+| 1_generation/ | VAE, DDPM, FlowMatching, DiT |
+| 2_vl_alignment/ | CLIP, LLaVA, PaliGemma |
+| 3_3d_vision/ | (待填: NeRF, 3DGS, Depth Anything) |
+| 4_self_supervised/ | (待填: MAE, DINO, DINOv2) |
+| 5_detection_seg/ | SAM |
+| 6_video/ | (待填) |
+
+#### robotics/ (robotics applications, by approach)
+
+| Folder | Papers |
+|--------|--------|
+| llm_planning/ | SayCan, CodeAsPolicies, InnerMonologue, Voyager |
+| policy_learning/ | DecisionTransformer, RT-1, RT-2, ACT, OpenXEmbodiment |
+| vla/ | PaLME, Octo, OpenVLA |
+| generative_policy/ | DiffusionPolicy, pi_0, GR00T_N1 |
+| world_model/ | DreamerV3 |
+
+#### surveys/
+
+| Folder | Content |
+|--------|---------|
+| CV/ | 7 surveys: ViT(TPAMI), NeRF+3DGS, VLM(TPAMI), SSL(TPAMI), Depth, Video(TCSVT), MIM(IJCV) |
+| robotics/ | 7 surveys: FMRobotics(IJRR), GeneralPurposeRobots, LangCondManip, LanguageGrounding, WorldModels, DynamicsModels, RobotScalingLaws |

@@ -6,20 +6,20 @@
 # Foundation Model - LLM
 # ============================================================
 foundation_model_llm:
-  - folder: foundation_model/LLM/12_RepresentationLearning
+  - folder: foundation_model/foundations/12_RepresentationLearning
     title: "Representation Learning: A Review and New Perspectives"
     authors: Bengio et al.
     year: 2012
     arxiv: "1206.5538"
     pdf: Representation_Learning_A_Review.pdf
 
-  - folder: foundation_model/LLM/17_Transformer
+  - folder: foundation_model/foundations/17_Transformer
     title: "Attention Is All You Need"
     authors: Vaswani et al., Google
     year: 2017
     arxiv: "1706.03762"
 
-  - folder: foundation_model/LLM/GPT_Series
+  - folder: foundation_model/LLM/families/GPT_Series
     title: "GPT Series (GPT-1/2/3/4)"
     authors: Radford, Brown et al., OpenAI
     year: 2018-2023
@@ -31,7 +31,7 @@ foundation_model_llm:
       - name: gpt-2
         url: https://github.com/openai/gpt-2.git
 
-  - folder: foundation_model/LLM/24_Qwen
+  - folder: foundation_model/LLM/families/qwen/24_Qwen
     title: "Qwen Technical Report"
     authors: Alibaba Cloud
     year: 2023
@@ -40,7 +40,7 @@ foundation_model_llm:
       - name: qwen_repo
         url: https://github.com/QwenLM/Qwen.git
 
-  - folder: foundation_model/LLM/25_KimiK2
+  - folder: foundation_model/LLM/families/kimi/25_KimiK2
     title: "Kimi K2: Open Agentic Intelligence"
     authors: Moonshot AI
     year: 2025
@@ -51,8 +51,8 @@ foundation_model_llm:
 # ============================================================
 # Foundation Model - Methods
 # ============================================================
-foundation_model_methods:
-  - folder: foundation_model/methods/20_DDPM
+foundation_model_cv_and_robotics:
+  - folder: foundation_model/CV/1_generation/20_DDPM
     title: "Denoising Diffusion Probabilistic Models"
     authors: Ho et al., Google
     year: 2020
@@ -61,7 +61,7 @@ foundation_model_methods:
       - name: diffusion
         url: https://github.com/hojonathanho/diffusion.git
 
-  - folder: foundation_model/methods/20_ViT
+  - folder: foundation_model/CV/0_backbone/20_ViT
     title: "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale"
     authors: Dosovitskiy et al., Google
     year: 2020
@@ -70,7 +70,7 @@ foundation_model_methods:
       - name: vision_transformer
         url: https://github.com/google-research/vision_transformer.git
 
-  - folder: foundation_model/methods/21_CLIP
+  - folder: foundation_model/CV/2_vl_alignment/21_CLIP
     title: "Learning Transferable Visual Models From Natural Language Supervision"
     authors: Radford et al., OpenAI
     year: 2021
@@ -79,7 +79,7 @@ foundation_model_methods:
       - name: CLIP
         url: https://github.com/openai/CLIP.git
 
-  - folder: foundation_model/methods/21_DecisionTransformer
+  - folder: foundation_model/robotics/policy_learning/21_DecisionTransformer
     title: "Decision Transformer: Reinforcement Learning via Sequence Modeling"
     authors: Chen et al.
     year: 2021
@@ -88,7 +88,7 @@ foundation_model_methods:
       - name: decision-transformer
         url: https://github.com/kzl/decision-transformer.git
 
-  - folder: foundation_model/methods/22_FlowMatching
+  - folder: foundation_model/CV/1_generation/22_FlowMatching
     title: "Flow Matching for Generative Modeling"
     authors: Lipman et al., Meta
     year: 2022
@@ -97,13 +97,13 @@ foundation_model_methods:
       - name: flow_matching
         url: https://github.com/facebookresearch/flow_matching.git
 
-  - folder: foundation_model/methods/22_RT1
+  - folder: foundation_model/robotics/policy_learning/22_RT1
     title: "RT-1: Robotics Transformer for Real-World Control at Scale"
     authors: Brohan et al., Google
     year: 2022
     arxiv: "2212.06817"
 
-  - folder: foundation_model/methods/23_ACT
+  - folder: foundation_model/robotics/policy_learning/23_ACT
     title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
     authors: Zhao et al., Stanford
     year: 2023
@@ -112,7 +112,7 @@ foundation_model_methods:
       - name: act
         url: https://github.com/tonyzhaozh/act.git
 
-  - folder: foundation_model/methods/23_DiT
+  - folder: foundation_model/CV/1_generation/23_DiT
     title: "Scalable Diffusion Models with Transformers"
     authors: Peebles & Xie
     year: 2023
@@ -121,7 +121,7 @@ foundation_model_methods:
       - name: DiT
         url: https://github.com/facebookresearch/DiT.git
 
-  - folder: foundation_model/methods/23_DreamerV3
+  - folder: foundation_model/robotics/world_model/23_DreamerV3
     title: "Mastering Diverse Domains through World Models"
     authors: Hafner et al.
     year: 2023
@@ -130,7 +130,7 @@ foundation_model_methods:
       - name: dreamerv3
         url: https://github.com/danijar/dreamerv3.git
 
-  - folder: foundation_model/methods/23_OpenXEmbodiment
+  - folder: foundation_model/robotics/policy_learning/23_OpenXEmbodiment
     title: "Open X-Embodiment: Robotic Learning Datasets and RT-X Models"
     authors: Open X-Embodiment Collaboration
     year: 2023
@@ -139,13 +139,13 @@ foundation_model_methods:
       - name: open_x_embodiment
         url: https://github.com/google-deepmind/open_x_embodiment.git
 
-  - folder: foundation_model/methods/23_RT2
+  - folder: foundation_model/robotics/policy_learning/23_RT2
     title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control"
     authors: Brohan et al., Google
     year: 2023
     arxiv: "2307.15818"
 
-  - folder: foundation_model/methods/24_DiffusionPolicy
+  - folder: foundation_model/robotics/generative_policy/24_DiffusionPolicy
     title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
     authors: Chi et al., Columbia/Stanford
     year: 2024
@@ -154,7 +154,7 @@ foundation_model_methods:
       - name: diffusion_policy
         url: https://github.com/real-stanford/diffusion_policy.git
 
-  - folder: foundation_model/methods/24_Octo
+  - folder: foundation_model/robotics/vla/24_Octo
     title: "Octo: An Open-Source Generalist Robot Policy"
     authors: Ghosh, Walke, Pertsch et al., UC Berkeley
     year: 2024
@@ -163,7 +163,7 @@ foundation_model_methods:
       - name: octo
         url: https://github.com/octo-models/octo.git
 
-  - folder: foundation_model/methods/24_OpenVLA
+  - folder: foundation_model/robotics/vla/24_OpenVLA
     title: "OpenVLA: An Open-Source Vision-Language-Action Model"
     authors: Kim et al., Stanford
     year: 2024
@@ -172,13 +172,13 @@ foundation_model_methods:
       - name: openvla
         url: https://github.com/openvla/openvla.git
 
-  - folder: foundation_model/methods/24_PaliGemma
+  - folder: foundation_model/CV/2_vl_alignment/24_PaliGemma
     title: "PaliGemma: A versatile 3B VLM for transfer"
     authors: Beyer et al., Google DeepMind
     year: 2024
     arxiv: "2407.07726"
 
-  - folder: foundation_model/methods/24_pi0
+  - folder: foundation_model/robotics/generative_policy/24_pi0
     title: "pi_0: A Vision-Language-Action Flow Model for General Robot Control"
     authors: Black, Pertsch et al., Physical Intelligence
     year: 2024
@@ -189,7 +189,7 @@ foundation_model_methods:
       - name: pi-data-sharing
         url: https://github.com/Physical-Intelligence/pi-data-sharing.git
 
-  - folder: foundation_model/methods/25_GR00T_N1
+  - folder: foundation_model/robotics/generative_policy/25_GR00T_N1
     title: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots"
     authors: NVIDIA
     year: 2025
@@ -202,45 +202,38 @@ foundation_model_methods:
 # Foundation Model - Surveys
 # ============================================================
 foundation_model_surveys:
-  - folder: foundation_model/surveys/22_Chinchilla
+  - folder: foundation_model/LLM/NLP_foundations/22_Chinchilla
     title: "Training Compute-Optimal Large Language Models"
     authors: Hoffmann et al., DeepMind
     year: 2022
     arxiv: "2203.15556"
 
-  - folder: foundation_model/surveys/23_FMRobotics
+  - folder: foundation_model/surveys/robotics/23_FMRobotics
     title: "Foundation Models in Robotics: Applications, Challenges, and the Future"
     authors: Firoozi et al.
     year: 2023
     arxiv: "2312.07843"
 
-  - folder: foundation_model/surveys/23_GeneralPurposeRobots
+  - folder: foundation_model/surveys/robotics/23_GeneralPurposeRobots
     title: "Toward General-Purpose Robots via Foundation Models: A Survey and Meta-Analysis"
     authors: Hu et al.
     year: 2023
     arxiv: "2312.08782"
 
-  - folder: foundation_model/surveys/23_LangCondManip
+  - folder: foundation_model/surveys/robotics/23_LangCondManip
     title: "Bridging Language, Vision and Action: Multimodal VAEs in Robotic Manipulation"
     authors: Shridhar et al.
     year: 2024
     arxiv: "2404.07933"
 
-  - folder: foundation_model/surveys/24_AwesomeSurvey
-    title: "Awesome Robotics Foundation Models"
-    authors: Community survey
-    year: 2024
-    repos:
-      - name: Awesome-Robotics-Foundation-Models
-        url: https://github.com/robotics-survey/Awesome-Robotics-Foundation-Models.git
 
-  - folder: foundation_model/surveys/24_LanguageGrounding
+  - folder: foundation_model/surveys/robotics/24_LanguageGrounding
     title: "A Survey of Robotic Language Grounding: Tradeoffs Between Symbols and Embeddings"
     authors: Tellex et al.
     year: 2024
     arxiv: "2405.13245"
 
-  - folder: foundation_model/surveys/25_AwesomeWorldModels
+  - folder: foundation_model/surveys/robotics/25_AwesomeWorldModels
     title: "Awesome World Models for Embodied AI"
     authors: Community survey
     year: 2025
@@ -248,20 +241,17 @@ foundation_model_surveys:
       - name: "."
         url: https://github.com/Li-Zn-H/AwesomeWorldModels.git
 
-  - folder: foundation_model/surveys/25_DynamicsModels
+  - folder: foundation_model/surveys/robotics/25_DynamicsModels
     title: "Learned Dynamics Models for Robotics"
     authors: Science Robotics
     year: 2025
 
-  - folder: foundation_model/surveys/25_RobotScalingLaws
+  - folder: foundation_model/surveys/robotics/25_RobotScalingLaws
     title: "Neural Scaling Laws in Robotics"
     authors: meta-analysis (327 papers)
     year: 2025
     arxiv: "2503.07507"
 
-  - folder: foundation_model/surveys/25_TransferLearningAgriculture
-    title: "Transfer Learning in Agriculture Review"
-    year: 2025
 
 # ============================================================
 # Humanoid
