@@ -4,9 +4,16 @@
 
 ```
 paper/
-├── humanoid/              # Humanoid whole-body control papers
-├── manip/                 # Dexterous manipulation papers
-├── foundation_model/      # Foundation models, generative control, world models
+├── humanoid/              # Humanoid whole-body control papers (12 projects)
+├── manip/                 # Dexterous manipulation papers (20+ projects)
+├── foundation_model/      # Foundation models: CS→Robotics knowledge base
+│   ├── foundations/       #   Universal ML foundations (9): Transfer Learning, Transformer, PPO, SAC, Adam, BN, LN, GAN, RepLearning
+│   ├── LLM/              #   LLM knowledge: NLP_foundations/ + families/ (GPT, Kimi, Qwen, DeepSeek, Llama)
+│   ├── CV/               #   CV knowledge: backbone, generation, VL, 3D, SSL, detection, video (28 papers)
+│   ├── robotics/         #   Robotics applications: llm_planning, policy_learning, vla, generative_policy, visual_repr, world_model (19 papers)
+│   ├── surveys/          #   Surveys: CV/ (7) + robotics/ (7)
+│   ├── CS2Robotics_Roadmap.md  # Main learning roadmap (Level 0-5)
+│   └── note/             #   Learning notes and exams
 └── html2aitext_convert/   # arxiv2md tool (DO NOT modify)
 ```
 
