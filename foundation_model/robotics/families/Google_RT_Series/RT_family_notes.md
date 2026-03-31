@@ -1,132 +1,59 @@
 # Google RT Series -- VLA 的起源故事
 
 > **目的**: 理解 VLA 是怎么从 "LLM 做规划" 一步步演化到 "VLM 直接出动作" 的。
-> RT 系列是整个 robotics FM 的源头——PI 和 GR00T 都是它的后续。
+> RT 系列是整个 robotics FM 的源头 -- PI 和 GR00T 都是它的后续。
 
 ---
 
 ## 1. 背景: 为什么是 Google
 
-Google DeepMind Robotics 在 2022-2023 年拥有独一无二的条件:
-- **PaLM/PaLM-2**: 当时最强的 LLM (GPT-4 之前)
-- **ViT/SigLIP**: 当时最强的视觉编码器
-- **数十个真实机器人**: Google 办公室里部署了数百台 Everyday Robot
-- **Karol Hausman, Brian Ichter, Pete Florence**: 后来创办 PI 的核心人物
+Google DeepMind Robotics 在 2022-2023 年同时拥有三样东西: 最强的语言模型、最强的视觉编码器、以及部署在真实办公室里的数百台机器人。这个组合让他们成为第一个把大模型和真实机器人对接的团队。
 
-这些条件让 Google 成为第一个把 LLM/VLM 和真实机器人结合的团队。
+更关键的是**人**: Karol Hausman, Brian Ichter, Pete Florence -- 后来创办 PI 的核心人物 -- 当时全在这个团队里。RT 系列的思想密度和后续影响力, 本质上是这批人的产出。
 
 ---
 
 ## 2. 演进脉络: 三个阶段
 
-```
-=== Phase 1: LLM-as-Planner (2022) ===
-  "LLM 不直接控制机器人, 而是做高层规划"
+### Phase 1: LLM-as-Planner (2022) -- "LLM 不直接控制, 只做高层规划"
 
-22_SayCan: LLM 规划 + CLIP affordance grounding
-  LLM: "要拿苹果, 步骤是: 1.走到桌子 2.抓苹果 3...."
-  CLIP: "这些步骤中, 哪些在当前场景中可执行?"
-  机器人: 用预训练的低层 skill 执行可行的步骤
+**核心问题**: LLM 懂语言、懂常识, 但它不知道机器人能做什么。怎么连接?
 
-  贡献: 第一次证明 LLM 可以做 robot task planning
-  限制: 低层 skill 是手写的, 不可扩展
+**三次尝试, 三种回答**:
 
-22_CodeAsPolicies: LLM 生成控制代码
-  不是"规划步骤", 而是"直接写 Python 代码控制机器人"
-  LLM 输出: move_to(apple); grasp(); move_to(plate); release()
+- **SayCan**: LLM 做任务分解 ("拿苹果 = 走过去 + 抓"), 再用视觉模型判断哪些步骤在当前场景中可执行, 最后调用预写的低层技能。第一次证明 LLM 可以做 robot task planning。
+- **Code as Policies**: 不输出步骤列表, 而是直接让 LLM 写控制代码。比 SayCan 更灵活 (代码能组合任意行为), 但仍然依赖预定义的 API 函数库。
+- **Inner Monologue**: 执行失败后, 用视觉模型描述当前状态, LLM 据此重新规划。第一次做 LLM-robot 的闭环反馈, 而非一次性规划。
 
-  贡献: 比 SayCan 更灵活 (代码能组合任意行为)
-  限制: 需要预定义 API (move_to, grasp 等)
+**Phase 1 的核心洞察**:
 
-22_InnerMonologue: LLM 做闭环反馈
-  执行失败 → 用 VLM 描述当前状态 → LLM 重新规划
-  "没抓到苹果" → "苹果滑到左边了, 重新尝试从左侧抓取"
+LLM 能做规划, 但规划和执行是分离的 -- 低层执行器要么手写, 要么依赖预定义接口, 不可扩展。能不能让一个模型端到端搞定?
 
-  贡献: 第一次做 LLM-robot 的闭环 (不是 open-loop 一次规划)
-  限制: 反馈全靠语言, 不够精确
+### Phase 2: Robot Transformer (2022-2023) -- "不做规划, 直接出动作"
 
-Phase 1 的总结:
-  LLM 能做规划, 但规划和执行是分离的
-  低层执行器 (skill) 需要单独训练/手写
-  → 能不能让一个模型端到端搞定?
+**核心问题**: 能否训练一个 Transformer 直接从图像到动作, 跳过 "先理解再规划再执行" 的流程?
 
-=== Phase 2: Robot Transformer (2022-2023) ===
-  "不用 LLM 做规划, 用 Transformer 直接做端到端 policy"
+**三次尝试, 从专用到通用**:
 
-22_RT1: 第一个大规模 robot Transformer
-  架构: EfficientNet (视觉) + TokenLearner + Transformer (决策)
-  训练: 130K 真实 episodes, 700+ 任务
-  动作: 离散化为 token (每个 DOF 256 bin)
+- **RT-1**: 第一个大规模 robot Transformer。纯端到端: 图像输入, 离散动作 token 输出。证明 Transformer 在机器人领域同样有效, 不只是 NLP 的专利。但它只用了自己采集的数据, 没有继承互联网上的视觉-语言知识。
+- **RT-2 (第一个 VLA)**: 核心思想极其简单 -- 既然 VLM 已经在互联网数据上学会了"苹果是什么", 为什么不直接让它输出动作? 将 VLM 与机器人数据混合微调, 动作被编码为离散 token 混在语言输出里。第一次证明 **web 知识可以迁移到 robot** -- 训练时没见过的物体也能抓。
+- **PaLM-E**: 把这个思路推到极致 -- 用当时最大的语言模型, 把图像、语言、机器人状态全部当 token 输入。证明 VLM 越大, robot 能力越强 (scaling 在 robot 上也 work), 但模型太大完全无法部署。
 
-  贡献: 证明 Transformer 可以做 robot policy (不只是 NLP)
-         130K 数据 = 当时最大的 robot 数据集
-  限制: 只用了自己的数据, 没有继承 web 知识
+**Phase 2 的核心洞察**:
 
-23_RT2: 第一个 VLA (Vision-Language-Action Model)
-  核心思想: 为什么不用 VLM 替代 RT-1 的视觉编码器?
-  架构: PaLI-X (55B VLM) → 直接输出离散动作 token
+VLM 可以做 robot policy, 且能继承 web 知识 -- 这就是 VLA 的核心假设。但当时的 VLM 太大太慢, 离散 token 精度也不够。需要: 更小的 VLM + 更高效的动作生成方式。
 
-  VLM 在 web 数据上预训练 → 已经理解 "苹果是什么"
-  co-fine-tuning: web VQA 数据 + robot demo 混合训练
-  → VLM 的视觉-语言知识迁移到了 robot
+### Phase 3: 数据与规模化 (2023-2024) -- "模型架构够了, 下一步是数据和部署"
 
-  贡献: 第一次证明 "web 知识可以迁移到 robot"
-         新物体零样本泛化 (训练没见过的物体也能抓)
-  限制: 55B 太大, 推理太慢 (~3Hz)
+**核心问题**: 单一实验室的数据永远不够, 怎么让机器人数据像 Common Crawl 一样规模化?
 
-23_PaLME: 走到极端 — 562B embodied LM
-  输入: 图像 + 语言 + robot 状态 → 全部当 token
-  输出: 语言回答 / 动作 token
+- **Open X-Embodiment**: 汇聚 22 个机器人平台的数据, 建立第一个大规模跨 embodiment 数据集。证明不同机器人的数据混合训练, 比只用自己的数据更好。这是 robotics 的 "Common Crawl"。
+- **AutoRT**: 用 VLM 自动给机器人分配任务, 机器人自主探索, VLM 评估成功/失败, 形成数据飞轮。第一次做到不靠人类遥操作的大规模数据采集。
+- **RT-H**: 在高层 VLM 和低层控制器之间插入自然语言作为中间表示 ("move hand left 5cm")。语言接口既可解释又可纠正, 和后来 PI 的 Hi Robot 思路一脉相承。
 
-  把 PaLM (540B) 变成多模态 embodied model
-  证明: 更大的 VLM → 更好的 robot 能力 (scaling works)
-  限制: 562B 不可能部署在真机上
+**Phase 3 的核心洞察**:
 
-Phase 2 的总结:
-  RT-1: Transformer 可以做 robot policy
-  RT-2: VLM 可以做 robot policy, 且继承 web 知识
-  PaLM-E: 越大越好, 但太大不能用
-  → 需要: 更小的 VLM + 更高效的动作生成
-
-=== Phase 3: 数据与规模化 (2023-2024) ===
-  "模型架构够了, 下一步是数据和部署"
-
-23_OpenXEmbodiment: 跨机器人数据集
-  22 个机器人平台, 527 种技能, 160K+ 轨迹
-  第一个大规模跨 embodiment 数据集
-  RT-1-X / RT-2-X: 在 Open X 上训练的 cross-embodiment 模型
-
-  贡献: robotics 的 "Common Crawl"
-         证明跨 embodiment 数据共享有效
-
-24_AutoRT: 大规模机器人数据采集
-  用 VLM 自动给机器人分配任务
-  机器人自主探索 → VLM 评估成功/失败 → 数据飞轮
-  20+ 机器人同时在 Google 办公室运行, 收集 77K+ 轨迹
-
-  贡献: 第一次做 "机器人自主数据采集" (不靠人类遥操作)
-
-24_RTH: 层级动作 + 语言中间表示
-  高层: VLM 输出自然语言描述的动作 ("move hand left 5cm")
-  低层: 语言描述 → 具体关节角
-
-  贡献: 用语言作为高低层之间的接口 (可解释 + 可纠正)
-  (和 PI 的 Hi Robot 思路类似, 但 RT-H 早 2 个月)
-
-=== Phase 4: 核心团队离开 → PI 成立 (2024) ===
-
-2024 年, RT 系列的核心作者集体离开 Google 创办 PI:
-  Karol Hausman (SayCan, RT-1/2 核心作者) → PI CEO
-  Brian Ichter (SayCan, Inner Monologue) → PI 联合创始人
-  Sergey Levine (RT-2 顾问, Berkeley) → PI 联合创始人
-  Chelsea Finn (RT-2 顾问, Stanford) → PI 联合创始人
-
-PI 的 pi_0 (2024.10) 本质是 RT-2 的精神续作:
-  RT-2: PaLI-X (55B) + 离散动作 token → 太大太慢
-  pi_0: PaliGemma (3B) + Flow Matching → 小而快
-
-  同样的思想 (VLM → robot action), 更好的工程实现
-```
+单一团队的数据采集不可扩展, 跨平台数据共享和自主采集才是出路。Open X 定义了数据标准, AutoRT 定义了采集范式。
 
 ---
 
@@ -134,82 +61,90 @@ PI 的 pi_0 (2024.10) 本质是 RT-2 的精神续作:
 
 | 问题 | SayCan (2022) | RT-1 (2022) | RT-2 (2023) | pi_0 (2024, PI) |
 |------|-------------|------------|------------|----------------|
-| 用 LLM 吗 | 是 (做规划) | 否 (纯 Transformer) | 是 (VLM 做骨干) | 是 (PaliGemma) |
-| 动作怎么出 | 调用预写 skill | 离散 token (256 bin) | 离散 token (256 bin) | **Flow Matching (连续)** |
-| 继承 web 知识 | 通过 LLM | 不继承 | **VLM co-fine-tune** | VLM pre-train |
-| 模型大小 | PaLM 540B + small skills | ~35M | 55B | **3B** |
-| 推理频率 | ~1 Hz | ~3 Hz | ~3 Hz | **~50 Hz** |
-| 新物体泛化 | 靠 LLM 语言理解 | 不行 | **可以** (VLM 知识迁移) | 可以 |
+| 大模型角色 | 做高层规划 | 不用大模型 | VLM 做端到端骨干 | VLM 做端到端骨干 |
+| 动作生成方式 | 调用预写 skill | 离散 token | 离散 token | **连续 (Flow Matching)** |
+| web 知识利用 | 通过 LLM 语言理解 | 不利用 | **VLM 混合微调迁移** | VLM 预训练迁移 |
+| 模型策略 | 大模型规划 + 小 skill | 专用小模型 | 通用大模型 | **紧凑通用模型** |
+| 新物体泛化 | 靠 LLM 语言理解 | 不行 | **可以** (知识迁移) | 可以 |
 
-**核心演化**: LLM 做规划 (SayCan) → Transformer 做 policy (RT-1) → VLM 做 policy + 继承 web 知识 (RT-2) → 更小更快的 VLM + 连续动作生成 (pi_0)
-
----
-
-## 4. RT 系列对整个领域的定义性贡献
-
-| 贡献 | 论文 | 后续影响 |
-|------|------|---------|
-| **证明 LLM 可以做 robot planning** | SayCan | 催生了整个 LLM-for-robotics 方向 |
-| **定义了 VLA 架构** | RT-2 | pi_0, GR00T, OpenVLA 都是 VLA |
-| **证明 web 知识可以迁移到 robot** | RT-2 | 所有 VLA 的核心假设 |
-| **建立了跨 embodiment 数据标准** | Open X-Embodiment | 所有通用 robot policy 的数据基础 |
-| **证明离散动作 token 可行** | RT-1/RT-2 | OpenVLA 继承; FAST 改进 |
-| **证明更大 VLM = 更好 robot** | PaLM-E | 支持 scaling 方向 |
-
-**但 RT 系列也留下了未解问题**:
-- 离散 token 精度不够 → pi_0 用 Flow Matching 解决
-- 55B 太大 → pi_0 用 3B PaliGemma 解决
-- 没有低层控制 → GR00T 的 SONIC 解决
-- 没有世界模型 → GR00T 的 DreamZero 解决
+**核心演化**: LLM 做规划 (SayCan) --> Transformer 做 policy (RT-1) --> VLM 做 policy + 继承 web 知识 (RT-2) --> 更小更快的 VLM + 连续动作生成 (pi_0)
 
 ---
 
-## 5. Takeaway
+## 4. RT Series --> PI --> GR00T 的传承关系
 
-| # | Takeaway | 原理 | 对你的启示 |
-|---|----------|------|-----------|
-| 1 | **VLA 起源于 RT-2: VLM 直接出动作 token** | web 预训练的 VLM 理解物体 → 零样本泛化 | VLA 的核心价值是知识迁移, 不只是端到端 |
-| 2 | **LLM-as-planner 是 VLA 的前身, 不是替代品** | SayCan 证明了 LLM 理解任务, RT-2 把它端到端化 | 两者可以组合 (Hi Robot / RT-H 的层级方案) |
-| 3 | **跨 embodiment 数据共享有效 (Open X)** | 不同机器人的数据混合训练 → 比单一数据更好 | 不要只用自己的机器人数据 |
-| 4 | **离散 token 是第一步, 连续生成是下一步** | RT-1/2 用 256-bin 可行但粗糙, Flow Matching 更精确 | 新项目直接用 Flow Matching |
-| 5 | **核心团队 = 核心竞争力** | RT 团队离开 → Google robotics 进展放缓, PI 快速崛起 | 人比架构重要 |
-| 6 | **AutoRT: 数据飞轮的正确打开方式** | VLM 自动分配任务 + 评估 → 机器人自主采集数据 | 人工遥操作不可扩展, 自主采集才是 |
+这是 RT 系列最深远的影响 -- 它不是一个终结的项目, 而是整个 robotics FM 的源流。
 
----
+### 4.1 人的传承: RT --> PI
 
-## 6. RT Series → PI → GR00T 的传承关系
+2024 年, RT 系列的核心作者集体离开 Google 创办 PI。这不是巧合, 而是 RT 系列的逻辑终点: Google 内部的资源条件 (大 VLM + 真机) 造就了 VLA 思想, 但 Google 的体制不适合把它产品化。
+
+PI 的 pi_0 本质是 RT-2 的精神续作, 解决了 RT-2 留下的两个核心问题:
+- **模型太大**: 用紧凑 VLM 替代庞大 VLM, 推理速度提升一个数量级
+- **离散 token 精度不够**: 用 Flow Matching 生成连续动作, 精度质变
+
+同样的思想 (VLM --> robot action), 更好的工程实现。
+
+### 4.2 数据的传承: Open X --> 所有 VLA
+
+Open X-Embodiment 成为所有后续通用 robot policy 的数据基础。Octo, OpenVLA, pi_0, GR00T 都在 Open X 上训练或评估。这是 RT 系列对领域最具基础设施意义的贡献。
+
+### 4.3 架构的传承: RT-2 --> GR00T
+
+GR00T N1 继承了 RT-2 "VLM + action head" 的基本结构, 但在两个方向上大幅扩展:
+- **低层控制**: RT 系列没有真正解决精细运动控制, GR00T 用 SONIC 补上了这块
+- **世界模型**: RT 系列没有预测能力, GR00T 用 DreamZero 加入了 imagination
+
+### 4.4 思想传承图
 
 ```
 Google RT Series (2022-2024)
-  │
-  ├── 思想传承 → PI (pi_Series)
-  │   SayCan 的 "LLM 理解任务" + RT-2 的 "VLM→action" → pi_0
-  │   核心作者: Hausman, Ichter, Levine, Finn
-  │   改进: 55B→3B, 离散→Flow Matching, 加 RL
-  │
-  ├── 数据传承 → 所有 VLA
-  │   Open X-Embodiment → Octo, OpenVLA, pi_0, GR00T 的训练数据
-  │
-  └── 架构传承 → GR00T
-      RT-2 的 "VLM + action head" → GR00T N1 的 "Eagle VLM + DiT"
-      但 GR00T 加了 SONIC (RT 没有的低层控制)
-      和 DreamZero (RT 没有的世界模型)
+  |
+  |-- [人 + 思想] --> PI (pi_Series)
+  |   SayCan 的 "LLM 理解任务" + RT-2 的 "VLM->action"
+  |   改进: 大模型->紧凑模型, 离散->Flow Matching, 加 RL
+  |
+  |-- [数据标准] --> 所有 VLA
+  |   Open X-Embodiment --> Octo, OpenVLA, pi_0, GR00T
+  |
+  |-- [架构范式] --> GR00T
+  |   RT-2 的 "VLM + action head" --> GR00T N1 的 "VLM + DiT"
+  |   GR00T 补上了 RT 缺失的低层控制 (SONIC) 和世界模型 (DreamZero)
+  |
+  +-- [未解问题] --> 领域开放挑战
+      离散 token 精度? --> Flow Matching (pi_0)
+      太大不能部署?   --> 紧凑 VLM (pi_0, GR00T)
+      没有低层控制?   --> SONIC (GR00T)
+      没有世界模型?   --> DreamZero (GR00T)
 ```
 
 ---
 
-## 7. 文件索引
+## 5. Takeaway: 思维层面的原则
+
+| # | 原则 | 为什么重要 | 对 robotics FM 研究的启示 |
+|---|------|-----------|--------------------------|
+| 1 | **web 预训练知识可以迁移到 robot, 这是 VLA 的核心假设** | RT-2 第一次验证: VLM 在互联网上学到的物体理解, 直接提升了机器人的零样本泛化能力 | 不要从头训 robot 模型, 要站在 VLM 的肩膀上 |
+| 2 | **规划和执行的分离是瓶颈, 端到端是趋势** | SayCan 证明了 LLM 能规划, 但预写 skill 不可扩展; RT-2 把规划和执行合并到一个模型里 | 但层级方案 (RT-H, Hi Robot) 说明完全端到端不一定是唯一解 -- 关键是接口要可学习, 不能手写 |
+| 3 | **跨 embodiment 数据共享的收益大于 domain gap 的损失** | Open X 证明: 混合不同机器人的数据, 即使形态不同, 也比只用自己的数据好 | 不要只用自己的机器人数据。数据多样性 > 数据纯净度 |
+| 4 | **scaling 在 robot 上也 work, 但部署约束会反过来定义模型大小** | PaLM-E 证明越大越好, 但太大不能用; pi_0 证明紧凑模型 + 好数据可以逼近大模型 | 模型大小不是越大越好, 而是在部署约束下的最优解 |
+| 5 | **人工遥操作不可扩展, 自主数据采集才是数据飞轮的正确形态** | AutoRT 用 VLM 分配任务 + 评估, 机器人自主探集, 效率远超人工 | 长期看, robot 数据不能靠人标注, 要靠 robot 自己生成 |
+| 6 | **核心团队 = 核心竞争力, RT 团队出走后 Google robotics 明显减速** | 思想在人脑里, 不在代码库里。PI 快速崛起的速度验证了这一点 | 关注人, 不只关注架构 |
+
+---
+
+## 6. 文件索引
 
 ```
 Google_RT_Series/
-├── RT_family_notes.md              ← 本文件
-├── 22_SayCan/                      # LLM + affordance grounding
-├── 22_CodeAsPolicies/              # LLM 生成控制代码
-├── 22_InnerMonologue/              # LLM 闭环反馈
-├── 22_RT1/                         # 第一个 robot Transformer
-├── 23_RT2/                         # 第一个 VLA
-├── 23_PaLME/                       # 562B embodied LM
-├── 23_OpenXEmbodiment/             # 跨机器人数据集
-├── 24_AutoRT/                      # 自主数据采集
-└── 24_RTH/                         # 层级动作 + 语言中间表示
++-- RT_family_notes.md              <-- this file
++-- 22_SayCan/                      # LLM + affordance grounding
++-- 22_CodeAsPolicies/              # LLM generates control code
++-- 22_InnerMonologue/              # LLM closed-loop feedback
++-- 22_RT1/                         # first robot Transformer
++-- 23_RT2/                         # first VLA
++-- 23_PaLME/                       # giant embodied LM
++-- 23_OpenXEmbodiment/             # cross-embodiment dataset
++-- 24_AutoRT/                      # autonomous data collection
++-- 24_RTH/                         # hierarchical action + language interface
 ```

@@ -58,6 +58,8 @@ PI 的论文本质上是这三个人的研究方向的工程化整合。
 
 **Takeaway 1**: **VLM + Flow Matching 是当前 VLA 的最佳架构组合。** GR00T N1.5 后来也选了同样的组合 (SigLip2+T5 + Flow Matching DiT), 说明这不是 PI 的偶然选择而是行业共识。
 
+**关于 Flow Matching vs Diffusion**: Flow Matching 用直线 ODE 路径 (5-10 步), 比 Diffusion 的弯曲 SDE 路径 (50-100 步) 更快更稳定, 数学也更简单。PI 和 GR00T 独立选择了同一方案, 已成行业共识。
+
 ### Phase 2: 提速 -- FAST (2025.01)
 
 **要解决的问题**: Flow Matching 需要多步迭代推理, 对高频灵巧任务太慢。能不能用 LLM 的 autoregressive 方式一次前向就出动作?
@@ -161,26 +163,10 @@ RECAP (pi*0.6 的做法):
   训练数据: 成功的 + 失败的 + 人类纠正的
   学习信号: advantage-conditioned — "这个动作比平均好多少/差多少"
 
-  具体:
-    每条轨迹标注 advantage A(s,a) = Q(s,a) - V(s)
-    A > 0: 这个动作好于平均 → 增加概率
-    A < 0: 这个动作差于平均 → 降低概率
-    A = 0: 平均水平 → 不变
-
-  关键: 不需要 online RL (不需要在真机上试错)
-        用离线数据 (之前收集的所有轨迹) 就能做
-        = offline RL 预训练
-```
-
-**为什么这很重要**:
-```
-BC:      只学 "该怎么做" (从好 demo)
-RECAP:   同时学 "该怎么做" 和 "不该怎么做" (从好+坏 demo)
-         = 信息效率提升, 每条轨迹的利用率更高
-
-对数据稀缺的 robotics:
-  之前失败的轨迹被扔掉 → 现在可以用来学 "什么不该做"
-  数据利用率翻倍
+  核心思想:
+    好 demo 学 "该怎么做", 坏 demo 学 "不该怎么做" = 数据利用率翻倍
+    不需要 online RL (不需要在真机上试错)
+    用离线数据 (之前收集的所有轨迹) 就能做 = offline RL 预训练
 ```
 
 **Takeaway 5**: **离线 RL 是 VLA 的天然下一步。** BC 只用成功 demo, offline RL 用所有数据。对你做 RL 的背景来说, pi\*0.6 的 RECAP 是把 RL 思想嫁接到 VLA 的最直接方案。不需要 online 试错, 不需要 reward engineering, 只需要给已有轨迹标 advantage。
@@ -224,69 +210,7 @@ RECAP:   同时学 "该怎么做" 和 "不该怎么做" (从好+坏 demo)
 
 ---
 
-## 3. PI 的核心架构详解
-
-### 3.1 pi_0 的架构 (所有后续版本的基础)
-
-```
-输入:
-  RGB 图像 (1-2 个摄像头) → PaliGemma SigLIP encoder → image tokens
-  语言指令                → PaliGemma Gemma 2B decoder → text tokens
-  本体感觉 (关节角/速度)  → MLP → proprio tokens
-
-VLM 处理 (PaliGemma, 冻结或部分解冻):
-  [image tokens] + [text tokens] → causal attention → VL embeddings
-
-Action Expert (独立于 VLM):
-  [VL embeddings] ← cross-attention → [proprio + noised action]
-  Flow Matching: 从高斯噪声出发, 学 velocity field, 迭代去噪
-  输出: action chunk (H=16 步的连续动作序列)
-
-推理:
-  VLM 跑一次 (10Hz) → 缓存 VL embeddings
-  Action Expert 多次迭代去噪 (每次 50Hz 内完成)
-  action chunk 按 50Hz 执行, 每 H 步重新生成
-```
-
-### 3.2 为什么选 PaliGemma 不选 LLaMA/Qwen?
-
-```
-PaliGemma = SigLIP (视觉) + Gemma 2B (语言)
-  总共 3B 参数 — 足够小, 能在 GPU 上实时运行
-  SigLIP 是 Google 最新的视觉编码器 (比 CLIP 的 ViT 好)
-  Gemma 2B 足够理解简单指令 (不需要 7B/70B)
-
-对比:
-  OpenVLA 用 Llama 2 7B → 太大, 推理慢, robot 不需要那么强的语言理解
-  GR00T 用 SigLip2 + T5 → 类似思路, 也是小模型优先
-
-结论: robot VLA 不需要顶级 LLM, 需要的是 "够用的语言理解 + 实时推理"
-```
-
-### 3.3 Flow Matching vs Diffusion: PI 的选择
-
-```
-Diffusion (DDPM):
-  前向: x_0 → 加噪 → x_T (高斯噪声)
-  反向: x_T → 去噪 → x_0, 学 score function ∇logp(x_t)
-  路径: 弯曲的 SDE 路径, 需要 ~50-100 步
-
-Flow Matching (Rectified Flow/ODE):
-  前向: x_0 → 直线插值 → x_1 (高斯噪声)
-  反向: x_1 → 沿直线返回 → x_0, 学 velocity field v(x_t, t)
-  路径: 直线 ODE 路径, 只需 ~5-10 步
-
-PI 选 Flow Matching 因为:
-  1. 推理更快 (5 步 vs 50 步)
-  2. 训练更稳定 (直线比弯曲容易学)
-  3. 数学更简单 (ODE vs SDE)
-
-  GR00T N1.5 后来也选了 Flow Matching, 验证了这个判断
-```
-
----
-
-## 4. PI vs GR00T: 两种完全不同的哲学
+## 3. PI vs GR00T: 两种完全不同的哲学
 
 | | PI 的思路 | NVIDIA 的思路 |
 |---|---|---|
@@ -322,32 +246,13 @@ NVIDIA 的观点:
 
 ---
 
-## 5. PI 的开源策略
+## 4. PI 的开源策略
 
-```
-开源了什么:
-  ✓ 推理代码 (openpi)
-  ✓ 模型权重 (pi_0, pi_0.5 on HuggingFace)
-  ✓ 数据格式工具 (pi-data-sharing, rlds_dataset_builder)
-  ✓ fine-tune 脚本 (在 openpi 中)
-
-没开源什么:
-  ✗ 预训练代码 (从零训练 pi_0)
-  ✗ 训练数据 (PI 自采的部分)
-  ✗ RECAP RL 训练代码 (pi*0.6)
-  ✗ FAST tokenizer 训练代码
-  ✗ Knowledge Insulation 具体实现
-
-对比 NVIDIA:
-  NVIDIA 开源了完整训练栈 (Isaac-GR00T + GR00T-WBC)
-  PI 只开源了推理栈 (openpi)
-
-结论: PI 论文可以学思想, 但要复现需要靠 NVIDIA 的代码
-```
+PI 开源了推理栈 (openpi 代码 + HuggingFace 权重 + fine-tune 脚本 + 数据工具), 但没开源训练栈 (预训练代码、训练数据、RECAP RL 代码、FAST tokenizer 训练、Knowledge Insulation 实现)。对比 NVIDIA 开源了完整训练栈 (Isaac-GR00T + GR00T-WBC)。**结论: PI 论文学思想, 复现靠 NVIDIA。**
 
 ---
 
-## 6. 核心 Takeaway (按可执行性排序)
+## 5. 核心 Takeaway (按可执行性排序)
 
 | # | Takeaway | 原理 | 对你的行动项 |
 |---|----------|------|------------|
@@ -360,14 +265,15 @@ NVIDIA 的观点:
 | 7 | **异构数据共训练 + web 数据保泛化 (pi_0.5)** | 只用 robot 数据 → 过拟合; 混入 web 数据 → 保持通用性 | 训练时混入非 robot 数据 (视频, 图文) |
 | 8 | **显式记忆解锁长时任务 (MEM)** | 短期视频 + 长期文本摘要 = 多尺度记忆 | 超过 1 分钟的任务需要记忆, context window 不够 |
 | 9 | **PI 不做低层控制, 但你应该做 (如果做人形)** | 桌面臂可以 VLA→关节角; 人形必须有 WBC 层 | SONIC 的方案对你更实用 |
+| 10 | **PI 走 VLA 纵深, 但 NVIDIA 正在用 WAM 替代 VLA** | WAM (World-Action Model): 想象→做, 替代 VLA 的看→做 | 关注 GR00T 的 DreamZero/WAM 范式, 这是下一代潜在方向 |
 
 ---
 
-## 7. 文件索引
+## 6. 文件索引
 
 ```
 pi_Series/
-├── pi_family_notes.md              ← 本文件
+├── pi_family_notes.md              <- 本文件
 ├── 24_DROID/ → symlink             # 数据集 (实体在 policy_learning/24_DROID/)
 ├── 24_pi0/                         # pi_0 论文 + notes
 │   ├── openpi/                     #   推理代码 (github.com/Physical-Intelligence/openpi)
