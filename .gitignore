@@ -23,10 +23,9 @@ foundation_model/methods/24_Octo/octo/
 foundation_model/methods/24_OpenVLA/openvla/
 foundation_model/methods/24_pi0/openpi/
 foundation_model/methods/24_pi0/pi-data-sharing/
-foundation_model/robotics/generative_policy/GR00T_Series/Isaac-GR00T/
-foundation_model/robotics/generative_policy/GR00T_Series/25_SONIC/GR00T-WBC/
-foundation_model/robotics/generative_policy/GR00T_Series/25_DreamGen/GR00T-Dreams/
-foundation_model/robotics/generative_policy/GR00T_Series/26_DreamZero/dreamzero/
+foundation_model/robotics/generative_policy/GR00T_Series/vla_wbc/Isaac-GR00T/
+foundation_model/robotics/generative_policy/GR00T_Series/world_model/25_DreamGen/GR00T-Dreams/
+foundation_model/robotics/generative_policy/GR00T_Series/world_model/26_DreamZero/dreamzero/
 
 # -- surveys repos --
 foundation_model/surveys/24_AwesomeSurvey/Awesome-Robotics-Foundation-Models/
