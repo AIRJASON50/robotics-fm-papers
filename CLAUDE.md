@@ -71,6 +71,7 @@ Notes must include the following sections:
 - No emoji
 - Use markdown tables for structured comparisons
 - Include file paths when referencing specific code locations
+- **首次缩写注解**: 所有英文缩写和专业术语在 notes 中**首次出现时**必须标注英文全称和中文解释, 格式为 inline 括号: `CNN (Convolutional Neural Network, 卷积神经网络)`, `SFT (Supervised Fine-Tuning, 监督微调 -- 用人工编写的高质量回答直接微调模型)`。后续出现可直接使用缩写。如果缩写在表格中密集出现, 在表格后用 `> **术语说明**:` 引用块集中解释。
 
 ## Paper Index
 
