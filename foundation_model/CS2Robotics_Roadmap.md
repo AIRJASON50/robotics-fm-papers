@@ -133,8 +133,8 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 | 3.2 | **DreamerV3** (2023) | `robotics/world_model/23_DreamerV3/` | 世界模型: 在"想象"中训练 | 3h |
 | 3.3 | **ACT** (2023) | `robotics/policy_learning/23_ACT/` | CVAE + action chunking | 2h |
 | 3.4 | **ACT 代码** | `robotics/policy_learning/23_ACT/act/` | 简洁的 imitation learning pipeline | 1h |
-| 3.5 | **Diffusion Policy** (2023) | `robotics/generative_policy/24_DiffusionPolicy/` | 条件去噪 + action chunk + receding horizon | 3h |
-| 3.6 | **Diffusion Policy 代码** | `robotics/generative_policy/24_DiffusionPolicy/diffusion_policy/` | 完整 policy 实现 | 2h |
+| 3.5 | **Diffusion Policy** (2023) | `robotics/policy_learning/24_DiffusionPolicy/` | 条件去噪 + action chunk + receding horizon | 3h |
+| 3.6 | **Diffusion Policy 代码** | `robotics/policy_learning/24_DiffusionPolicy/diffusion_policy/` | 完整 policy 实现 | 2h |
 
 ### Level 4: VLA 统一模型 (当前前沿)
 
@@ -142,16 +142,16 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 
 | 顺序 | 论文 | 在本库位置 | 阅读重点 | 预计时间 |
 |------|------|---------|---------|---------|
-| 4.1 | **RT-1** (2022) | `robotics/policy_learning/22_RT1/` | 第一个大规模 robot Transformer | 1.5h |
-| 4.2 | **RT-2** (2023) | `robotics/policy_learning/23_RT2/` | 第一个 VLA: VLM 直接输出离散动作 token | 2h |
-| 4.3 | **Open X-Embodiment** (2023) | `robotics/policy_learning/23_OpenXEmbodiment/` | 跨机器人数据集, 所有 VLA 的训练数据基础 | 1.5h |
+| 4.1 | **RT-1** (2022) | `robotics/families/Google_RT_Series/22_RT1/` | 第一个大规模 robot Transformer | 1.5h |
+| 4.2 | **RT-2** (2023) | `robotics/families/Google_RT_Series/23_RT2/` | 第一个 VLA: VLM 直接输出离散动作 token | 2h |
+| 4.3 | **Open X-Embodiment** (2023) | `robotics/families/Google_RT_Series/23_OpenXEmbodiment/` | 跨机器人数据集, 所有 VLA 的训练数据基础 | 1.5h |
 | 4.4 | **PaliGemma** (2024) | `CV/2_vl_alignment/24_PaliGemma/` | SigLIP + Gemma 2B, pi_0 的 VLM backbone | 1.5h |
 | 4.5 | **Octo** (2024) | `robotics/vla/24_Octo/` | 开源 generalist robot policy, pi_0 的前身 | 2h |
 | 4.6 | **OpenVLA** (2024) | `robotics/vla/24_OpenVLA/` | 开源 VLA baseline, LoRA fine-tuning | 2h |
-| 4.7 | **pi_0** (2024) | `robotics/generative_policy/24_pi0/` | action expert + flow matching | 3h |
-| 4.8 | **pi_0 代码** | `robotics/generative_policy/24_pi0/openpi/` | dual-expert attention, flow matching loss | 3h |
-| 4.9 | **GR00T N1** (2025) | `robotics/generative_policy/25_GR00T_N1/` | 双系统: VLM (10Hz) + DiT (120Hz) | 2h |
-| 4.10 | **GR00T N1 代码** | `robotics/generative_policy/25_GR00T_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
+| 4.7 | **pi_0** (2024) | `robotics/families/pi_Series/24_pi0/` | action expert + flow matching | 3h |
+| 4.8 | **pi_0 代码** | `robotics/families/pi_Series/24_pi0/openpi/` | dual-expert attention, flow matching loss | 3h |
+| 4.9 | **GR00T N1** (2025) | `robotics/families/GR00T_Series/vla_wbc/Isaac-GR00T/25_N1/` | 双系统: VLM (10Hz) + DiT (120Hz) | 2h |
+| 4.10 | **GR00T N1 代码** | `robotics/families/GR00T_Series/vla_wbc/Isaac-GR00T/25_N1/Isaac-GR00T/` | 训练、评估、部署全流程 | 2h |
 
 ### Level 5: 综述 (建立全局视野, 按需阅读)
 
@@ -197,15 +197,15 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 | DiT | 2023 | `CV/1_generation/23_DiT/` | 已有 |
 | ACT | 2023 | `robotics/policy_learning/23_ACT/` | 已有 |
 | OpenVLA | 2024 | `robotics/vla/24_OpenVLA/` | 已有 |
-| SayCan | 2022 | `robotics/llm_planning/22_SayCan/` | 已有 |
-| Code-as-Policies | 2022 | `robotics/llm_planning/22_CodeAsPolicies/` | 已有 |
-| Inner Monologue | 2022 | `robotics/llm_planning/22_InnerMonologue/` | 已有 |
+| SayCan | 2022 | `robotics/families/Google_RT_Series/22_SayCan/` | 已有 |
+| Code-as-Policies | 2022 | `robotics/families/Google_RT_Series/22_CodeAsPolicies/` | 已有 |
+| Inner Monologue | 2022 | `robotics/families/Google_RT_Series/22_InnerMonologue/` | 已有 |
 | LLaVA | 2023 | `CV/2_vl_alignment/23_LLaVA/` | 已有 |
-| Voyager | 2023 | `robotics/llm_planning/23_Voyager/` | 已有 |
+| Voyager | 2023 | `robotics/families/Google_RT_Series/23_Voyager/` | 已有 |
 | MAE | 2021 | `CV/4_self_supervised/21_MAE/` | 已有 |
 | DINOv2 | 2023 | `CV/4_self_supervised/23_DINOv2/` | 已有 |
 | SAM | 2023 | `CV/5_detection_seg/23_SAM/` | 已有 |
-| PaLME | 2023 | `robotics/vla/23_PaLME/` | 已有 |
+| PaLME | 2023 | `robotics/families/Google_RT_Series/23_PaLME/` | 已有 |
 | NeRF | 2020 | `CV/3_3d_vision/20_NeRF/` | 已有 |
 | 3D Gaussian Splatting | 2023 | `CV/3_3d_vision/23_3DGS/` | 已有 |
 | Depth Anything | 2024 | `CV/3_3d_vision/24_DepthAnything/` | 已有 |
@@ -222,12 +222,12 @@ Phase 7: 第三次迁移 -- VLA 统一模型 (2022-2025)
 | **Ilya Sutskever** | OpenAI/SSI | GPT-3 首席科学家 | Scaling 思想 |
 | **Kaiming He** | Meta/MIT | ResNet, MAE | CV/0_backbone + CV/4_self_supervised |
 | **Yann LeCun** | Meta | CNN 先驱, JEPA 世界模型 | 世界模型理论 |
-| **Sergey Levine** | UC Berkeley / PI | RL for Robotics, pi_0 | robotics/generative_policy/24_pi0 |
-| **Chelsea Finn** | Stanford / PI | Meta-learning, pi_0 | robotics/generative_policy/24_pi0 |
+| **Sergey Levine** | UC Berkeley / PI | RL for Robotics, pi_0 | robotics/families/pi_Series/24_pi0 |
+| **Chelsea Finn** | Stanford / PI | Meta-learning, pi_0 | robotics/families/pi_Series/24_pi0 |
 | **Pieter Abbeel** | UC Berkeley | RL, mjlab, Playground | RL 框架 |
-| **Shuran Song** | Stanford (原 Columbia) | Diffusion Policy | robotics/generative_policy/24_DiffusionPolicy |
-| **Cheng Chi** | Stanford (原 Columbia) | Diffusion Policy 一作 | robotics/generative_policy/24_DiffusionPolicy |
-| **Dieter Fox** | NVIDIA/UW | GR00T N1 | robotics/generative_policy/25_GR00T_N1 |
+| **Shuran Song** | Stanford (原 Columbia) | Diffusion Policy | robotics/policy_learning/24_DiffusionPolicy |
+| **Cheng Chi** | Stanford (原 Columbia) | Diffusion Policy 一作 | robotics/policy_learning/24_DiffusionPolicy |
+| **Dieter Fox** | NVIDIA/UW | GR00T N1 | robotics/families/GR00T_Series |
 | **Jim Fan** | NVIDIA | GR00T N1, Foundation Agent | VLA 工业化 |
 
 ---
@@ -258,10 +258,10 @@ foundation_model/
 │   ├── 5_detection_seg/         # SAM
 │   └── 6_video/                 # (待填)
 ├── robotics/                     # Robotics 应用 (按技术路线)
-│   ├── llm_planning/            # SayCan, CodeAsPolicies, InnerMonologue, Voyager
-│   ├── policy_learning/         # DT, RT-1, RT-2, ACT, OpenXEmbodiment
-│   ├── vla/                     # PaLME, Octo, OpenVLA
-│   ├── generative_policy/       # DiffusionPolicy, pi_0, GR00T N1
+│   ├── families/                # Google_RT_Series, pi_Series, GR00T_Series
+│   ├── policy_learning/         # DT, ACT, DiffusionPolicy, DROID
+│   ├── vla/                     # Octo, OpenVLA
+│   ├── families/                 # pi_Series, GR00T_Series, Google_RT_Series
 │   └── world_model/             # DreamerV3
 ├── surveys/
 │   ├── CV/                      # 7 篇 CV surveys (TPAMI/IJCV/TCSVT)
