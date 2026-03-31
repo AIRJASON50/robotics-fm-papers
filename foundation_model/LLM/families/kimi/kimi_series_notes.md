@@ -359,7 +359,11 @@ GPT-1/2 (2018-2019): 定义技术原点
         gpt-oss: MXFP4 推理量化
 ```
 
-### 3.2 对 Robotics Foundation Model 的启示
+*(Robotics 启示已独立为 Section 4)*
+
+---
+
+## 4. 对 Robotics Foundation Model 的启示
 
 **为什么要看这些 LLM 分岔?** 因为 robotics 正在重走 LLM 的路:
 
@@ -373,11 +377,22 @@ GPT-1/2 (2018-2019): 定义技术原点
 | 优化器效率 | 更高效的 policy 训练 | **Muon 在 RL 中的应用尚未被探索** |
 | Scaling Laws | Robot Scaling Laws | 25_RobotScalingLaws: 存在但数据不足以精确量化 |
 
-**最可迁移的经验**:
+### 4.1 Robotics Takeaway 总表
 
-1. **Sparsity Scaling Law (K2)**: 固定激活参数, 增加专家数持续降低 loss。这对 multi-task robot policy 有直接指导意义 -- 不需要一个巨大的 dense policy, 可以用 MoE 让不同 expert 负责不同技能。
+| # | Takeaway | 原理 | 对你的行动项 |
+|---|---------|------|------------|
+| 1 | **Muon 优化器: 2x 训练效率, 在 robot RL 中未验证** | Muon 通过矩阵正交化让梯度更新方向更优, 在 LLM pretraining 中实现 ~2x compute-efficiency (Moonlight)。但尚无人在 RL policy 训练中测试过。 | 低成本高回报实验: 在 IsaacLab 中将 PPO 的 AdamW 替换为 Muon, 对比 locomotion/manipulation 任务的 sample efficiency。只需改优化器, 不改架构。 |
+| 2 | **MoBA: 长机器人视频的块稀疏注意力** | MoBA 将 KV 分块, 每个 query 只关注 top-k 最相关的块, 将 O(n^2) 注意力降为 O(n * k * block_size)。已部署在 Kimi 生产环境处理 1M 上下文。 | 机器人视频理解 (如 long-horizon task demonstration) 的 Transformer 处理瓶颈在 attention。当 VLA 模型需要处理长视频 episode (>1000 帧) 时, MoBA 是比 sliding window 更灵活的方案 -- 模型自学关注哪些帧, 而非人工定义固定窗口。 |
+| 3 | **Partial Rollouts: 直接适用于长 horizon robot RL** | k1.5 的 128K 上下文 RL 通过复用已有 trajectory 前缀 + 只重新生成后缀来降低采样成本。 | 直接迁移到 long-horizon robot RL (如 mobile manipulation): 复用已有 episode 前半段 (navigation), 只重新采样后半段 (manipulation)。在 sim 中零成本实现, 可大幅减少长 episode 的 RL 采样开销。 |
+| 4 | **Agent Swarm (PARL): 多机器人协调框架** | K2.5 将复杂任务分解为并行子任务, 由可训练 orchestrator 调度 + 冻结 sub-agents 执行, 延迟降低 4.5x。 | 多机器人协作场景 (如仓库多臂协同): 可训练一个 orchestrator policy 负责任务分解, 各 robot 运行冻结的专用 policy。PARL 的三种 reward (实例化 + 完成率 + 任务级) 可直接适配为多机器人 reward 设计模板。 |
+| 5 | **Zero-vision SFT: 纯文本 SFT 激活视觉推理** | K2.5 发现纯文本 SFT 即可激活模型的视觉推理能力, 添加人工视觉轨迹反而损害泛化。 | 对 VLA 训练的暗示: 不需要大量视觉标注数据。先用文本描述操作步骤做 SFT (成本低), 再用少量视觉数据做 RL 微调。这可能大幅降低 robot VLA 的数据获取成本。 |
+| 6 | **Sparsity Scaling Law: MoE 是 multi-task policy 的天然架构** | K2 证明固定激活参数 (32B), 只增加专家数 (8->384), loss 持续下降。稀疏度是独立于模型大小和数据量的第三个 scaling 维度。 | multi-task robot policy 不需要一个巨大的 dense policy, 可以用 MoE 让不同 expert 负责不同技能 (抓取/放置/旋转), 共享 expert 处理通用视觉+运动基元。参考 DeepSeekMoE 的 fine-grained segmentation。 |
 
-2. **Muon 优化器 (Moonlight)**: 2x 训练效率, 目前只在 LLM 验证。如果 Muon 在 RL policy 训练中也有效, 等于免费翻倍 robot 训练 compute。值得实验。
+### 4.2 最可迁移的经验 (详述)
+
+1. **Muon 优化器 (Moonlight)**: 2x 训练效率, 目前只在 LLM 验证。如果 Muon 在 RL policy 训练中也有效, 等于免费翻倍 robot 训练 compute。值得实验。
+
+2. **MoBA (MoBA paper)**: 机器人视频处理的 attention 瓶颈与 LLM 长上下文完全同构。当 VLA 模型接收长视频输入 (>1000 帧, 每帧多 patch), token 数轻松破万, MoBA 的块稀疏注意力可以大幅降低计算量且保留关键帧信息。
 
 3. **Partial Rollouts (k1.5)**: 长 trajectory 的 RL 训练复用已有 trajectory 前缀。对机器人的长 horizon 任务 (如 mobile manipulation) 可能直接适用。
 
@@ -385,11 +400,13 @@ GPT-1/2 (2018-2019): 定义技术原点
 
 5. **Zero-vision SFT (K2.5)**: 纯文本 SFT 就能激活视觉推理。暗示: 机器人的 vision-language 能力可能不需要大量视觉标注数据, 文本描述 + 少量视觉数据就够。
 
-6. **Self-improvement (Qwen)**: 用上一代模型生成下一代训练数据。Robot policy 也可以用 "trained policy 生成 demo → filter → 训练下一代 policy" 的方式扩充数据。
+6. **Sparsity Scaling Law (K2)**: 固定激活参数, 增加专家数持续降低 loss。这对 multi-task robot policy 有直接指导意义 -- 不需要一个巨大的 dense policy, 可以用 MoE 让不同 expert 负责不同技能。
+
+7. **Self-improvement (Qwen)**: 用上一代模型生成下一代训练数据。Robot policy 也可以用 "trained policy 生成 demo -> filter -> 训练下一代 policy" 的方式扩充数据。
 
 ---
 
-## 4. Kimi 内部的技术传承链
+## 5. Kimi 内部的技术传承链
 
 Kimi 的 7 个项目不是独立的, 而是有清晰的技术传承:
 
@@ -443,7 +460,7 @@ Kimi CLI (2025.10): 产品化
 
 ---
 
-## 5. 阅读建议
+## 6. 阅读建议
 
 | 目标 | 推荐阅读顺序 |
 |------|-----------|
@@ -454,3 +471,18 @@ Kimi CLI (2025.10): 产品化
 | 理解多模态 | Kimi-Audio paper -> K2.5 paper (MoonViT + zero-vision SFT) |
 | 理解 agentic | K2 paper Section 3.2 (tool synthesis) -> K2.5 Section 5 (Agent Swarm) |
 | 理解行业格局 | GPT_series_notes.md Section 9 (GPT 商业逻辑) -> 本文 Section 3 (交织借鉴) |
+| Robotics 迁移 | 本文 Section 4 (Takeaway 总表) -> DeepSeek notes Section 4+9 (对比两家的 robotics 启示) |
+
+---
+
+## 7. 与其他家族笔记的关联
+
+| 家族 | 笔记位置 | 与 Kimi 的关系 |
+|------|---------|--------------|
+| GPT | `../GPT_Series/GPT_series_notes.md` | 技术原点: Kimi 所有分岔都从 GPT 定义的 Transformer decoder + autoregressive 出发 |
+| DeepSeek | `../deepseek/deepseek_series_notes.md` | 架构供给方: K2/K2.5 直接采用 MLA+MoE; Moonlight 用 V3-small 架构; GRPO 思路影响 k1.5 |
+| Qwen | `../qwen/qwen_series_notes.md` | Base model 供给方: Kimi-Audio 用 Qwen2.5 7B 做 backbone; Qwen 的 self-improvement 可借鉴 |
+| Llama | `../llama/llama_series_notes.md` | 开源策略参照: K2 走 Apache 2.0 开源路线, 与 Llama 竞争开源生态 |
+| Google RT | `../../robotics/families/Google_RT_Series/RT_family_notes.md` | Kimi 的 MoE+RL 经验可迁移到 VLA; RT-2 式架构可用 MoBA 处理长视频 |
+| PI | `../../robotics/families/pi_Series/pi_family_notes.md` | pi_0 的 Flow Matching policy + Kimi 的 Muon 优化器 = 潜在加速组合 |
+| GR00T | `../../robotics/families/GR00T_Series/GR00T_family_notes.md` | GR00T N1 的 dual-system 是 MoE 的雏形; Agent Swarm 可指导多机器人协调 |

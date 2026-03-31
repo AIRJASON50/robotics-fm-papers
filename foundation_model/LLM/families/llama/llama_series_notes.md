@@ -419,17 +419,7 @@ iRoPE:   交替使用 RoPE 层和 NoPE 层 (无位置编码)
 
 RoPE 不是 Llama 发明的 (Su et al., 2021), 但 Llama 系列是 RoPE 最重要的推广者和演进者。
 
-**RoPE 基本原理**:
-
-将位置 pos 编码为旋转:
-```
-q'_2i   = q_2i * cos(pos * theta_i) - q_{2i+1} * sin(pos * theta_i)
-q'_{2i+1} = q_2i * sin(pos * theta_i) + q_{2i+1} * cos(pos * theta_i)
-
-其中 theta_i = base^{-2i/d}
-```
-
-两个位置 m, n 的 query/key 内积自然包含 (m-n) 的函数 -- 这是 "相对位置编码" 的来源。
+**RoPE 解决什么问题**: 将位置信息编码为 query/key 向量的旋转, 使内积自然包含相对位置 (m-n) 的函数。核心优势是 **相对位置感知 + 理论上支持长度外推**, 无需学习固定的 positional embedding。具体公式见 Section 3.1 (LLaMA 1 架构四件套)。
 
 **Llama 系列中的 RoPE 演进**:
 
@@ -465,6 +455,8 @@ Llama 4 (2025.04): iRoPE, context=10M
 
 GQA 在 Llama 2 34B/70B 首次引入, 到 Llama 3 全系列标配, 并被 Qwen2+, Mistral, 以及几乎所有后续开源 LLM 采纳。
 
+**GQA 解决什么问题**: 多个 query head 共享同一组 KV head, 压缩 KV cache 以降低推理显存和延迟。GQA 的分组机制和 MHA/MQA 的对比图见 Section 3.2。
+
 **为什么 GQA 而不是 MQA 或 MLA?**
 
 | 方案 | KV cache 压缩率 | 质量损失 | 复杂度 |
@@ -476,17 +468,7 @@ GQA 在 Llama 2 34B/70B 首次引入, 到 Llama 3 全系列标配, 并被 Qwen2+
 
 GQA 是 "性价比最高" 的选择: 实现简单 (只需修改 KV head 数量), 压缩率足够 (8x), 质量损失几乎不可测量。这也是为什么 Llama 系列一直使用 GQA 而非转向更复杂的 MLA -- **对于已经足够大的生态, 简单性比极致压缩更重要**。
 
-**GQA 的具体 KV cache 节省** (以 Llama 3 70B 为例):
-
-```
-MHA KV cache:  2 * 80 layers * 64 heads * 128 d_head * seq_len * 2 bytes (fp16)
-             = 2 * 80 * 64 * 128 * L * 2 = 2.62 MB per token
-
-GQA KV cache:  2 * 80 layers * 8 kv_heads * 128 d_head * seq_len * 2 bytes
-             = 2 * 80 * 8 * 128 * L * 2 = 0.33 MB per token
-
-压缩 8x: 128K context 从 336 GB 降到 42 GB
-```
+以 Llama 3 70B 为例: GQA (8 kv_heads vs 64 heads) 将 128K context 的 KV cache 从 ~336 GB 压缩到 ~42 GB, 8x 压缩。
 
 ### 4.3 "标准 LLM 配方" 的确立
 
@@ -942,3 +924,15 @@ Llama 开源
 2. **开源生态**: Llama 催生了最大的开源 LLM 生态系统, 包括工具链 (vLLM, LoRA, GPTQ), 衍生模型 (LLaVA, Vicuna), 和 **robotics 直接应用 (OpenVLA)**。这个生态的网络效应使 Llama 成为 robotics 模型的默认基座选择。
 
 3. **数据 scaling 哲学**: 从 "小模型 + 更多数据" (LLaMA 1) 到 "过训小模型" (Llama 3 8B/15T), Llama 证明了在推理成本受限的场景下 (如机器人端侧部署), **数据 scaling 比模型 scaling 更重要**。这一发现直接指导了 robotics 数据策略: 扩大训练数据 (real + sim + synthetic) 比增大模型更有效。
+
+---
+
+## 12. 与其他 LLM 家族笔记的交叉参考
+
+| 主题 | 参考笔记 | 关联点 |
+|------|---------|--------|
+| GPT 系列 (Llama 的技术起点) | `families/GPT_Series/GPT_series_notes.md` | Llama 继承 GPT 的 decoder-only + next-token prediction; RLHF pipeline 源自 InstructGPT; Scaling Laws 源自 Kaplan/Chinchilla |
+| Qwen 系列 (架构跟随者 + 多模态竞争者) | `families/qwen/qwen_series_notes.md` | Qwen 采用 Llama 标准配方 (RoPE+GQA+SwiGLU+RMSNorm); M-RoPE 是 RoPE 的多模态扩展; Apache 2.0 许可证更宽松 |
+| DeepSeek 系列 (架构创新者) | `families/deepseek/deepseek_series_notes.md` | MLA 是 GQA 的低秩推广; DeepSeek-V3 MoE 影响 Llama 4 转向 MoE; MIT 许可证对比 |
+| Kimi 系列 (长上下文 + 效率) | `families/kimi/kimi_series_notes.md` | MoBA 稀疏注意力 vs Llama 全注意力; K2 借鉴 DeepSeek MLA+MoE 而非 Llama GQA; YaRN 长度外推 vs iRoPE |
+| OpenVLA (Llama 的 robotics 直接应用) | `../../robotics/vla/` | Llama 2 7B 作为 VLA backbone, action tokenization 继承 GPT 式 discrete prediction |
