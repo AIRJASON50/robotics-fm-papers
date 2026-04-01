@@ -1,82 +1,82 @@
-# Learning Guide: From Dexterous Hand RL to Robotics Foundation Model
+# 学习导读: 从灵巧手 RL 到 Robotics Foundation Model
 
-> **Reader**: PPO sim2real dexterous manipulation practitioner
-> **Goal**: Understand how CS foundation model techniques reshape robotics, and how your RL expertise fits in
-> **This file**: The FIRST thing to read. Points you to everything else.
+> **你**: PPO sim2real 灵巧手操作实践者
+> **目标**: 理解 CS 基础模型技术如何重塑机器人领域, 以及你的 RL 经验如何融入
+> **本文件**: 打开这个 repo 后第一个要读的。指向所有其他内容。
 
-## Your Learning Path (overview)
+## 你的学习路径 (全景)
 
 ```
- Phase 1                      Phase 2                         Phase 3                    Phase 4
- YOUR DOMAIN                  CS METHODOLOGY                  THREE FAMILIES             BACK TO WORK
- ~~~~~~~~~~~                  ~~~~~~~~~~~~~~                  ~~~~~~~~~~~~~~             ~~~~~~~~~~~~
- manip_landscape.md           CS2Robotics_Roadmap.md          RT_family_notes.md         Apply to your
-   5 themes of dexterous        Level 0: Representation         "VLA origin story"       PPO sim2real
-   manipulation                 Level 1: Pre-training+Scale   pi_family_notes.md         pipeline
- humanoid_landscape.md          Level 2: Generative Policy      "VLA + offline RL"
-   4 themes of humanoid         Level 3: Full Robot FM        GR00T_family_notes.md
-   whole-body control           Level 4: Frontier               "Hierarchy + WBC"
-                                                                                         
- ~2h                          ~30h (self-paced)               ~6h                        ongoing
+Phase 1                      Phase 2                         Phase 3                    Phase 4
+你的领域                      CS 方法论                        三大家族                    回到你的工作
+~~~~~~~~~~~                  ~~~~~~~~~~~~~~                  ~~~~~~~~~~~~~~             ~~~~~~~~~~~~
+manip_landscape.md           CS2Robotics_Roadmap.md          RT_family_notes.md         把学到的应用到
+  灵巧操作 5 个主题             Level 0: 表征与 Transformer       "VLA 起源故事"           你的 PPO sim2real
+humanoid_landscape.md          Level 1: 预训练 + 规模化       pi_family_notes.md         pipeline 上
+  人形机器人 4 个主题            Level 2: 生成式 Policy          "VLA + 离线 RL"
+                               Level 3: 完整的 Robot FM       GR00T_family_notes.md
+                               Level 4: 前沿方向                "分层 + 全身控制"
+
+~2h                          ~30h (自定节奏)                  ~6h                        持续
 ```
 
-## Phase 1: Understand Your Domain (manip + humanoid)
+## Phase 1: 理解你的领域 (manip + humanoid)
 
-**Why first**: You need to articulate *what problems* FM should solve before studying *how* FM works.
+**为什么先看这个**: 你需要先搞清楚 "FM 该解决什么问题", 再去学 "FM 怎么做"。
 
-| File | Path | Key Takeaway | Time |
+| 文件 | 路径 | 核心 Takeaway | 时间 |
 |------|------|-------------|------|
-| manip_landscape.md | `manip/manip_landscape.md` | 5 themes (traditional_rl -> human2robot -> scaling_rl -> sim2real -> fm_manip) show that per-task PPO hits a wall at contact diversity and object generalization | 1h |
-| humanoid_landscape.md | `humanoid/humanoid_landscape.md` | Motion tracking is humanoid's "ImageNet moment"; SONIC proves PPO + scale works at foundation level | 1h |
+| 灵巧操作全景 | `manip/manip_landscape.md` | 5 个主题 (traditional_rl→human2robot→scaling_rl→sim2real→fm_manip) 展示了 per-task PPO 在接触多样性和物体泛化上碰壁 | 1h |
+| 人形机器人全景 | `humanoid/humanoid_landscape.md` | Motion tracking 是人形的 "ImageNet moment"; SONIC 证明 PPO + scale 可以在 FM 级别 work | 1h |
 
-**Takeaway**: Your PPO sim2real skill is the starting point, not the destination. The field is moving from "one policy per task" to "one model, many tasks". Phase 2 explains how.
+**Phase 1 Takeaway**: 你的 PPO sim2real 技能是起点, 不是终点。领域正在从 "每个任务一个策略" 走向 "一个模型, 多种任务"。Phase 2 解释怎么做到的。
 
-## Phase 2: Understand the Methodology (foundation_model)
+## Phase 2: 理解方法论来源 (foundation_model)
 
-**Main document**: `foundation_model/CS2Robotics_Roadmap.md` -- the Level 0-4 progressive curriculum.
+**主文档**: `foundation_model/CS2Robotics_Roadmap.md` — Level 0-4 渐进式路线。
 
-| Level | Core Question | What You Read | Time |
-|-------|--------------|---------------|------|
-| 0 | What patterns transfer from CS to robotics? | Representation Learning (Bengio) + Transformer | 3h |
-| 1 | How does large-scale pre-training work? | GPT series + Scaling Laws + MAE + DINOv2 + CV overview | 8h |
-| 2 | Why move from RL to generative policy? | CLIP + DDPM + Flow Matching + Diffusion Policy + ACT + DT | 12h |
-| 3 | What does a complete robot FM look like? | RT/PI/GR00T family notes + pi_0/SONIC/N1 papers | 12h |
-| 4 | What comes next? | DreamZero + Robot Scaling Laws + surveys | 7h |
+| Level | 核心问题 | 读什么 | 时间 |
+|-------|---------|--------|------|
+| 0 | 什么模式可以从 CS 迁移到 Robotics? | 表征学习 (Bengio) + Transformer | 3h |
+| 1 | 怎么做大规模预训练? | GPT 系列 + Scaling Laws + MAE + DINOv2 + CV 演进图谱 | 8h |
+| 2 | 怎么从 RL 走向生成式 Policy? | CLIP + DDPM + Flow Matching + Diffusion Policy + ACT + DT + R3M/VIP | 12h |
+| 3 | 完整的 Robot FM 长什么样? | RT/PI/GR00T 三份 family notes + pi_0/SONIC/GR00T N1 精读 | 12h |
+| 4 | 下一步是什么? | DreamZero + Robot Scaling Laws + surveys + 局限性声明 | 7h |
 
-**Upgrade exams**: After each Level, take the exam in `foundation_model/note/level_exams.md`. 80% to advance.
+**升级考试**: 每个 Level 完成后做 `foundation_model/note/level_exams.md` 中的考试。80 分进入下一级。
 
-## Phase 3: Deep Dive into the Three Families (RT / PI / GR00T)
+## Phase 3: 深入三大家族 (RT / PI / GR00T)
 
-Read the family notes in `foundation_model/robotics/families/`. Each teaches you something different:
+读 `foundation_model/robotics/families/` 下的 family notes。每个家族教你不同的东西:
 
-| Family | Notes Path | What It Teaches You |
-|--------|-----------|-------------------|
-| Google RT Series | `Google_RT_Series/RT_family_notes.md` | How VLA was born: from LLM-as-planner (SayCan) to end-to-end (RT-2). Why the team left to build PI. The lesson: web knowledge transfers to robots, but autoregressive action tokens have limits. |
-| PI Series | `pi_Series/pi_family_notes.md` | The full VLA pipeline: flow matching action expert + knowledge insulation + cross-embodiment pre-training. pi\*0.6 shows offline RL as post-training -- your PPO experience is directly relevant here. |
-| GR00T Series | `GR00T_Series/GR00T_family_notes.md` | Hierarchical architecture: VLA brain (10Hz) + WBC cerebellum (120Hz) + world model imagination (DreamZero). Your sim2real and motion tracking skills map to the cerebellum layer. |
+| 家族 | Notes 路径 | 教你什么 |
+|------|-----------|---------|
+| Google RT | `Google_RT_Series/RT_family_notes.md` | VLA 是怎么诞生的: 从 LLM 做规划 (SayCan) 到端到端 (RT-2)。核心人物为什么出走做 PI。教训: web 知识可以迁移到机器人, 但离散 token 有精度上限。 |
+| PI | `pi_Series/pi_family_notes.md` | 完整的 VLA 演进: flow matching + knowledge insulation + 跨 embodiment 预训练。pi\*0.6 展示离线 RL 做 post-training — 你的 PPO 经验在这里直接适用。 |
+| GR00T | `GR00T_Series/GR00T_family_notes.md` | 分层架构: VLA 大脑 (10Hz) + WBC 小脑 (120Hz) + 世界模型想象 (DreamZero)。你的 sim2real 和 motion tracking 技能对应小脑层。 |
 
-## Phase 4: Back to Your Work
+## Phase 4: 回到你的工作
 
-How to apply what you learned to your PPO sim2real dexterous manipulation work:
+学完后怎么用到你的 PPO sim2real 灵巧手工作上:
 
-1. **Short term**: Your PPO + sim2real pipeline remains valid for the WBC / low-level control layer (SONIC proves this). Refine it.
-2. **Medium term**: Learn Diffusion Policy or flow matching as your high-level policy. Keep PPO for low-level tracking. This is the TWIST2 / GR00T N1 architecture pattern.
-3. **Long term**: Fine-tune a pre-trained VLA (e.g., openpi) on your dexterous hand demos. Use your RL expertise for post-training (the pi\*0.6 route).
-4. **Data strategy**: Build a teleoperation pipeline to collect demonstration data. This is the bottleneck -- not algorithms.
-5. **Read pi\*0.6 carefully**: It shows how offline RL fine-tunes a VLA -- the exact intersection of "your RL skills" and "new FM paradigm".
+1. **短期**: 你的 PPO + sim2real pipeline 在 WBC / 低层控制层仍然有效 (SONIC 验证了这一点)。继续打磨。
+2. **中期**: 学 Diffusion Policy 或 Flow Matching 做高层策略, PPO 保留在低层做追踪控制。这是 GR00T N1 的架构模式。
+3. **长期**: 在预训练的 VLA (如 openpi) 上用你的灵巧手 demo 做 fine-tune。用 RL 做 post-training (pi\*0.6 路线)。
+4. **数据策略**: 搭建遥操作 pipeline 采集 demo 数据。瓶颈是数据, 不是算法。
+5. **重点精读 pi\*0.6**: 它展示了离线 RL 怎么 fine-tune VLA — 正好是 "你的 RL 技能" 和 "FM 新范式" 的交叉点。
 
-## Quick Lookup Index
+## 快速查阅索引
 
-| "I want to understand..." | Go read |
-|--------------------------|---------|
-| Why per-task RL doesn't scale | `manip/manip_landscape.md` Section 0-1 |
-| How motion tracking unifies humanoid control | `humanoid/humanoid_landscape.md` Theme A |
-| The full CS-to-Robotics transfer roadmap | `foundation_model/CS2Robotics_Roadmap.md` |
-| How GPT's pre-train+fine-tune maps to robots | `CS2Robotics_Roadmap.md` Level 1 |
-| Why diffusion/flow replaces Gaussian policy | `CS2Robotics_Roadmap.md` Level 2 |
-| pi_0's architecture and design choices | `robotics/families/pi_Series/pi_family_notes.md` |
-| GR00T's hierarchical VLA+WBC design | `robotics/families/GR00T_Series/GR00T_family_notes.md` |
-| How RL is used as post-training for VLA | PI family notes, search for "pi\*0.6" |
-| What comes after VLA (world models) | `CS2Robotics_Roadmap.md` Level 4, DreamZero notes |
-| Exam questions to test my understanding | `foundation_model/note/level_exams.md` |
-| All papers in this repo | `paper/papers.yaml` or `paper/CLAUDE.md` |
+| 我想了解... | 去看 |
+|-----------|------|
+| 为什么 per-task RL 不能 scale | `manip/manip_landscape.md` Section 0-1 |
+| motion tracking 怎么统一人形控制 | `humanoid/humanoid_landscape.md` Theme A |
+| CS→Robotics 完整迁移路线 | `foundation_model/CS2Robotics_Roadmap.md` |
+| GPT 的 pre-train+fine-tune 怎么映射到 robot | `CS2Robotics_Roadmap.md` Level 1 |
+| 为什么 diffusion/flow 替代了 Gaussian policy | `CS2Robotics_Roadmap.md` Level 2 |
+| pi_0 的架构和设计思路 | `robotics/families/pi_Series/pi_family_notes.md` |
+| GR00T 的分层 VLA+WBC 设计 | `robotics/families/GR00T_Series/GR00T_family_notes.md` |
+| RL 怎么做 VLA 的 post-training | PI family notes, 搜索 "pi\*0.6" |
+| VLA 之后是什么 (世界模型) | `CS2Robotics_Roadmap.md` Level 4 + DreamZero notes |
+| 考试题测试我的理解 | `foundation_model/note/level_exams.md` |
+| 这个 repo 所有论文的清单 | `papers.yaml` 或 `CLAUDE.md` |
