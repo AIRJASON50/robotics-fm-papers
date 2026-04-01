@@ -1,164 +1,189 @@
-# paper/ - Research Paper Library
+# paper/ - Robotics Foundation Model 知识库
 
-## Directory Structure
+> **用户背景**: RL 实践者 (PPO sim2real 灵巧手), 目标是理解 robotics FM 的设计思想
+> **不复现代码**, 只要思想、方法和 takeaway
+> **核心假设**: Robotics 正在重走 LLM/CV 的路
+
+## 目录结构
 
 ```
 paper/
-├── humanoid/              # Humanoid whole-body control papers (12 projects)
-├── manip/                 # Dexterous manipulation papers (20+ projects)
-├── foundation_model/      # Foundation models: CS→Robotics knowledge base
-│   ├── foundations/       #   Universal ML foundations (9): Transfer Learning, Transformer, PPO, SAC, Adam, BN, LN, GAN, RepLearning
-│   ├── LLM/              #   LLM knowledge: NLP_foundations/ + families/ (GPT, Kimi, Qwen, DeepSeek, Llama)
-│   ├── CV/               #   CV knowledge: backbone, generation, VL, 3D, SSL, detection, video (28 papers)
-│   ├── robotics/         #   Robotics applications: llm_planning, policy_learning, vla, generative_policy, visual_repr, world_model (19 papers)
-│   ├── surveys/          #   Surveys: CV/ (7) + robotics/ (7)
-│   ├── CS2Robotics_Roadmap.md  # Main learning roadmap (Level 0-5)
-│   └── note/             #   Learning notes and exams
-└── html2aitext_convert/   # arxiv2md tool (DO NOT modify)
+├── foundation_model/              # CS → Robotics FM 知识库
+│   ├── foundations/               #   通用 ML 基础 (9 篇)
+│   │   ├── 10_TransferLearning    #     pre-train+fine-tune 的理论根基
+│   │   ├── 12_RepresentationLearning  # 好表示 = 好 AI
+│   │   ├── 14_GAN                 #     生成对抗网络
+│   │   ├── 15_Adam                #     默认优化器
+│   │   ├── 15_BatchNorm           #     CNN 训练稳定性
+│   │   ├── 16_LayerNorm           #     Transformer 标配
+│   │   ├── 17_PPO                 #     RLHF + robot RL 的核心算法
+│   │   ├── 17_Transformer         #     一切的根基
+│   │   └── 18_SAC                 #     连续控制 RL 标准
+│   ├── LLM/                       #   LLM 知识体系
+│   │   ├── NLP_foundations/       #     Word2Vec→Seq2Seq→Attention→BERT→Chinchilla
+│   │   ├── families/             #     GPT, Kimi, Qwen, DeepSeek, Llama
+│   │   └── LLM_技术交织与机器人启示.md
+│   ├── CV/                        #   CV 知识体系 (24 篇, 7 个方向)
+│   │   ├── 0_backbone/           #     ResNet, ViT, Swin, TransferFeatures
+│   │   ├── 1_generation/         #     VAE, DDPM, LDM, FlowMatching, DiT
+│   │   ├── 2_vl_alignment/       #     CLIP, BLIP-2, LLaVA, PaliGemma
+│   │   ├── 3_3d_vision/          #     NeRF, 3DGS, DepthAnything
+│   │   ├── 4_self_supervised/    #     MoCo, SimCLR, DINO, BEiT, MAE, DINOv2
+│   │   ├── 5_detection_seg/      #     DETR, SAM
+│   │   ├── 6_video/              #     TimeSformer, ViViT, VideoMAE, Ego4D
+│   │   └── CV_技术演进与机器人启示.md
+│   ├── robotics/                  #   Robotics 应用
+│   │   ├── families/             #     Google_RT_Series, pi_Series, GR00T_Series
+│   │   ├── policy_learning/      #     DT, ACT, DiffusionPolicy, DROID
+│   │   ├── vla/                  #     Octo, OpenVLA
+│   │   ├── visual_repr/          #     R3M, VIP
+│   │   └── world_model/          #     DreamerV3, UniSim
+│   ├── surveys/                   #   CV/ (7) + robotics/ (7)
+│   ├── CS2Robotics_Roadmap.md     #   主学习路线 (Level 0-4, 按问题分级)
+│   └── note/                      #   学习笔记 + 升级考试
+├── humanoid/                      # 人形机器人 (12 项目)
+├── manip/                         # 灵巧手操作 (16+ 项目)
+│   └── dataset/                   #   手部数据集库 (hand_object/robot_hand/hand_only)
+├── html2aitext_convert/           # arxiv → markdown 工具 (DO NOT modify)
+├── papers.yaml                    # 全库清单
+├── scripts/setup.sh               # 一键 clone
+├── README.md                      # 项目说明
+└── CLAUDE.md                      # 本文件
 ```
 
-## Paper Acquisition Workflow
+## 论文获取流程
 
-### 1. arxiv Paper Fetching
-
-Use the conversion tool to fetch arxiv papers as markdown:
+### 1. 拉取 arxiv 论文
 
 ```bash
-bash /home/l/ws/doc/paper/html2aitext_convert/arxiv2md.sh <arxiv_id>
-# Output: /home/l/ws/doc/paper/html2aitext_convert/output/<title>.md
+bash html2aitext_convert/arxiv2md.sh <arxiv_id>
+# 输出: html2aitext_convert/output/<title>.md
+# 如果 404 (老论文无 HTML): curl -sL -o <name>.pdf https://arxiv.org/pdf/<id>
 ```
 
-### 2. Folder Naming Convention
+### 2. 放置位置决策
 
-Create a folder under the appropriate category (`humanoid/`, `manip/`, or `foundation_model/`) with:
+| 内容 | 放哪里 |
+|------|--------|
+| ML 通用基础 (Transformer, PPO, Adam...) | `foundations/` |
+| LLM 模型家族 | `LLM/families/<name>/` |
+| NLP 专属基础 | `LLM/NLP_foundations/` |
+| CV 论文 (按技术方向) | `CV/<方向>/` |
+| Robotics 家族项目 (RT, PI, GR00T) | `robotics/families/<name>/` |
+| Robotics 单篇方法 | `robotics/policy_learning/` 或 `vla/` 或 `world_model/` |
+| 综述 | `surveys/CV/` 或 `surveys/robotics/` |
 
-- **Format**: `<YY>_<ShortName>`
-- **YY**: 2-digit year of publication (e.g., `25` for 2025)
-- **ShortName**: Short, memorable abbreviation of the paper/project name
+### 3. 命名规范
 
-Examples:
-- `25_HDMI` (HDMI, 2025)
-- `25_OmniRetarget` (OmniRetarget, 2025)
-- `25_SONIC` (SONIC, 2025)
-- `24_ManipTrans` (ManipTrans, 2024)
+- 文件夹: `<YY>_<ShortName>` (如 `25_SONIC`, `24_pi0`)
+- 家族: `<Name>_Series` (如 `GR00T_Series`, `pi_Series`)
+- 笔记: `<name>_notes.md` 或 `<name>_family_notes.md`
 
-### 3. Folder Contents
+### 4. 笔记写作标准
 
-Each paper folder should contain:
+**单篇论文笔记** (`*_notes.md`):
 
-```
-<YY>_<ShortName>/
-├── <paper_title>.md        # arxiv2md output (copy from html2aitext_convert/output/)
-├── <repo_name>/            # Git clone of the codebase (if available)
-└── <ShortName>_notes.md    # Analysis notes (Chinese)
-```
+8 个标准 section:
+1. Core Problem
+2. Method Overview
+3. Key Designs (2-3 个最重要贡献)
+4. Experiments
+5. Related Work Analysis
+6. Limitations & Future Directions
+7. Paper vs Code Discrepancies
+8. Cross-Paper Comparison
 
-### 4. Notes Writing Standard (`<ShortName>_notes.md`)
+**家族笔记** (`*_family_notes.md`):
 
-Notes must include the following sections:
+以 takeaway 为核心, 参考 DeepSeek notes 格式:
+1. 战略定位 / 背景
+2. 演进脉络 (每个阶段: 问题→洞察→解法→takeaway)
+3. 核心 takeaway 表 (# / Takeaway / 原理 / 对你的行动项)
+4. 与其他家族的交叉引用
+5. 文件索引
 
-1. **Core Problem**: What problem does this paper solve?
-2. **Method Overview**: Architecture, pipeline, key formulas
-3. **Key Designs**: The 2-3 most important technical contributions, with intuitive explanations
-4. **Experiments**: Main results, ablation findings
-5. **Related Work Analysis**: Field development context, what makes this work unique
-6. **Limitations & Future Directions**: Author-stated + inferred from code
-7. **Paper vs Code Discrepancies**: Things the paper didn't mention but code implements (e.g., teacher-student distillation, extra reward terms, per-task tuning). This section is critical.
-8. **Cross-Paper Comparison**: Compare with other papers in this library and with bh_motion_track where relevant
-
-**Format rules**:
-- Written in Chinese, technical terms in English
-- No emoji
-- Use markdown tables for structured comparisons
-- Include file paths when referencing specific code locations
-- **首次缩写注解**: 所有英文缩写和专业术语在 notes 中**首次出现时**必须标注英文全称和中文解释, 格式为 inline 括号: `CNN (Convolutional Neural Network, 卷积神经网络)`, `SFT (Supervised Fine-Tuning, 监督微调 -- 用人工编写的高质量回答直接微调模型)`。后续出现可直接使用缩写。如果缩写在表格中密集出现, 在表格后用 `> **术语说明**:` 引用块集中解释。
+**格式规则**:
+- 中文写作, 技术术语保留英文
+- 不用 emoji
+- 首次缩写注解: `SFT (Supervised Fine-Tuning, 监督微调)`
+- markdown 表格做结构化对比
 
 ## Paper Index
 
-### humanoid/
-
-| Folder | Paper | Year | Notes |
-|--------|-------|------|-------|
-| 18_DeepMimic | DeepMimic: Example-Guided Deep RL | 2018 | - |
-| 23_PHC | Perpetual Humanoid Control (ICCV) | 2023 | PHC_notes.md |
-| 24_H2O | H2O + OmniH2O (Whole-Body Teleoperation) | 2024 | H2O_notes.md |
-| 25_ASAP | ASAP: Aligning Sim and Real Physics | 2025 | - |
-| 25_BeyondMimic | BeyondMimic: Versatile Humanoid Control | 2025 | - |
-| 25_FPO | First-Person Operation Control | 2025 | - |
-| 25_HDMI | HDMI: Interactive Humanoid Control from Video | 2025 | HDMI_notes.md |
-| 25_OmniRetarget | OmniRetarget + HoloSoma Framework | 2025 | OmniRetarget_notes.md |
-| 25_RWM | Robotic World Model | 2025 | - |
-| 25_SONIC | SONIC: Supersizing Motion Tracking | 2025 | - |
-| 25_TWIST2 | TWIST2: Teleoperated Whole-Body Imitation | 2025 | - |
-| Humanoid-Locomotion-Survey | Evolution of Humanoid Locomotion Control (Survey) | 2025 | survey_notes.md |
-
-### manip/
-
-| Folder | Paper | Year | Notes |
-|--------|-------|------|-------|
-| 23_ArtiGrasp | ArtiGrasp: Articulated Object Grasping | 2023 | - |
-| 23_PhysHOI | PhysHOI: Physics-based Human-Object Interaction | 2023 | - |
-| 24_BiDexHD | BiDexHD: Bimanual Dexterous Hand | 2024 | - |
-| 24_DexMachina | DexMachina: Dexterous Manipulation | 2024 | - |
-| 24_ManipTrans | ManipTrans: Manipulation Transfer | 2024 | - |
-| 24_ObjDexEnvs | ObjDexEnvs: Object Dexterous Environments | 2024 | - |
-| 24_QiHaoZhi | QiHaoZhi Dexterous Manipulation | 2024 | - |
-| 25_MinBC | MinBC: Choice Policy for Humanoid Manipulation | 2025 | MinBC_notes.md |
-| 25_DexCanvas | DexCanvas: Dexterous Motion Tracking | 2025 | - |
-| 25_SimToolReal | SimToolReal: Sim-to-Real Tool Use | 2025 | - |
-| 25_SPIDER | SPIDER: Dexterous Manipulation | 2025 | - |
-| 25_OmniReset | OmniReset: Emergent Dexterity via Diverse Resets and Large-Scale RL | 2025 | OmniReset_notes.md |
-| 26_Dex4D | Dex4D: 4D Dexterous Manipulation | 2026 | - |
-| 26_HandelBot | HandelBot: Real-World Piano Playing | 2026 | HandelBot_notes.md |
-
-### foundation_model/
-
-Roadmap: `CS2Robotics_Roadmap.md` -- CS→Robotics migration paths and reading order.
-
-#### foundations/ (universal ML foundations)
+### foundations/ (9 篇)
 
 | Folder | Paper | Year |
 |--------|-------|------|
 | 10_TransferLearning | A Survey on Transfer Learning (Pan & Yang, IEEE TKDE) | 2010 |
-| 12_RepresentationLearning | Representation Learning: A Review (Bengio, IEEE TPAMI) | 2013 |
-| 17_Transformer | Attention Is All You Need (Vaswani et al., NeurIPS) | 2017 |
+| 12_RepresentationLearning | Representation Learning (Bengio, IEEE TPAMI) | 2013 |
+| 14_GAN | Generative Adversarial Networks (Goodfellow, NeurIPS) | 2014 |
+| 15_Adam | Adam Optimizer (Kingma & Ba, ICLR) | 2015 |
+| 15_BatchNorm | Batch Normalization (Ioffe & Szegedy, ICML) | 2015 |
+| 16_LayerNorm | Layer Normalization (Ba, Kiros, Hinton) | 2016 |
+| 17_PPO | Proximal Policy Optimization (Schulman, OpenAI) | 2017 |
+| 17_Transformer | Attention Is All You Need (Vaswani, NeurIPS) | 2017 |
+| 18_SAC | Soft Actor-Critic (Haarnoja, ICML) | 2018 |
 
-#### LLM/ (LLM knowledge base)
+### LLM/ (5 NLP 基础 + 5 模型家族)
 
-| Folder | Content | Notes |
-|--------|---------|-------|
-| NLP_foundations/ | Word2Vec, Seq2Seq, BahdanauAttention, BERT, Chinchilla | 5 NLP-specific foundations |
-| families/GPT_Series/ | GPT-1/2/3/4 + Scaling Laws + RLHF + Codex + WebGPT + InstructGPT | GPT_series_notes.md |
-| families/kimi/ | k1.5, MoBA, Moonlight, Audio, K2, K2.5 (Moonshot AI) | kimi_series_notes.md |
-| families/qwen/ | Qwen 1/2/2.5/3/3.5, VL, Audio, Omni (Alibaba) | qwen_series_notes.md |
-| families/deepseek/ | DeepSeekMoE, V2 (MLA+MoE), V3, R1 | deepseek_series_notes.md |
-| families/llama/ | LLaMA 1, Llama 2/3/4 (Meta) | llama_series_notes.md |
+| 内容 | Notes |
+|------|-------|
+| NLP_foundations: Word2Vec, Seq2Seq, Attention, BERT, Chinchilla | -- |
+| GPT Series: GPT-1/2/3/4 + RLHF + Codex + WebGPT + InstructGPT | GPT_series_notes.md |
+| Kimi: k1.5, MoBA, Moonlight, Audio, K2, K2.5 | kimi_series_notes.md |
+| Qwen: 1/2/2.5/3/3.5, VL, Audio, Omni | qwen_series_notes.md |
+| DeepSeek: MoE, V2 (MLA), V3, R1 | deepseek_series_notes.md |
+| Llama: 1/2/3/4 | llama_series_notes.md |
 
-#### CV/ (CV knowledge base, by technique)
+### CV/ (24 篇, 7 方向)
 
-| Folder | Content |
-|--------|---------|
-| 0_backbone/ | ResNet, ViT, TransferFeatures |
-| 1_generation/ | VAE, DDPM, FlowMatching, DiT |
-| 2_vl_alignment/ | CLIP, LLaVA, PaliGemma |
-| 3_3d_vision/ | (待填: NeRF, 3DGS, Depth Anything) |
-| 4_self_supervised/ | (待填: MAE, DINO, DINOv2) |
-| 5_detection_seg/ | SAM |
-| 6_video/ | (待填) |
+| 方向 | 内容 |
+|------|------|
+| 0_backbone | ResNet, ViT, SwinTransformer, TransferFeatures |
+| 1_generation | VAE, DDPM, LDM, FlowMatching, DiT |
+| 2_vl_alignment | CLIP, BLIP-2, LLaVA, PaliGemma |
+| 3_3d_vision | NeRF, 3DGS, DepthAnything |
+| 4_self_supervised | MoCo, SimCLR, DINO, BEiT, MAE, DINOv2 |
+| 5_detection_seg | DETR, SAM |
+| 6_video | TimeSformer, ViViT, VideoMAE, Ego4D |
 
-#### robotics/ (robotics applications, by approach)
+### robotics/ (3 家族 + 方法论文)
 
-| Folder | Papers |
-|--------|--------|
-| llm_planning/ | SayCan, CodeAsPolicies, InnerMonologue, Voyager |
-| policy_learning/ | DecisionTransformer, RT-1, RT-2, ACT, OpenXEmbodiment |
-| vla/ | PaLME, Octo, OpenVLA |
-| generative_policy/ | DiffusionPolicy, pi_0, GR00T_N1 |
-| world_model/ | DreamerV3 |
+| 内容 | 位置 |
+|------|------|
+| **Google RT Series** (9 篇): SayCan→RT-1→RT-2→PaLME→OpenX→AutoRT→RT-H | families/Google_RT_Series/ |
+| **PI Series** (7 篇): DROID→pi_0→FAST→HiRobot→pi_0.5→pi\*0.6→MEM | families/pi_Series/ |
+| **GR00T Series** (6 篇): N1→N1.5→SONIC→DreamGen→N1.6→DreamZero | families/GR00T_Series/ |
+| 方法论文: DT, ACT, DiffusionPolicy, DROID | policy_learning/ |
+| VLA 基线: Octo, OpenVLA | vla/ |
+| 视觉表征: R3M, VIP | visual_repr/ |
+| 世界模型: DreamerV3, UniSim | world_model/ |
 
-#### surveys/
+### surveys/ (14 篇)
 
-| Folder | Content |
-|--------|---------|
-| CV/ | 7 surveys: ViT(TPAMI), NeRF+3DGS, VLM(TPAMI), SSL(TPAMI), Depth, Video(TCSVT), MIM(IJCV) |
-| robotics/ | 7 surveys: FMRobotics(IJRR), GeneralPurposeRobots, LangCondManip, LanguageGrounding, WorldModels, DynamicsModels, RobotScalingLaws |
+| 方向 | 内容 |
+|------|------|
+| CV (7) | ViT(TPAMI), SSL(TPAMI), VLM(TPAMI), Depth, MIM(IJCV), Video(TCSVT), NeRF+3DGS |
+| Robotics (7) | FMRobotics(IJRR), GeneralPurpose, LangCondManip, LanguageGrounding, WorldModels, DynamicsModels, RobotScalingLaws |
+
+### humanoid/ (12 项目)
+
+| Folder | Paper | Year |
+|--------|-------|------|
+| 18_DeepMimic | DeepMimic: Example-Guided Deep RL | 2018 |
+| 23_PHC | Perpetual Humanoid Control | 2023 |
+| 24_H2O | H2O: Human-to-Humanoid Teleoperation | 2024 |
+| 25_ASAP | ASAP: Aligning Sim and Real Physics | 2025 |
+| 25_BeyondMimic | BeyondMimic: Versatile Humanoid Control | 2025 |
+| 25_FPO | First-Person Operation Control | 2025 |
+| 25_HDMI | HDMI: Interactive Humanoid Control from Video | 2025 |
+| 25_OmniRetarget | OmniRetarget + HoloSoma | 2025 |
+| 25_RWM | Robotic World Model | 2025 |
+| 25_SONIC | SONIC: Supersizing Motion Tracking | 2025 |
+| 25_TWIST2 | TWIST2: Teleoperated Whole-Body Imitation | 2025 |
+| Humanoid-Locomotion-Survey | Humanoid Locomotion Survey | 2025 |
+
+### manip/ (16+ 项目)
+
+灵巧手操作论文 + `dataset/` 手部数据集库 (hand_object / robot_hand / hand_only)。
+详见 `manip/dataset/DATASET_COMPARISON.md`。
