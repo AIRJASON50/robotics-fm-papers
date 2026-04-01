@@ -182,6 +182,42 @@ Robot: RT-1 (基础) → pi_0/GR00T (对齐+部署) → ??? (产品化)
 
 ---
 
+### 本路线图的局限性 (基于 survey 交叉验证)
+
+以下是本路线图**有意识的简化和遗漏**, 基于 IJRR FM Survey、General-Purpose Robots Survey、Robot Scaling Laws Survey 的交叉验证:
+
+**1. VLA 不是唯一路线**
+
+本路线图重点覆盖端到端 VLA (RT→pi_0→GR00T), 但 IJRR survey 给予 **LLM-as-planner** (SayCan, Code-as-Policies, ProgPrompt) 和 **open-vocabulary perception** (Grounding DINO, CLIP-Fields) 同等权重。这些模块化方案在工业部署中可能比端到端 VLA 更实用 — VLA 的推理频率 (1-10Hz) 远不能满足全身控制 (需 500Hz)。RT family notes Phase 1 覆盖了 LLM-as-planner, 但路线图主线未纳入。
+
+**2. Safety / Uncertainty 完全未覆盖**
+
+两份 survey 都将 safety 和 uncertainty quantification 列为**核心挑战/最薄弱环节**。本路线图没有任何 safety 相关内容。如果你的工作涉及真机部署, 这是一个必须单独学习的方向。
+
+**3. Scaling 的统计置信度有限**
+
+Robot Scaling Laws survey 的结论基于 327 篇论文的 meta-analysis, 但大多数 scaling study 仅有 **2-3 个数据点**, compute scaling 维度 **几乎空白** (327 篇中仅 1 篇)。Power-law 趋势存在但不如 LLM 的 Kaplan/Chinchilla 那样可靠。且 survey 强调 **data diversity > data quantity** — seen task 的 scaling 效率是 unseen 的 2.5 倍。
+
+**4. VLA 的已知瓶颈**
+
+General-Purpose Robots survey 指出 VLA 在 unseen task 上性能下降 **21-31%**, 且缺乏统一 benchmark (不同论文的 success rate 定义不同)。本路线图呈现了 VLA 的能力但未充分警告其局限。
+
+**5. 数据增广是被低估的方向**
+
+IJRR survey 系统讨论了多种 data augmentation 方案 (ROSIE 语义增广、GenAug 生成式增广、CACTI 上下文增广), 这些在数据稀缺的 robotics 中极其重要。你的知识库中 GR00T DreamGen 和 UltraDexGrasp 的合成数据 pipeline 属于这个方向, 但路线图未将数据增广作为独立主题。
+
+**数据增广的三种范式** (值得你关注):
+
+| 范式 | 方法 | 代表 | 与你的关联 |
+|------|------|------|---------|
+| **Domain Randomization** | 在 sim 中随机化视觉/物理参数 | SONIC 的 DR、你的 sim2real 工作 | 你已经在用, 但可以更系统化 |
+| **生成式增广** | 用生成模型 (diffusion/video) 创建新场景/视角 | GR00T DreamGen (Cosmos 世界模型)、ROSIE、GenAug | DreamGen 证明 11h→6500h 等效, 数据飞轮的核心 |
+| **合成数据 Pipeline** | 自动化生成大规模标注数据 | UltraDexGrasp (BODex 20M 帧)、AutoRT (VLM 自动分配) | 完全绕过人工数据采集瓶颈 |
+
+> **对你的启示**: 你的 sim2real 经验 (Domain Randomization) 是数据增广的第一种范式。下一步是探索生成式增广 (DreamGen) 和合成 pipeline (UltraDexGrasp) — 这两种可以让你用少量真实 demo 产生大规模训练数据。
+
+---
+
 ## 4. 你的知识库全景
 
 ```
