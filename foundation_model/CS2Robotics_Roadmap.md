@@ -5,6 +5,27 @@
 > **不做什么**: 不复现代码, 不成为 LLM/CV 专家
 > **核心洞察**: Robotics 正在重走 LLM/CV 的路, 学习这条路 = 看到 robotics 的未来
 
+### 本路线图在知识库中的位置
+
+```
+你的学习路径:
+
+manip/ (你的起点)                     "问题是什么"
+  manip_landscape.md                    灵巧操作 5 个主题的全景
+  → 发现: per-task RL 不可扩展
+  
+humanoid/ (扩展视野)                   "规模化怎么做"
+  humanoid_landscape.md                 人形控制 4 个主题的全景
+  → 发现: motion tracking 可以统一所有运动
+
+foundation_model/ (方法论来源)          "为什么可以这样做"
+  >>> 本文件: CS2Robotics_Roadmap.md    Level 0-4 的学习路线 <<<
+  LLM_技术交织与机器人启示.md             LLM 全景 + 技术分岔
+  CV_技术演进与机器人启示.md              CV 全景 + 5 条演进线
+```
+
+如果你还没看过 manip_landscape.md 和 humanoid_landscape.md, **建议先看它们**——它们是你从自身经验出发理解 "为什么需要 FM" 的上下文。本文件假设你已经理解了灵巧操作的 5 个主题和人形控制的 4 个方向。
+
 ---
 
 ## 1. Robotics 在 LLM 时间线上的位置
