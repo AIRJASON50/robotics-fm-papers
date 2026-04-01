@@ -19,8 +19,8 @@ paper/
 │   ├── robotics/             #   3 大家族 (RT/PI/GR00T) + 方法论文 + surveys
 │   ├── surveys/              #   14 篇 survey (CV 7 + Robotics 7)
 │   └── CS2Robotics_Roadmap.md    # 主学习路线 (按问题分级, 非按领域)
-├── humanoid/                  # 人形机器人全身控制 (12 项目)
-├── manip/                     # 灵巧手操作 (16+ 项目 + 数据集库)
+├── humanoid/                  # 人形机器人 (4 主题: motion_tracking, teleoperation, sim2real, video_world_model)
+├── manip/                     # 灵巧手操作 (5 主题: traditional_rl, human2robot, scaling_rl, sim2real, fm_manip)
 ├── html2aitext_convert/       # arxiv → markdown 工具
 ├── papers.yaml                # 全库清单 (arxiv IDs + repo URLs)
 └── scripts/setup.sh           # 一键 clone 所有代码仓库

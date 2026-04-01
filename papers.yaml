@@ -683,7 +683,7 @@ surveys_robotics:
 # Humanoid
 # ============================================================
 humanoid:
-  - folder: humanoid/18_DeepMimic
+  - folder: humanoid/motion_tracking/18_DeepMimic
     title: "DeepMimic: Example-Guided Deep RL of Physics-Based Character Skills"
     authors: Peng et al.
     year: 2018
@@ -692,7 +692,7 @@ humanoid:
       - name: DeepMimic
         url: https://github.com/xbpeng/DeepMimic.git
 
-  - folder: humanoid/23_PHC
+  - folder: humanoid/motion_tracking/23_PHC
     title: "Perpetual Humanoid Control for Real-time Simulated Avatars"
     authors: Luo et al.
     year: 2023
@@ -701,7 +701,7 @@ humanoid:
       - name: PHC
         url: https://github.com/ZhengyiLuo/PHC.git
 
-  - folder: humanoid/24_H2O
+  - folder: humanoid/teleoperation/24_H2O
     title: "H2O + OmniH2O: Human-to-Humanoid Whole-Body Teleoperation"
     authors: He et al., CMU
     year: 2024
@@ -710,7 +710,7 @@ humanoid:
       - name: human2humanoid
         url: https://github.com/LeCAR-Lab/human2humanoid.git
 
-  - folder: humanoid/25_ASAP
+  - folder: humanoid/sim2real/25_ASAP
     title: "ASAP: Aligning Sim and Real Physics"
     authors: He et al., CMU
     year: 2025
@@ -719,7 +719,7 @@ humanoid:
       - name: "."
         url: https://github.com/LeCAR-Lab/ASAP.git
 
-  - folder: humanoid/25_BeyondMimic
+  - folder: humanoid/motion_tracking/25_BeyondMimic
     title: "BeyondMimic: Versatile Humanoid Locomotion and Manipulation"
     authors: HybridRobotics
     year: 2025
@@ -727,7 +727,7 @@ humanoid:
       - name: whole_body_tracking
         url: https://github.com/HybridRobotics/whole_body_tracking.git
 
-  - folder: humanoid/25_FPO
+  - folder: humanoid/teleoperation/25_FPO
     title: "First-Person Operation of Robot Manipulators"
     authors: Amazon FAR
     year: 2025
@@ -735,7 +735,7 @@ humanoid:
       - name: code
         url: https://github.com/amazon-far/fpo-control.git
 
-  - folder: humanoid/25_HDMI
+  - folder: humanoid/video_world_model/25_HDMI
     title: "HDMI: Interactive Humanoid Control from High-Definition Video"
     authors: He et al., CMU
     year: 2025
@@ -744,7 +744,7 @@ humanoid:
       - name: HDMI
         url: https://github.com/LeCAR-Lab/HDMI.git
 
-  - folder: humanoid/25_OmniRetarget
+  - folder: humanoid/teleoperation/25_OmniRetarget
     title: "OmniRetarget + HoloSoma Framework"
     authors: Amazon FAR
     year: 2025
@@ -752,7 +752,7 @@ humanoid:
       - name: "."
         url: https://github.com/amazon-far/holosoma.git
 
-  - folder: humanoid/25_RWM
+  - folder: humanoid/video_world_model/25_RWM
     title: "Robotic World Model"
     authors: ETH Zurich
     year: 2025
@@ -760,7 +760,7 @@ humanoid:
       - name: "."
         url: https://github.com/leggedrobotics/robotic_world_model.git
 
-  - folder: humanoid/25_SONIC
+  - folder: humanoid/motion_tracking/25_SONIC
     title: "SONIC: Supersizing Optimal Control for Humanoid Locomotion"
     authors: NVIDIA
     year: 2025
@@ -768,7 +768,7 @@ humanoid:
       - name: GR00T-WBC
         url: https://github.com/NVlabs/GR00T-WholeBodyControl.git
 
-  - folder: humanoid/25_TWIST2
+  - folder: humanoid/teleoperation/25_TWIST2
     title: "TWIST2: Teleoperated Whole-Body Imitation with Stabilized Tracking"
     authors: Amazon FAR
     year: 2025
@@ -787,7 +787,7 @@ humanoid:
 # Dexterous Manipulation
 # ============================================================
 manip:
-  - folder: manip/23_ArtiGrasp
+  - folder: manip/traditional_rl/23_ArtiGrasp
     title: "ArtiGrasp: Articulated Object Grasping"
     authors: Zhang et al.
     year: 2023
@@ -796,7 +796,7 @@ manip:
       - name: artigrasp
         url: https://github.com/zdchan/artigrasp.git
 
-  - folder: manip/23_PhysHOI
+  - folder: manip/traditional_rl/23_PhysHOI
     title: "PhysHOI: Physics-Based Human-Object Interaction"
     authors: Wang et al.
     year: 2023
@@ -804,7 +804,7 @@ manip:
       - name: PhysHOI
         url: https://github.com/wyhuai/PhysHOI.git
 
-  - folder: manip/24_BiDexHD
+  - folder: manip/human2robot/24_BiDexHD
     title: "BiDexHD: Bimanual Dexterous Manipulation"
     authors: Zhou et al.
     year: 2024
@@ -812,7 +812,7 @@ manip:
       - name: BiDexHD
         url: https://github.com/zhoubohan0/BiDexHD.git
 
-  - folder: manip/24_DexMachina
+  - folder: manip/human2robot/24_DexMachina
     title: "DexMachina: Functional Grasp Synthesis"
     year: 2024
     repos:
@@ -826,42 +826,42 @@ manip:
       - name: repo
         url: https://github.com/ManipTrans/ManipTrans.git
 
-  - folder: manip/24_ObjDexEnvs
+  - folder: manip/traditional_rl/24_ObjDexEnvs
     title: "ObjDexEnvs: Object Dexterous Manipulation Environments"
     year: 2024
     repos:
       - name: ObjDexEnvs
         url: https://github.com/cypypccpy/ObjDexEnvs.git
 
-  - folder: manip/25_DexTrack
+  - folder: manip/human2robot/25_DexTrack
     title: "DexCanvas: Dexterous Motion Tracking"
     year: 2025
     repos:
       - name: code
         url: https://github.com/dexrobot/dexcanvas.git
 
-  - folder: manip/25_DexTrack
+  - folder: manip/human2robot/25_DexTrack
     title: "DexTrack: Dexterous Hand Tracking"
     year: 2025
     repos:
       - name: DexTrack_code
         url: https://github.com/Meowuu7/DexTrack.git
 
-  - folder: manip/25_OmniReset
+  - folder: manip/scaling_rl/25_OmniReset
     title: "OmniReset: Emergent Dexterity via Diverse Resets"
     year: 2025
     repos:
       - name: UWLab
         url: https://github.com/UW-Lab/UWLab.git
 
-  - folder: manip/25_SimToolReal
+  - folder: manip/sim2real/25_SimToolReal
     title: "SimToolReal: Sim-to-Real Tool Use"
     year: 2025
     repos:
       - name: simtoolreal
         url: https://github.com/tylerlum/simtoolreal.git
 
-  - folder: manip/26_Dex4D
+  - folder: manip/sim2real/26_Dex4D
     title: "Dex4D: 4D Dexterous Manipulation"
     year: 2026
     repos:
@@ -872,21 +872,21 @@ manip:
       - name: Dex4D-Vision
         url: https://github.com/Dex4D/Dex4D-Vision.git
 
-  - folder: manip/26_DexLatent
+  - folder: manip/fm_manip/26_DexLatent
     title: "DexLatent: Dexterous Manipulation via Latent Representations"
     year: 2026
     repos:
       - name: DexLatent
         url: https://github.com/EmptyBlueBox/DexLatent.git
 
-  - folder: manip/26_HumDex
+  - folder: manip/human2robot/26_HumDex
     title: "HumDex: Human-like Dexterous Manipulation"
     year: 2026
     repos:
       - name: HumDex
         url: https://github.com/physical-superintelligence-lab/HumDex.git
 
-  - folder: manip/26_UltraDexGrasp
+  - folder: manip/fm_manip/26_UltraDexGrasp
     title: "UltraDexGrasp: Ultra-Dexterous Grasp Synthesis"
     year: 2026
     repos:

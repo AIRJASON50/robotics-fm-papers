@@ -166,24 +166,27 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | CV (7) | ViT(TPAMI), SSL(TPAMI), VLM(TPAMI), Depth, MIM(IJCV), Video(TCSVT), NeRF+3DGS |
 | Robotics (7) | FMRobotics(IJRR), GeneralPurpose, LangCondManip, LanguageGrounding, WorldModels, DynamicsModels, RobotScalingLaws |
 
-### humanoid/ (12 项目)
+### humanoid/ (12 项目, 4 主题)
 
-| Folder | Paper | Year |
-|--------|-------|------|
-| 18_DeepMimic | DeepMimic: Example-Guided Deep RL | 2018 |
-| 23_PHC | Perpetual Humanoid Control | 2023 |
-| 24_H2O | H2O: Human-to-Humanoid Teleoperation | 2024 |
-| 25_ASAP | ASAP: Aligning Sim and Real Physics | 2025 |
-| 25_BeyondMimic | BeyondMimic: Versatile Humanoid Control | 2025 |
-| 25_FPO | First-Person Operation Control | 2025 |
-| 25_HDMI | HDMI: Interactive Humanoid Control from Video | 2025 |
-| 25_OmniRetarget | OmniRetarget + HoloSoma | 2025 |
-| 25_RWM | Robotic World Model | 2025 |
-| 25_SONIC | SONIC: Supersizing Motion Tracking | 2025 |
-| 25_TWIST2 | TWIST2: Teleoperated Whole-Body Imitation | 2025 |
-| Humanoid-Locomotion-Survey | Humanoid Locomotion Survey | 2025 |
+详见 `humanoid/humanoid_landscape.md`
 
-### manip/ (16+ 项目)
+| 主题 | 内容 |
+|------|------|
+| motion_tracking/ | DeepMimic → PHC → BeyondMimic → SONIC (→GR00T) |
+| teleoperation/ | H2O, FPO, OmniRetarget, TWIST2 |
+| sim2real/ | ASAP |
+| video_world_model/ | HDMI, RWM |
 
-灵巧手操作论文 + `dataset/` 手部数据集库 (hand_object / robot_hand / hand_only)。
-详见 `manip/dataset/DATASET_COMPARISON.md`。
+### manip/ (13+ 项目, 5 主题)
+
+详见 `manip/manip_landscape.md` (含 humanoid→manip 桥接分析)
+
+| 主题 | 内容 |
+|------|------|
+| traditional_rl/ | ArtiGrasp, PhysHOI, ObjDexEnvs |
+| human2robot/ | BiDexHD, DexMachina, DexTrack, HumDex |
+| scaling_rl/ | OmniReset |
+| sim2real/ | SimToolReal, Dex4D |
+| fm_manip/ | RLToken (PI), DexLatent (XL-VLA), UltraDexGrasp |
+| QiHaoZhi/ | 研究者 family (齐昊之) |
+| dataset/ | 手部数据集库 (hand_object / robot_hand / hand_only) |
