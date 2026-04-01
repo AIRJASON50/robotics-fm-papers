@@ -224,7 +224,7 @@ foundation_model/
 | **Sergey Levine** (Berkeley/PI) | RL→Robot FM 转型的标杆人物, pi_0 联合创始人 |
 | **Chelsea Finn** (Stanford/PI) | Meta-learning→VLA, 和你一样从 RL 出发 |
 | **Karol Hausman** (PI CEO) | SayCan→RT-2→pi_0, VLA 定义者 |
-| **骆政一 Zhengyi Luo** (NVIDIA) | PHC→SONIC, motion tracking 从小规模到 FM 级 |
+| **罗正宜 Zhengyi Luo** (NVIDIA) | PHC→SONIC, motion tracking 从小规模到 FM 级 |
 | **Jim Fan** (NVIDIA) | GR00T 系列, Foundation Agent 倡导者 |
 | **Shuran Song** (Stanford) | Diffusion Policy 创造者 |
 | **Kaiming He** (MIT) | ResNet→MoCo→MAE, 视觉自监督的定义者 |
