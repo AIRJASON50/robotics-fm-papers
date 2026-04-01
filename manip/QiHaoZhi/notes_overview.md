@@ -1,4 +1,4 @@
-# Haozhi Qi (齐昊之) 研究脉络总结
+# Haozhi Qi (齐浩之) 研究脉络总结
 
 **机构**: UC Berkeley → Amazon FAR AI
 **导师**: Jitendra Malik

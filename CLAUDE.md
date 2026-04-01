@@ -188,5 +188,5 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | scaling_rl/ | OmniReset |
 | sim2real/ | SimToolReal, Dex4D |
 | fm_manip/ | RLToken (PI), DexLatent (XL-VLA), UltraDexGrasp |
-| QiHaoZhi/ | 研究者 family (齐昊之) |
+| QiHaoZhi/ | 研究者 family (齐浩之) |
 | dataset/ | 手部数据集库 (hand_object / robot_hand / hand_only) |

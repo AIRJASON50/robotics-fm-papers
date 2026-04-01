@@ -1,6 +1,6 @@
 # 通过快速运动自适应实现手内物体旋转
 
-**齐昊之\*,1,2, Ashish Kumar\*,1, Roberto Calandra2, 马毅1, Jitendra Malik1,2**
+**齐浩之\*,1,2, Ashish Kumar\*,1, Roberto Calandra2, 马毅1, Jitendra Malik1,2**
 
 1 UC Berkeley, 2 Meta AI
 

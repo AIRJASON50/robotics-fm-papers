@@ -209,7 +209,7 @@ OmniReset 的 diverse resets 本质是扩大 RL 的 state coverage。在 FM fine
 
 | 相关目录 | 内容 | 与本文的关系 |
 |----------|------|-------------|
-| `manip/QiHaoZhi/` | 齐昊之组的 sim2real 系列 (HORA, PenSpin, DexScrew) 和 human demo 系列 (HOP, AINA, SPIDER) | sim2real 和 human2robot 主题的更多实例, 代码实现参考价值高 |
+| `manip/QiHaoZhi/` | 齐浩之组的 sim2real 系列 (HORA, PenSpin, DexScrew) 和 human demo 系列 (HOP, AINA, SPIDER) | sim2real 和 human2robot 主题的更多实例, 代码实现参考价值高 |
 | `manip/dataset/` | 手部数据集库 (ARCTIC, GRAB, TACO, DexGraspNet, DexCanvas 等) | human2robot 和 FM 主题的数据基础设施 |
 | `foundation_model/robotics/` | Google RT Series, PI Series, GR00T Series, 以及 policy learning 方法 | FM manipulation 主题的上游知识 (VLA 架构、训练范式) |
 | `foundation_model/CV/` | 视觉基础 (ViT, CLIP, SAM, 3DGS, DINOv2 等) | sim2real 感知模块 (FoundationPose, point tracking) 的基础 |
