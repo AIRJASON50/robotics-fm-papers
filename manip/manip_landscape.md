@@ -5,6 +5,49 @@
 
 ---
 
+## 0. 从人形机器人到灵巧操作: 先验、桥梁与新挑战
+
+灵巧操作不是从零开始的——它继承了 humanoid whole-body control 的大量先验, 同时面临全新的挑战。
+
+### 从 humanoid 带来的先验
+
+| 先验 | humanoid 中怎么用 | manip 中怎么用 |
+|------|-----------------|---------------|
+| **PPO + sim2real** | 全身步态控制 (PHC, SONIC) | 灵巧手关节控制 (ArtiGrasp, OmniReset) |
+| **Motion tracking 作为统一目标** | SONIC: 100M 帧动捕→全身追踪 | DexTrack: 3585 条手部轨迹→灵巧追踪 |
+| **Domain randomization** | ASAP: 摩擦/质量/延迟随机化 | SimToolReal/Dex4D: 物体几何/纹理随机化 |
+| **Teacher-student 蒸馏** | PHC/SONIC: state teacher → deploy | BiDexHD: state teacher → vision student |
+| **Universal Token Space** | SONIC: FSQ 对齐人和机器人 | DexLatent: VAE 对齐不同灵巧手 |
+
+### humanoid→manip 的自然演进
+
+```
+humanoid 解决的问题:             manip 面临的新问题:
+  "怎么走和平衡"                   "怎么抓和操作"
+  全身 29 DOF                      手部 16-24 DOF (更密集的接触)
+  动捕数据丰富 (AMASS 100M帧)       手部数据稀缺 (ARCTIC ~几千条)
+  运动是周期性的 (步态)              操作是非周期的 (每个任务不同)
+  reward 可以简化 (跟踪位置)         reward 必须包含接触 (力/滑动)
+  sim2real gap 主要在地面            sim2real gap 在接触面 (更难)
+```
+
+### 三个核心新挑战
+
+**挑战 1: 接触建模**
+Humanoid 的主要接触是脚-地面 (大面积、可预测)。灵巧操作的接触是指尖-物体 (小面积、高度不确定、力敏感)。仿真中的接触模型 (MuJoCo soft contact) 和真实接触差距更大, 这使得 sim2real 在 manipulation 中比 locomotion 更难。
+
+**挑战 2: 物体多样性**
+Humanoid 的环境相对固定 (平地/楼梯/斜坡)。灵巧操作面对的物体是开放集合 (任意形状/材质/重量)。这要求策略对物体有 zero-shot 泛化能力——传统 per-object RL 做不到, 必须用 object-centric representation (SimToolReal) 或 foundation model (DexLatent)。
+
+**挑战 3: 数据获取**
+Humanoid 有 AMASS (100M 帧全身动捕)。灵巧手没有同等规模的数据集——ARCTIC 只有几千条, TACO 只有 141 个任务。这就是为什么 UltraDexGrasp 用合成数据 (20M 帧) 和 DexTrack 用 data flywheel 来绕过人类数据瓶颈。
+
+### Takeaway
+
+**humanoid 教会了我们 "motion tracking + PPO + sim2real" 这套方法论。manip 继承了这套方法论, 但发现它在接触密集、物体多样、数据稀缺的灵巧操作场景中不够用。五个主题 (traditional_rl→human2robot→scaling_rl→sim2real→fm_manip) 就是解决这三个新挑战的五次尝试。**
+
+---
+
 ## 1. Traditional RL -- 单任务强化学习
 
 **定义**: 用 PPO 等 on-policy RL 算法, 在仿真中为特定物体/任务训练灵巧操作策略。策略直接映射本体感知到关节动作, 训练依赖精心设计的 reward shaping 和 curriculum。这是灵巧操作领域最成熟的范式, 也是绝大多数后续工作的起点。
