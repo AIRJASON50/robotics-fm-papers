@@ -1,0 +1,173 @@
+# 灵巧操作研究全景 (Dexterous Manipulation Landscape)
+
+> **读者画像**: PPO sim2real 灵巧手实践者, 正在向 Foundation Model 方向转型
+> **本文目的**: 梳理 manip/ 目录下 5 个主题的定义、核心问题和相互关系, 为 FM 转型提供导航
+
+---
+
+## 1. Traditional RL -- 单任务强化学习
+
+**定义**: 用 PPO 等 on-policy RL 算法, 在仿真中为特定物体/任务训练灵巧操作策略。策略直接映射本体感知到关节动作, 训练依赖精心设计的 reward shaping 和 curriculum。这是灵巧操作领域最成熟的范式, 也是绝大多数后续工作的起点。
+
+**核心问题**: 如何用 RL 让高自由度手(MANO 51-DOF / Shadow 24-DOF)完成接触密集的操作任务?
+
+**代表论文**:
+
+| 论文 | 一句话总结 |
+|------|-----------|
+| ArtiGrasp (2023) | PPO + curriculum, 双手 MANO 在 RaiSim 中抓取并操作铰接物体, 统一策略处理 grasp + articulation |
+| PhysHOI (2023) | 全身(含手指)人-物交互的物理模仿, 提出 Contact Graph Reward 解决接触稀疏问题 |
+| ObjDexEnvs (2024) | 两层架构: Transformer planner 生成腕部轨迹 + PPO controller 学指尖动作, 利用腕部运动跨越 embodiment gap |
+
+**与你的关联**: 这是你当前的主力范式。三篇论文展示了 PPO 在灵巧操作中的三种典型用法 -- 端到端训练(ArtiGrasp)、模仿奖励(PhysHOI)、层次化控制(ObjDexEnvs)。ObjDexEnvs 的"腕部规划 + 指尖 RL"分层思路在后续工作中被反复验证。
+
+**Takeaway**: Reward shaping 和 curriculum 是传统 RL 的生命线, 但也是其可扩展性的天花板 -- 每增加一个任务, 就要重新调一套 reward。
+
+---
+
+## 2. Human2Robot -- 从人类演示到机器人策略
+
+**定义**: 利用人手交互数据(ARCTIC、GRAB、TACO 等数据集或实时遥操)作为先验, 通过 retargeting、tracking、蒸馏等手段将人类操作技能迁移到机器人手上。核心挑战在于人手与机器手之间的 embodiment gap -- 运动学结构、自由度、接触面积都不同。
+
+**核心问题**: 如何跨越 human-robot embodiment gap, 将人类灵巧操作的"知识"迁移给机器人?
+
+**代表论文**:
+
+| 论文 | 一句话总结 |
+|------|-----------|
+| BiDexHD (2024) | TACO 数据集 -> 自动构建仿真任务 -> IPPO teacher -> DAgger 蒸馏 vision student, 141 个双手工具任务 |
+| DexMachina (2024) | ARCTIC 人手数据 retarget 到 6 种机器手, hybrid residual action + PPO 学习铰接物体操作 |
+| DexTrack (2025) | 通用 neural tracking controller, RL+IL 混合训练 + data flywheel 迭代扩充, 覆盖 GRAB+TACO 3585 条轨迹 |
+| HumDex (2026) | IMU 遥操 + 学习式 retargeting + 两阶段模仿学习, 面向人形机器人全身灵巧操作的完整 pipeline |
+
+**与你的关联**: human2robot 路线直接扩展了你的 PPO 经验 -- DexMachina 和 DexTrack 的底层 controller 就是 PPO, 只是把 reward 从手工设计换成了 tracking reference。HumDex 展示了从数据采集到部署的端到端流程, 是你做 sim2real 部署时的重要参考。关键趋势是从"离线数据集 retarget"(BiDexHD, DexMachina)演进到"在线 tracking"(DexTrack)再到"实时遥操采集"(HumDex)。
+
+**Takeaway**: Embodiment gap 的最优解法不是精确复制人手动作, 而是提取 task-level intent (物体轨迹、接触模式) 然后让 RL 在机器人 embodiment 上重新发现执行策略。
+
+---
+
+## 3. Scaling RL -- 通过规模化突破 RL 瓶颈
+
+**定义**: 探索如何通过增加计算规模、多样化初始状态分布等手段, 让简单的 RL 算法(PPO)在灵巧操作中产生涌现行为, 而非依赖人工 reward engineering 和 curriculum。这一主题受 LLM scaling 的启发, 试图回答: 机器人 RL 是否也存在 scaling law?
+
+**核心问题**: 能否用"简单算法 + 大规模计算"替代"精巧 reward + 人工 curriculum", 实现 emergent dexterity?
+
+**代表论文**:
+
+| 论文 | 一句话总结 |
+|------|-----------|
+| OmniReset (2025) | 离线预计算 diverse reset states + 大规模 PPO (Isaac Lab), 无 per-task reward shaping 即可完成 pick-reorient-insert 等长 horizon 任务 |
+
+**与你的关联**: 这是你最应该关注的方向之一。OmniReset 证明了 PPO 在灵巧操作中的 exploration saturation 问题可以通过 diverse resets 缓解 -- 不需要换算法, 只需要改 reset 分布。其核心洞察是: 增加 parallel environments 不等于增加 state coverage, 真正的 scale 需要 diversity。这与 LLM 中"数据多样性比数据量更重要"的结论一致。
+
+**Takeaway**: Scale 不是简单堆算力, 而是扩展状态空间覆盖。Diverse resets 是 RL 版的"数据增强", 可以让你现有的 PPO pipeline 直接受益。
+
+---
+
+## 4. Sim2Real -- 从仿真到真实世界的迁移
+
+**定义**: 研究如何让仿真中训练的灵巧操作策略在真实世界中 zero-shot 或 few-shot 工作。核心手段包括: domain randomization、object-centric 表示(解耦物体形状与任务逻辑)、task-agnostic 策略(一个策略适配多任务)。与 traditional RL 的区别在于, sim2real 更关注泛化和鲁棒性而非单任务性能。
+
+**核心问题**: 如何设计策略表示和训练流程, 使得 sim-trained policy 能够 zero-shot 泛化到真实世界的未见物体和任务?
+
+**代表论文**:
+
+| 论文 | 一句话总结 |
+|------|-----------|
+| SimToolReal (2025) | "所有工具使用 = 依次到达 6D 目标位姿", 在 primitive 物体上训练 goal-conditioned policy, zero-shot 迁移 12 种真实工具 |
+| Dex4D (2026) | 以 4D point tracks (物体表面关键点随时间的 3D 轨迹) 为统一任务表示, 仿真中训练 task-agnostic policy, 通过 video demo 指定新任务 |
+
+**与你的关联**: 作为 PPO sim2real 实践者, 这两篇论文是你最直接的技术升级路径。关键 insight 是: 不要为每个任务设计 reward, 而是设计一个足够通用的 goal representation (6D pose sequence 或 4D point tracks), 然后训练 goal-conditioned policy。这样一个策略可以覆盖整个任务族, sim2real 的 domain gap 也被限缩到感知层面(pose estimation / point tracking)。
+
+**Takeaway**: Object-centric representation 是 sim2real 泛化的关键 -- 把"任务"从 reward function 中解耦出来, 变成 goal conditioning 的输入, 可以极大提升策略复用性。
+
+---
+
+## 5. FM for Manipulation -- Foundation Model 驱动的灵巧操作
+
+**定义**: 将大规模预训练模型(VLA, Vision-Language-Action)应用于灵巧操作, 或用大规模合成数据训练通用操作模型。这一主题的核心张力在于: VLA 提供了强大的语义理解和泛化能力, 但灵巧操作对精度和接触力控制的要求远超一般 pick-and-place 任务, 且不同手型的 action space 完全不同。
+
+**核心问题**: 如何让 Foundation Model 的泛化能力与灵巧操作的精度要求兼容? 如何跨越不同手型的 action space 鸿沟?
+
+**代表论文**:
+
+| 论文 | 一句话总结 |
+|------|-----------|
+| RL Token (2025, PI) | 冻结 VLA (pi-0.6), 训练小型 encoder-decoder 提取 "RL token" 作为状态表示, 用 off-policy RL 在线精调动作头, 真机数小时内提升亚毫米精度 |
+| DexLatent (2026) | Multi-headed VAE 将不同灵巧手映射到共享 32D latent space, VLA 在 latent space 预测动作, 新手型 zero-shot 接入 |
+| UltraDexGrasp (2026) | 纯合成数据 pipeline (BODex + cuRobo + SAPIEN) 生成 20M 帧 demo, BC 训练 point cloud 策略, 1000+ 物体 zero-shot 部署 |
+
+**与你的关联**: 这是你的目标方向。三篇论文展示了三种 FM + manipulation 的结合模式:
+- **RL Token**: FM 提供表示, RL 提供精度 -- 最能利用你的 PPO 经验
+- **DexLatent**: 解决跨 embodiment 问题, 如果你需要支持多种灵巧手这是必读
+- **UltraDexGrasp**: 用合成数据替代人工采集, BC 替代 RL -- 代表了"数据工程 > 算法工程"的趋势
+
+**Takeaway**: FM 时代的 RL 不再是端到端训练策略, 而是在 FM 提供的 representation/prior 之上做精度校准。你的 PPO 经验将演变为"如何高效 fine-tune FM 的 action head"。
+
+---
+
+## 发展脉络
+
+```
+传统 RL (2022-2024)
+  |
+  +---> human2robot (2024-2025): 引入人类演示作为先验, 减少 reward engineering
+  |       |
+  |       +---> scaling RL (2025): 不依赖人类数据, 用 diverse resets + scale 产生涌现行为
+  |       |
+  |       +---> sim2real (2025-2026): 从 per-task 转向 task-agnostic, 统一目标表示
+  |       |
+  |       +---> FM manipulation (2025-2026): VLA + RL fine-tune / cross-hand latent / synthetic data
+  |
+  (每条路线都保留了 PPO 作为底层训练算法)
+```
+
+**为什么领域这样演化**:
+
+1. **传统 RL -> human2robot**: 单纯 RL 的 reward engineering 成本随任务数线性增长。人类演示提供了 task-level prior, 将 reward 从"手工设计目标函数"简化为"跟踪参考轨迹"。
+
+2. **human2robot -> scaling RL**: 人类数据本身也有获取瓶颈(需要 mocap 设备、retargeting 流程)。OmniReset 试图绕过人类数据, 纯靠 RL + scale 达到类似效果。这条路线还很早期, 但方向明确。
+
+3. **human2robot -> sim2real**: 积累了足够多的仿真策略后, 自然面临"如何部署"的问题。从 per-task sim2real 到 task-agnostic sim2real 的转变, 本质是用更通用的 goal representation (6D pose / point tracks) 替代 per-task reward。
+
+4. **全部 -> FM manipulation**: 当操作技能需要覆盖开放词汇的物体和指令时, 传统方法(无论是 RL 还是 BC)的 scalability 都不够。FM 提供了语义理解和跨任务泛化, 但需要与灵巧操作的精度要求对接。RL Token 和 DexLatent 分别从"精度"和"跨 embodiment"两个角度解决这个对接问题。
+
+**关键趋势**: 底层的 PPO 训练范式始终存在, 但其角色从"端到端训练策略"逐步演变为"在先验之上精调"(human2robot 中的 tracking controller, FM 中的 action head fine-tune)。
+
+---
+
+## 对 Foundation Model 的启示
+
+从灵巧操作研究中可以提炼出以下对 robotics FM 设计的关键教训:
+
+### 1. Action Space 是灵巧 FM 的核心难题
+
+不同于 navigation 或 pick-and-place (6-7 DOF), 灵巧手的 action space 高达 16-24 DOF 且跨手型差异巨大。DexLatent 的 VAE latent space 方案表明: **FM 不应直接预测关节角, 而应在一个与硬件无关的 latent space 中预测**, 然后由 per-hand decoder 映射到具体关节。
+
+### 2. FM 的泛化能力与 RL 的精度能力互补
+
+RL Token 证明了一个实用的组合模式: 冻结 VLA 做 representation, 轻量 RL 做 fine-tune。这意味着未来的灵巧操作 FM 不需要在预训练阶段解决精度问题 -- **pre-train for generalization, fine-tune for precision**。
+
+### 3. 合成数据 pipeline 可能比真实数据更重要
+
+UltraDexGrasp 的 20M 帧合成数据 + 简单 BC 的效果表明: 对于灵巧抓取这类可以精确仿真的任务, **数据工程(grasp synthesis + motion planning + physics validation)比算法创新更能推动性能**。这与 LLM 领域"数据质量 > 模型架构"的结论高度一致。
+
+### 4. Object-centric representation 是跨任务泛化的关键
+
+SimToolReal 和 Dex4D 都将任务统一为物体的目标轨迹(6D pose 或 4D point tracks)。这提示 FM 的 visual encoder 应该能输出 **object-centric 的空间表示**(而非 image-level feature), 才能与灵巧操作的需求对接。
+
+### 5. Diverse resets / curriculum 的思想可以迁移到 FM fine-tune
+
+OmniReset 的 diverse resets 本质是扩大 RL 的 state coverage。在 FM fine-tune (如 RL Token 的 online RL 阶段) 中, 类似的思想同样适用: 在更多样的初始条件下 fine-tune, 可以避免 catastrophic forgetting 和 mode collapse。
+
+---
+
+## 交叉参考
+
+| 相关目录 | 内容 | 与本文的关系 |
+|----------|------|-------------|
+| `manip/QiHaoZhi/` | 齐昊之组的 sim2real 系列 (HORA, PenSpin, DexScrew) 和 human demo 系列 (HOP, AINA, SPIDER) | sim2real 和 human2robot 主题的更多实例, 代码实现参考价值高 |
+| `manip/dataset/` | 手部数据集库 (ARCTIC, GRAB, TACO, DexGraspNet, DexCanvas 等) | human2robot 和 FM 主题的数据基础设施 |
+| `foundation_model/robotics/` | Google RT Series, PI Series, GR00T Series, 以及 policy learning 方法 | FM manipulation 主题的上游知识 (VLA 架构、训练范式) |
+| `foundation_model/CV/` | 视觉基础 (ViT, CLIP, SAM, 3DGS, DINOv2 等) | sim2real 感知模块 (FoundationPose, point tracking) 的基础 |
+| `humanoid/` | 全身人形控制 (DeepMimic, SONIC, ASAP 等) | HumDex 连接了灵巧操作与人形控制, 是两个领域的交叉点 |
