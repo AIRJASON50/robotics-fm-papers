@@ -1,30 +1,79 @@
-# Auto-Encoding Variational Bayes (Kingma & Welling, 2014) -- Takeaway Notes
+# Auto-Encoding Variational Bayes -- 学习笔记
 
-> 一句话: 用 reparameterization trick 让 variational inference 可以反向传播, 开创了 continuous latent space 生成模型, 是 LDM/Diffusion Policy/ACT 的数学根基。
+> 一句话: 通过 reparameterization trick 让变分推断可以用标准梯度下降训练, 奠定了深度生成模型的概率基础。
+> 论文: Diederik P. Kingma, Max Welling (Universiteit van Amsterdam), 2013, ICLR 2014
 
-## 核心贡献
+## 这篇论文解决了什么问题
 
-1. **Reparameterization trick**: 将采样操作 z ~ q(z|x) 改写为 z = mu + sigma * epsilon (epsilon ~ N(0,1)), 让梯度可以穿过随机采样节点, 解决了 variational inference 无法端到端训练的核心问题。
-2. **ELBO (Evidence Lower Bound) 目标函数**: L = E[log p(x|z)] - KL(q(z|x) || p(z)), 第一项是 reconstruction, 第二项是 latent regularization -- 两项的平衡决定了 latent space 的结构化程度。
-3. **连续结构化的 latent space**: 不同于 GAN 的隐式 latent space, VAE 的 latent space 是显式的、连续的、有概率语义的 -- 可以插值、采样、操控。
+对于带有连续 latent variable 的概率生成模型 (z -> x), 我们想做三件事:
+1. 学模型参数 theta -- 生成逼真的数据
+2. 推断后验 p(z|x) -- 给定观察, 找到 latent code
+3. 估计边际似然 p(x) -- 评估模型好坏
 
-## 为什么重要
+传统方法的困难: 当 likelihood p(x|z) 是神经网络时, 边际似然 p(x) = integral of p(x|z)p(z)dz intractable (不可解析计算), EM 算法和 mean-field variational inference 都失效。MCMC 采样太慢, 不适合大数据集。
 
-- **生成模型的第二范式**: GAN 靠对抗, VAE 靠变分推断 -- 两条路线分别发展, 但 VAE 的 latent space 思想影响远超 GAN。
-- **Latent Diffusion 的前提**: LDM (Stable Diffusion) = VAE encoder 压缩到 latent space + diffusion 在 latent space 做生成。没有 VAE, 就没有 "latent" diffusion。
-- **连续 action space 的建模启发**: VAE 证明连续分布可以用 encoder-decoder + 正则化 latent space 来建模, 这直接启发了机器人动作生成中的 latent action space 设计。
+核心矛盾: **需要一种既能处理 intractable posterior, 又能 scale 到大数据的推断方法。**
+
+## 核心想法 (用直觉解释)
+
+**用一个神经网络 (encoder) 直接学习近似后验 q_phi(z|x), 和 decoder p_theta(x|z) 一起端到端训练。**
+
+关键障碍: 从 q_phi(z|x) 采样的操作不可微分 -- 不能对"从分布中采样"求梯度。
+
+**Reparameterization trick** 解决了这个问题:
+```
+epsilon ~ N(0, I)          # sample noise from fixed distribution
+z = mu + sigma * epsilon   # deterministic transformation of encoder output
+```
+z 关于 phi 变成可微的 (mu 和 sigma 是 encoder 的输出), 梯度可以流过去。
+
+训练目标 (ELBO, Evidence Lower Bound):
+```
+L = -D_KL(q_phi(z|x) || p(z)) + E_q[log p_theta(x|z)]
+     ^-- regularizer              ^-- reconstruction
+     后验别离先验太远               能还原出输入 x
+```
+
+## 关键设计决策
+
+**1. Reparameterization trick -- 论文的核心贡献**
+
+把"对随机变量期望的梯度"转化为"对确定性函数期望的梯度"。适用于任何可以表示为 z = g(epsilon, x) 的分布 (Gaussian, Logistic, Laplace 等 location-scale 族)。打通了概率推断和深度学习的桥梁。
+
+**2. KL divergence 的解析计算**
+
+当 prior p(z) = N(0, I) 且 q(z|x) = N(mu, sigma^2 I) 时, KL 有闭合解:
+```
+D_KL = -1/2 * sum(1 + log(sigma^2) - mu^2 - sigma^2)
+```
+只有 reconstruction term 需要采样估计。论文发现 L=1 (一个采样) 在 minibatch M=100 时就够了。
+
+**3. ELBO 的双重角色: 目标函数 + 正则化器**
+
+KL 项鼓励后验接近标准正态先验, 起到正则化作用。实验发现增加 latent 维度不会 overfit -- 多余维度的 KL 自动被压到零。这是比传统 autoencoder 更优雅的正则化方式。
+
+**4. 与 autoencoder 的联系**
+
+VAE 的目标 = autoencoder 重建误差 + KL 正则项。但这不是 ad hoc 的设计, 而是从变分推断的 ELBO 自然推导出来的。给了 "encoder-decoder + bottleneck" 结构一个概率理论基础。
+
+**5. 实验结果**
+
+在 MNIST 和 Frey Face 上对比 wake-sleep algorithm 和 Monte Carlo EM。AEVB 收敛更快, 在各种 latent 维度 (3-200) 上都更好。更多 latent 变量不导致 overfitting, 归功于 variational bound 的正则化效果。
+
+## 这篇论文之后发生了什么
+
+- **VAE 成为生成模型三大范式之一** (与 GAN, Flow 并列)
+- **VQ-VAE (2017)**: discrete latent code, 后来演化为 DALL-E 的核心组件
+- **Latent Diffusion (Stable Diffusion)**: VAE 把图像压到 latent space, diffusion 在 latent space 做生成 -- VAE 是 LDM 的前级
+- **beta-VAE**: 调节 KL 权重控制 disentanglement, 学习可解释 representation
+- **Reparameterization trick 广泛使用**: Gumbel-Softmax (discrete), normalizing flow, diffusion forward process 都源于此
 
 ## 对你 (RL->FM) 的 Takeaway
 
-| # | Takeaway | 行动关联 |
-|---|----------|---------|
-| 1 | **Reparameterization trick 是所有 "梯度穿过随机性" 的模板**。PPO 的 policy gradient 用 log-probability trick; VAE 用 reparameterization trick -- 两者本质都是解决 "如何对随机采样求导" 的不同方案。 | 理解 stochastic policy 的数学基础 |
-| 2 | **Latent space 压缩是 scalable 生成的关键**: pixel space 太大 (256x256x3=196K 维), latent space 压缩到 32x32x4=4K 维 -- LDM 就是靠 VAE 降了 50x 维度才能用 diffusion 做高分辨率生成。Diffusion Policy 同理。 | 理解为什么 robot action generation 也走 latent space |
-| 3 | **KL regularization = latent space 的结构化**: KL 项强制 latent 接近标准正态, 使得 latent space 平滑且可插值。ACT (Action Chunking with Transformers) 的 CVAE 结构直接用了这个设计。 | ACT policy 中 CVAE 的设计来源 |
-
-## 与知识库其他内容的关联
-
-- **LDM (CV/1_generation/22_LDM)**: LDM = VAE (pixel->latent) + Diffusion (latent space 生成), VAE 是 LDM 的前半部分
-- **ACT (robotics/policy_learning)**: ACT 使用 CVAE 架构, encoder 将 observation+action 编码到 latent, decoder 从 latent 解码 action chunk
-- **Diffusion Policy (robotics/policy_learning)**: 虽然不直接用 VAE, 但 "在 latent space 做生成" 的思路源于 VAE
-- **GAN (foundations/14_GAN)**: VAE vs GAN 是生成模型两条路线; VAE 生成模糊但可控, GAN 生成清晰但不稳定; diffusion 最终统一了两者的优势
+| # | Takeaway | 与你的关联 |
+|---|----------|----------|
+| 1 | **Reparameterization trick 是让"采样"可微的通用技术** | SAC 用 reparameterization 训练连续 policy, PPO 用 log-prob trick -- 两条路解决同一个问题; Diffusion Policy 也依赖可微采样 |
+| 2 | **Encoder-decoder + bottleneck + regularization 是学习 latent representation 的基本范式** | ACT 的 CVAE, latent plan 的 VQ-VAE, robot policy 的 latent action space 都继承这个结构 |
+| 3 | **KL regularization 防止 latent space 退化** -- 没有它, autoencoder 的 latent space 无结构, 不能采样 | 训练 robot policy 的 latent space 时需要类似正则化保证 latent code 可泛化 |
+| 4 | **VAE 是 Stable Diffusion / LDM 的前级压缩器** -- 没有 VAE 把 512x512 压到 64x64, diffusion 算不起 | 理解 image generation pipeline 对理解 world model (UniSim, DreamGen) 至关重要 |
+| 5 | **概率生成模型自然表达不确定性** -- latent space 是分布而非点 | Robot 的多模态动作分布 (同一 observation 有多种合理动作) 天然需要概率建模 |

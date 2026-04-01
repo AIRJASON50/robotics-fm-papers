@@ -1,30 +1,65 @@
-# Deep Residual Learning for Image Recognition (He et al., 2015) -- Takeaway Notes
+# Deep Residual Learning for Image Recognition -- 学习笔记
 
-> 一句话: Residual connection 让网络深度从 20 层跳到 152 层, 确立了 "ImageNet pre-train + downstream fine-tune" 的 foundation model 原型范式。
+> 一句话: 通过 shortcut connection 让网络学习残差映射 F(x) 而非完整映射 H(x), 使上百层深度网络的训练成为可能。
+> 论文: Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun (Microsoft Research), 2015, CVPR 2016
 
-## 核心贡献
+## 这篇论文解决了什么问题
 
-1. **Residual connection (shortcut / skip connection)**: 学 F(x) = H(x) - x 而非 H(x), 让梯度可以直通跳层, 解决了深度网络的 degradation problem (不是 vanishing gradient, 而是更深的网络 train loss 反而更高)。
-2. **Bottleneck block**: 1x1 conv 降维 -> 3x3 conv -> 1x1 conv 升维, 让 152 层网络的计算量可控。
-3. **ImageNet pre-train paradigm**: ResNet 成为 CV 领域第一个被广泛当作通用 backbone 使用的模型 -- 一次 ImageNet 预训练, 迁移到检测/分割/姿态估计等所有下游任务。
+深度网络的 **degradation problem (退化问题)**: 当 plain network 层数增加时, training error 反而上升。注意这不是 overfitting -- 56 层 plain net 的 training error 比 20 层的还高。这说明更深的网络更难优化, 而非容量不够。
 
-## 为什么重要
+理论上, 一个更深的网络至少可以通过让多出来的层学成 identity mapping 来达到和浅网络一样的性能。但实际上 SGD 优化器找不到这个解。问题的根源是: 让一组非线性层逼近 identity mapping 非常困难。
 
-- **"越深越好"终于成立**: 在 ResNet 之前, 网络加深到一定程度性能反而下降。Residual connection 打破了这个瓶颈, 开启了 depth scaling 的时代。
-- **Foundation model 思想的原型**: 虽然 2015 年没有 "foundation model" 这个词, 但 "一个 backbone, 多个任务" 的 pre-train + fine-tune 范式就是从 ResNet 开始的。
-- **影响力穿透至今**: Transformer 中的 residual connection (Add & Norm) 直接来自 ResNet; ViT、DiT、VLA 全都在用。
+## 核心想法 (用直觉解释)
+
+**与其让网络直接学习目标映射 H(x), 不如让它学习残差 F(x) = H(x) - x。**
+
+直觉: 如果最优映射接近 identity, 那么把残差推向零比从头学一个 identity 容易得多。网络只需要学"在 identity 基础上做多少微调", 而不是"从零学完整变换"。
+
+实现极其简单: 在每隔几层的输出上加一条 shortcut connection, 直接把输入 x 加到输出上:
+```
+y = F(x, {W_i}) + x
+```
+这条 shortcut 不引入额外参数, 不增加计算量, 不需要修改优化器。
+
+## 关键设计决策
+
+**1. Identity shortcut vs. projection shortcut**
+
+三种方案: (A) 维度不匹配时 zero-padding; (B) 维度不匹配时用 1x1 conv projection, 其余用 identity; (C) 全部用 projection。实验表明 B 略好于 A, C 比 B 好一点但引入更多参数。论文选择 B -- identity shortcut 是核心, projection 只在必要时使用。设计哲学: **免费的 information highway 比学出来的 gating 更有效** (对比 Highway Network 用 learned gate, 效果反而不如 ResNet)。
+
+**2. Bottleneck block (1x1 -> 3x3 -> 1x1)**
+
+ResNet-50/101/152 使用 bottleneck: 先 1x1 conv 降维, 再 3x3 conv, 再 1x1 conv 升维。关键: identity shortcut 连接高维两端, 如果换成 projection shortcut, 时间复杂度和模型大小都翻倍。Identity shortcut 对 bottleneck 的效率至关重要。152 层 ResNet (11.3B FLOPs) 仍低于 VGG-19 (19.6B FLOPs)。
+
+**3. BN everywhere + no dropout**
+
+BN 放在每个 conv 之后、activation 之前。不使用 dropout, 靠深度本身提供正则化。这个模式后来成为 CNN 时代的标配。
+
+**4. 层响应分析验证核心假设**
+
+ResNet 各层的输出响应标准差普遍小于对应 plain net, 且越深的 ResNet 响应越小 (Fig. 7)。验证了: residual function 确实接近零, 网络在做"对 identity 的微小扰动"而非学习全新的变换。
+
+**5. 实验结果亮点**
+
+- ResNet-34 training error 低于 plain-34, 逆转了 degradation (Fig. 4)
+- 152 层 ResNet ensemble: ImageNet top-5 error 3.57%, ILSVRC 2015 冠军
+- COCO detection: ResNet-101 替换 VGG-16 后 mAP@[.5,.95] 从 21.2 提升到 27.2 (+28% 相对提升)
+- CIFAR-10: 1202 层 ResNet 可以训练 (training error <0.1%), 但 test error 不如 110 层 (overfitting)
+
+## 这篇论文之后发生了什么
+
+- **成为 CV 默认 backbone (2016-2020)**: 检测 (Faster R-CNN)、分割 (Mask R-CNN, DeepLab)、生成任务几乎都用 ResNet
+- **ResNet 变体爆发**: ResNeXt (分组卷积), Wide ResNet, DenseNet (dense connection), SE-Net (channel attention)
+- **Pre-trained ResNet 定义了 transfer learning**: ImageNet pre-trained ResNet-50 是 CV 下游任务的默认初始化
+- **ViT (2020) 开始挑战 ResNet**, 但 ResNet-50 至今仍是 SSL (DINO, MoCo, MAE) 的标准对比 baseline
+- **Residual connection 泛化到 Transformer**: 每个 sublayer 都用 x + Sublayer(x), 直接继承 ResNet 思想
 
 ## 对你 (RL->FM) 的 Takeaway
 
-| # | Takeaway | 行动关联 |
-|---|----------|---------|
-| 1 | **Residual = identity mapping 是深度网络训练的充要条件**。PPO 中用的 MLP policy 通常只有 2-3 层, 不需要 residual; 但 VLA 的 backbone 动辄 24-48 层, 没有 residual 根本训不动。 | 理解 VLA backbone 为什么能 scale |
-| 2 | **Pre-train + fine-tune 范式**: RT-1 用 EfficientNet (ResNet 的后继), RT-2 用 ViT -- 都是 ImageNet pre-train 的 backbone。机器人视觉 backbone 的选型逻辑直接继承自 ResNet 时代。 | 理解 robot vision backbone 选型 |
-| 3 | **深度 vs 宽度 tradeoff**: ResNet 证明深度比宽度更重要 (ResNet-152 > 宽但浅的 VGG-19)。同样的 insight 后来被 Transformer scaling law 验证。 | Foundation model scaling 的设计直觉 |
-
-## 与知识库其他内容的关联
-
-- **ViT (CV/0_backbone)**: ViT 的 Transformer block 中 residual connection + LayerNorm 直接来自 ResNet + BatchNorm 的设计 pattern
-- **DiT (CV/1_generation)**: GR00T N1 的 DiT action head 中每个 block 都有 residual -- 没有 ResNet 就没有 DiT
-- **PPO (foundations/17_PPO)**: RL policy network 通常太浅不需要 residual, 但当 policy 变成 VLA (百层级别), residual 重新成为必需
-- **CV_技术演进图谱**: ResNet 位于 "Backbone 演进线" 的起点, 是 CNN 时代 foundation model 思想的开端
+| # | Takeaway | 与你的关联 |
+|---|----------|----------|
+| 1 | **Residual connection 是深度网络的基础设施** -- 没有它就没有 Transformer, 没有 Transformer 就没有 foundation model | 你用的每个 FM (GPT, CLIP, DINO) 内部都有 residual connection, 它是梯度流过上百层的根本保障 |
+| 2 | **让网络学"修正量"而非"完整映射"是强大的 inductive bias** | RL 中 residual policy (在 base policy 上学残差) 比从零学更容易; Diffusion Policy 的 denoising 也是在学残差 |
+| 3 | **Identity shortcut 比 learned gating 更有效** -- Highway Network 用 learned gate 反而不如无参数 identity shortcut | 设计 robot policy 网络时, 简单的 skip connection 往往比复杂 gating 更可靠 |
+| 4 | **Pre-trained backbone 范式从 ResNet 开始** -- "ImageNet pre-train + downstream fine-tune" | 这就是 robotics FM 的前身: 预训练视觉 encoder (R3M, VIP, DINO) 然后在 robot task 上微调 |
+| 5 | **深度比宽度重要, 但有上限** -- ResNet-152 远超 ResNet-18, 但 1202 层开始 overfit | Scaling law 的早期信号: robot FM 也需要找到 depth/width 的 sweet spot |

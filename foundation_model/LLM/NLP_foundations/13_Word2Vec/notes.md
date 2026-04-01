@@ -1,33 +1,26 @@
-# Word2Vec: Efficient Estimation of Word Representations (Mikolov et al., 2013) -- Takeaway Notes
+# Word2Vec: Efficient Estimation of Word Representations in Vector Space -- 学习笔记
+> 一句话: 用极简 log-linear 模型 (CBOW / Skip-gram) 从海量文本学词向量, 首次发现 embedding 具有线性代数结构 (king - man + woman = queen).
+> 论文: Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean (Google), 2013, arXiv 1301.3781
 
-> 一句话: 用极简的 log-linear 模型 (CBOW / Skip-gram) 从海量文本中学到词向量, 首次证明 learned embedding 能捕获语义代数结构 (king - man + woman = queen).
+## 这篇论文解决了什么问题
+当时 NLP 系统把词当 one-hot 符号 (词表 100 万维, 每个词一个位置为 1 其余为 0), 词之间没有相似性概念. 已有的神经语言模型 (NNLM, RNNLM) 虽然能学到词表示, 但计算量太大 -- 主要瓶颈在 hidden layer 的非线性计算 (O(N*D*H)). 本文目标: 设计计算量最小的架构, 在数十亿词上快速训练高质量词向量.
 
-## 核心贡献
-- 提出两个无 hidden layer 的架构: CBOW (上下文预测中心词) 和 Skip-gram (中心词预测上下文), 将训练复杂度从 O(H x V) 降到 O(D x log(V))
-- 发现 embedding 空间具有线性代数结构: 语义关系可通过向量加减运算, 这远超 "相似词聚类" 的预期
-- 证明 "简单模型 + 大数据" 可以打败 "复杂模型 + 小数据" -- 在 6B token Google News 上用 1 天完成训练, 超过之前所有 NNLM/RNNLM
-- 设计了 Semantic-Syntactic Word Relationship 测试集, 为 embedding 质量提供定量评估标准
+## 核心想法 (用直觉解释)
+既然 hidden layer 是瓶颈, 就干脆去掉它. CBOW (Continuous Bag-of-Words): 把上下文窗口内的词向量求平均, 直接预测中心词 -- 没有非线性层, 复杂度 O(N*D + D*log(V)). Skip-gram: 反过来, 用中心词预测上下文中的每个词. 用 hierarchical softmax (Huffman tree) 避免在全词表上做 softmax. 在 6B 词的 Google News 上不到一天就训练完成. 惊人发现: 学到的向量空间具有线性结构, 语义/语法关系可以用向量加减表示.
 
-## 为什么重要
-Word2Vec 是 "learned representation 取代 hand-crafted feature" 这一范式转变在 NLP 中的起点.
-之前 NLP 系统把词当作 one-hot 符号 (无相似性概念), Word2Vec 之后, 连续向量表示成为一切
-下游模型的输入基础. 这条线直通 BERT/GPT 的 token embedding 和 robotics 中的 task embedding.
+## 关键设计决策
+- **去掉 hidden layer**: CBOW 和 Skip-gram 都是 log-linear 模型, 输入层直接连 projection 再连 output. 这把单样本复杂度从 O(N*D*H + H*V) 降到 O(N*D + D*log(V))
+- **两种互补架构**: CBOW 在语法任务上更好 (利用上下文的平均信息), Skip-gram 在语义任务上更好 (每个上下文词独立预测, 学到更细粒度的关系). Skip-gram 后来更流行
+- **Hierarchical softmax + Huffman tree**: 高频词路径短, 低频词路径长, 比标准 softmax 快约 2 倍. 后续工作引入 negative sampling 进一步简化
+- **维度与数据同步 scaling**: Table 2 表明, 增加维度或数据量单独有收益但会饱和, 必须同步增加才能持续提升. 这是 scaling law 的朴素前身
 
-核心洞察: **pretext task 的设计决定了 representation 的质量**. 预测上下文这个 self-supervised
-目标, 逼迫模型把语义/语法信息压缩进固定维度的向量 -- 这和后来 contrastive learning (MoCo/CLIP)
-以及 masked prediction (MAE/BERT) 的思路一脉相承.
+## 这篇论文之后发生了什么
+GloVe (Pennington 2014) 用矩阵分解统一了 Word2Vec 和共现矩阵方法. FastText 扩展到 subword 级别. ELMo (2018) 从 static embedding 进化到 context-dependent embedding (同一个词不同上下文有不同向量). BERT 和 GPT 用 Transformer 做 contextual embedding, 但输入层仍保留 Word2Vec 式的 token embedding. Word2Vec 的 self-supervised 思想 (用上下文预测目标) 延伸到 CV (contrastive learning) 和 robotics (task embedding).
 
 ## 对你 (RL->FM) 的 Takeaway
-- **Embedding 是 FM 的基石**: 无论是 VLA 中的 language embedding, 还是 task/goal conditioned RL
-  中的 goal embedding, 本质上都在做 Word2Vec 开创的事 -- 把离散/高维输入映射到有结构的连续空间
-- **Self-supervised pretext task 设计**: Word2Vec 用 "预测上下文" 来学表示, robotics FM 用
-  "预测下一帧/动作" 来学表示 (DreamerV3, UniSim), 核心逻辑相同
-- **Scaling 的早期证据**: 维度和数据量需要同步增长才能提升质量 (Table 2), 这是 Chinchilla scaling law 的朴素前身
-- **向量算术 = 概念组合**: 如果 robot skill embedding 也有这种结构, 那么 skill composition 就变成向量运算 -- 这正是 SayCan/RT-2 做 language grounding 时隐含的假设
-
-## 与知识库其他内容的关联
-- foundations/12_RepresentationLearning: Word2Vec 是 representation learning 在 NLP 的第一个杀手级应用
-- foundations/17_Transformer: Transformer 的 input embedding layer 直接继承 Word2Vec 的思想, 但改为可训练
-- 14_Seq2Seq: encoder 将整个句子压缩为向量, 可看作 Word2Vec "词向量" 到 "句向量" 的升级
-- 18_BERT: 从 static embedding 进化到 contextual embedding, 同一个词在不同上下文有不同向量
-- CV/4_self_supervised (MoCo, DINO): 同样用 pretext task 学 visual representation, 思路与 Word2Vec 高度对称
+| # | Takeaway | 与你的关联 |
+|---|----------|-----------|
+| 1 | Embedding 是 FM 的基石: 离散/高维输入映射到有结构的连续空间 | VLA 的 language embedding, goal-conditioned RL 的 goal embedding, 本质都是 Word2Vec 开创的事 |
+| 2 | Self-supervised pretext task 决定 representation 质量 | Word2Vec 用 "预测上下文" 学表示, robotics FM 用 "预测下一帧/动作" (DreamerV3, UniSim) 学表示, 核心逻辑相同 |
+| 3 | 简单模型 + 大数据 > 复杂模型 + 小数据 | 1B 词上的 Skip-gram 碾压 300M 词上的 RNNLM, 对 robotics 的启示: 数据规模比模型花哨程度更关键 |
+| 4 | 向量算术 = 概念组合 | 如果 robot skill embedding 有线性结构, skill composition 就变成向量运算 -- SayCan/RT-2 做 language grounding 时隐含了这个假设 |

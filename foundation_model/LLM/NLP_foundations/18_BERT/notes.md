@@ -1,35 +1,26 @@
-# BERT: Pre-training of Deep Bidirectional Transformers (Devlin et al., 2018) -- Takeaway Notes
+# BERT: Pre-training of Deep Bidirectional Transformers -- 学习笔记
+> 一句话: 用 Masked LM (随机遮盖 15% token 让模型双向预测) 打破单向语言模型的限制, 确立 pre-train + fine-tune 为 NLP 标准范式.
+> 论文: Jacob Devlin, Ming-Wei Chang, Kenton Lee, Kristina Toutanova (Google AI Language), 2018, arXiv 1810.04805
 
-> 一句话: 用 Masked Language Model (随机遮盖 15% token 让模型预测) 实现真正的双向 Transformer pre-training, 然后只加一层输出头就能 fine-tune 到 11 个 NLP 任务的 SOTA.
+## 这篇论文解决了什么问题
+GPT 等模型只能单向 (left-to-right) 预训练, 这对需要理解完整上下文的任务 (QA, NLI) 是致命缺陷. ELMo 虽然拼接了双向 LSTM, 但只是浅层拼接而非深度双向. BERT 要解决的是: 如何用 Transformer 做真正的 deep bidirectional pre-training, 然后通过 fine-tune 适配所有下游任务.
 
-## 核心贡献
-- 提出 MLM (Masked Language Model, 掩码语言模型): 随机 mask 15% input token (80% 替换为 [MASK], 10% 随机词, 10% 保持不变), 预测被 mask 的原始 token. 这绕过了 "双向模型会看到自己" 的问题, 实现了深度双向 pre-training
-- 提出 NSP (Next Sentence Prediction, 下一句预测): 训练模型判断两个句子是否相邻, 学习句间关系
-- 确立 "pre-train + fine-tune" 的标准范式: 同一个预训练模型, 仅换输出层即可适配 QA / NLI / 分类等不同任务. BERT_BASE (110M) 和 BERT_LARGE (340M) 两个尺度
-- 在 GLUE 上达到 80.5% (比 GPT 高 7.7 点), SQuAD v1.1 F1 达到 93.2, 全面刷新 11 项 NLP benchmark
+## 核心想法 (用直觉解释)
+标准语言模型从左到右逐词预测, 双向则会让每个词 "看到自己". BERT 的解法是完形填空 -- 随机 mask 掉一些词让模型根据两侧上下文猜回来. 这样每个 token 的表示天然融合了左右信息. 同时训练 Next Sentence Prediction 来学句间关系. 预训练完成后, 对任何任务只需加一个输出层 fine-tune 即可.
 
-## 为什么重要
-1. **Masked prediction 作为 self-supervised objective**: MLM 证明 "破坏-重建" 是训练双向表示的有效方式, 直接启发了 CV 中的 BEiT/MAE 以及 robotics 中的 masked trajectory prediction.
-2. **Pre-train + fine-tune 成为工业标准**: 一个通用模型 + 轻量 fine-tune 取代了为每个任务定制架构, 这条路线通过 GPT-3 演化为 prompt/in-context learning, 通过 RT-2/Octo 延伸到 robotics.
+## 关键设计决策
+- **MLM (Masked Language Model)**: 随机选 15% token, 其中 80% 替换为 [MASK], 10% 随机词, 10% 保持不变. 80/10/10 策略缓解了 pre-train (有 [MASK]) 和 fine-tune (无 [MASK]) 之间的分布不匹配
+- **NSP (Next Sentence Prediction)**: 50% 正样本 (真实下一句) + 50% 负样本 (随机句子), 学习句对关系. 后来 RoBERTa 证明 NSP 作用有限, 但 BERT 首次提出了这种多任务 pre-training 的思路
+- **Input = Token Emb + Segment Emb + Position Emb**: 一个统一输入格式处理单句和句对任务. [CLS] token 的最终隐状态做分类, [SEP] 分隔句对
+- **两个模型规模**: BERT_BASE (L=12, H=768, 110M) 和 BERT_LARGE (L=24, H=1024, 340M), BASE 与 GPT 同规模以便公平对比
 
-BERT (encoder-only, 双向, 理解) vs GPT (decoder-only, 单向, 生成) 定义了大模型两大流派.
-Robotics FM 主要在做"生成动作", 所以多数 VLA 选择 decoder 架构.
+## 这篇论文之后发生了什么
+RoBERTa 去掉 NSP 并加大训练量证明 MLM 本身就够强. ALBERT 用参数共享压缩模型. XLNet 用 permutation LM 统一双向与自回归. GPT-2/3 走向纯 decoder 路线并最终以 scaling 取胜. 在 CV 中, BEiT 和 MAE 直接将 MLM 迁移为 masked image modeling. 在 robotics 中, Octo 用 masked trajectory prediction 做 multi-task pre-training.
 
 ## 对你 (RL->FM) 的 Takeaway
-- **MLM = MAE = 机器人的 masked prediction**: mask 掉部分输入让模型补全, 是最通用的
-  self-supervised pretext task. 在 robotics 中, VideoMAE 预训练 visual encoder,
-  Octo 用 masked trajectory 预测来学 multi-task policy -- 都是 BERT MLM 思想的直系后裔
-- **双向 vs 自回归的选择**: BERT 式双向编码更擅长"理解" (场景理解, 物体检测, 状态估计);
-  GPT 式自回归更擅长"生成" (action sequence, trajectory). 你的 VLA pipeline 中,
-  vision encoder 适合 BERT 式 (如 ViT+MAE), action decoder 适合 GPT 式 (如 autoregressive chunk)
-- **Fine-tune 的极致简洁**: BERT 只加一个线性层就能适配新任务. 这预示了 robotics FM
-  的目标 -- 一个预训练模型, 通过极少量 task-specific adaptation 部署到不同机器人/任务
-- **[CLS] token 的设计**: BERT 在序列开头加 [CLS] token, 其最终表示用于句级分类.
-  RT-1/RT-2 中 "action token" 附在 visual/language token 后面, 起同样的"汇聚全局信息"作用
-
-## 与知识库其他内容的关联
-- 13_Word2Vec: static embedding -> BERT contextual embedding 的演进. 同一个词 "bank" 在 Word2Vec 中只有一个向量, 在 BERT 中随上下文变化
-- 15_BahdanauAttention -> foundations/17_Transformer -> BERT: attention -> self-attention -> masked self-attention pre-training 的技术链
-- LLM/families/GPT_Series: BERT (encoder, 双向, 理解) vs GPT (decoder, 单向, 生成) 是大模型两大路线的分野
-- CV/4_self_supervised (MAE, BEiT): 将 BERT MLM 迁移到 vision -- mask image patches 并重建, BEiT 连名字都致敬了 BERT
-- robotics/vla/Octo: 使用 masked trajectory prediction 做 multi-task pre-training, 是 BERT MLM 在 robotics 的直接应用
+| # | Takeaway | 与你的关联 |
+|---|----------|-----------|
+| 1 | MLM = "破坏-重建" 自监督范式 | MAE 预训练 visual encoder, Octo 用 masked trajectory 学 multi-task policy, 都是 MLM 的直系后裔 |
+| 2 | 双向 (encoder) 适合理解, 单向 (decoder) 适合生成 | VLA 的 vision encoder 用 BERT 式双向编码 (ViT), action decoder 用 GPT 式自回归, 两者分工 |
+| 3 | pre-train + 极简 fine-tune 消灭 task-specific 架构 | robotics FM 的目标: 一个预训练模型, 加最少的适配层就能部署到不同任务/机器人 |
+| 4 | [CLS] token 作为全局汇聚点 | RT-1/RT-2 的 action token 附在 visual/language token 后, 起同样的全局信息汇聚作用 |

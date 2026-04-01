@@ -1,39 +1,25 @@
-# Bahdanau Attention: Neural MT by Jointly Learning to Align and Translate (Bahdanau et al., 2015) -- Takeaway Notes
+# Bahdanau Attention: Neural MT by Jointly Learning to Align and Translate -- 学习笔记
+> 一句话: 在 encoder-decoder 中引入 soft attention, 让 decoder 每步动态查询输入序列的相关位置, 彻底解决了固定向量瓶颈.
+> 论文: Dzmitry Bahdanau, KyungHyun Cho, Yoshua Bengio, 2015, ICLR 2015
 
-> 一句话: 在 encoder-decoder 中引入 attention mechanism, 让 decoder 在每步生成时动态 soft-search 输入序列的相关位置, 从根本上解决了固定向量瓶颈, 开启了 Transformer 的技术前史.
+## 这篇论文解决了什么问题
+Seq2Seq (Sutskever 2014) 把整个输入句子压缩成一个固定长度向量, decoder 从这个向量生成翻译. 但 Cho et al. 实验表明, 句子一长 (>30 词) BLEU 就急剧下降 -- 单个向量装不下一句长话的全部信息. 本文要解决的就是这个 information bottleneck: 让 decoder 不再依赖单一固定向量, 而是能回看输入的任意位置.
 
-## 核心贡献
-- 提出 additive attention (alignment model): e_ij = v_a^T tanh(W_a s_{i-1} + U_a h_j), decoder 的每步隐状态与 encoder 每个位置的 annotation 计算相关性, softmax 归一化后加权求和得到 context vector c_i
-- 用 BiRNN (双向 GRU) 做 encoder, 每个位置的 annotation h_j 同时编码前后文信息
-- 在长句翻译上大幅超越 Seq2Seq (RNNencdec): 无 attention 的模型在句长 > 30 时 BLEU 急剧下降, 有 attention 的 RNNsearch 保持稳定
-- Attention 权重矩阵可视化直接展示了 source-target 的 soft alignment, 提供了模型可解释性
+## 核心想法 (用直觉解释)
+翻译时, 人不会先把整句话记成一个 "压缩码" 再翻, 而是边翻边回头看原文相关部分. Attention 就是模拟这个过程: decoder 每生成一个词时, 先用当前 decoder 状态去和 encoder 每个位置 "打分" (alignment score), softmax 归一化后加权求和得到一个 context vector, 这个 context 包含了 "当前最该关注的输入信息". 这是 soft alignment -- 可微分, 端到端训练.
 
-## 为什么重要
-Attention 是过去十年深度学习最关键的单一创新. Bahdanau attention 解决了一个根本矛盾:
-**如何让固定容量的 decoder 访问变长输入的任意位置**. 这个思想两年后被 Vaswani (2017)
-推广为 self-attention, 成为 Transformer 的核心, 并由此衍生出 GPT, BERT, ViT, CLIP,
-Diffusion Transformer, 以及所有 VLA 模型.
+## 关键设计决策
+- **Additive attention**: e_ij = v^T tanh(W * s_{i-1} + U * h_j), 用一个前馈网络计算 decoder 隐状态 s_{i-1} 和 encoder annotation h_j 的匹配分数. 这个 alignment model 不是预先定义的, 而是和翻译模型联合训练
+- **Bidirectional RNN encoder**: 用 BiGRU 编码输入, 每个位置的 annotation h_j = [forward_h_j; backward_h_j] 同时包含前后文信息, 因为 RNN 更擅长编码局部上下文
+- **每步不同的 context vector**: c_i = sum(alpha_ij * h_j), 每个 target word 有自己的 attention 分布, 不再共享单一固定向量. 这意味着信息存储从 O(1) 变成了 O(T_source)
 
-从信息论角度: Seq2Seq 的固定向量是 rate-distortion 瓶颈, attention 把它变成了
-**content-addressable memory** -- decoder 按需检索, 而非一次性压缩. 这个转变对应于
-从 "state-based control" 到 "memory-augmented control" 的范式迁移.
+## 这篇论文之后发生了什么
+Luong (2015) 简化为 dot-product attention (去掉前馈网络, 直接点积). Vaswani (2017) 推广为 self-attention: Q/K/V 框架 + multi-head + scaled dot-product, 诞生 Transformer. Self-attention 让序列内部也能互相 attend (不只是 decoder→encoder), 从根本上取代了 RNN. Attention 可视化催生了可解释性研究. Cross-attention 成为所有多模态模型 (CLIP, LLaVA, VLA) 的标准组件.
 
 ## 对你 (RL->FM) 的 Takeaway
-- **Attention = 选择性感知**: robot policy 面对 multi-camera 或 point cloud 输入时, 不可能
-  均匀处理所有信息. Cross-attention (RT-2 中 language 与 vision 的交互, Octo 中 task token
-  与 observation token 的交互) 直接继承了 Bahdanau 的设计
-- **固定 latent 的致命缺陷**: Seq2Seq 在长句上失败 = robot policy 用单帧 latent 在长时域
-  任务上失败. Attention 的解法是保留完整的 observation history 并按需查询 -- 这正是
-  Transformer-based policy (ACT, pi0) 比 MLP policy 强的根本原因
-- **Soft alignment vs hard alignment**: Bahdanau 选择 soft (可微分) 而非 hard (不可微,
-  需 REINFORCE) alignment, 使整个系统端到端可训练. 同理, robotics 中 differentiable
-  rendering (NeRF/3DGS) 优于 discrete feature matching 也是因为 soft 操作保留梯度
-- **可解释性的副产品**: attention weight 可视化免费提供了 "模型在看哪里" 的信息.
-  在 robot debugging 中, 可视化 cross-attention 可以诊断 policy 是否关注了正确的物体区域
-
-## 与知识库其他内容的关联
-- 14_Seq2Seq: Bahdanau 直接改进 Seq2Seq 的固定向量瓶颈, 两篇论文是 "问题-解法" 的关系
-- foundations/17_Transformer: self-attention 是 Bahdanau attention 的泛化 -- Q/K/V 分别对应 s_{i-1}/h_j/h_j, 但允许同一序列内部互相 attend
-- CV/2_vl_alignment/CLIP: CLIP 的 image-text matching 本质上也是一种 alignment, 与 Bahdanau 的 source-target alignment 同源
-- CV/2_vl_alignment/LLaVA: visual token 与 language token 之间的 cross-attention 就是 Bahdanau attention 的现代版本
-- robotics/vla (Octo, OpenVLA): task-conditioned attention 直接来自这个技术谱系
+| # | Takeaway | 与你的关联 |
+|---|----------|-----------|
+| 1 | Attention = 按需检索, 解决固定容量瓶颈 | robot policy 用单帧 latent 在长时域任务失败, 解法就是 attention over observation history (ACT, pi0) |
+| 2 | Soft alignment 保留梯度, 端到端可训练 | 同理 NeRF/3DGS 的 differentiable rendering 优于 discrete feature matching, 都是 "soft 操作保留梯度" |
+| 3 | Cross-attention 连接不同模态 | RT-2 中 language 与 vision 交互, Octo 中 task token 与 observation token 交互, 都是 Bahdanau 的后裔 |
+| 4 | Attention 权重提供免费的可解释性 | 可视化 VLA 的 cross-attention 可诊断 policy 是否关注正确物体区域, 对 debug sim2real 有直接帮助 |
