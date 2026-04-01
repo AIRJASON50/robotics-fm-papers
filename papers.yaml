@@ -402,22 +402,22 @@ cv_video:
 # ============================================================
 # Robotics - LLM Planning (4 papers)
 # ============================================================
-robotics_llm_planning:
-  - folder: foundation_model/robotics/llm_planning/22_SayCan
+robotics_google_rt:
+  - folder: foundation_model/robotics/families/Google_RT_Series/22_SayCan
     title: "Do As I Can, Not As I Say: Grounding Language in Robotic Affordances"
     authors: Ahn et al., Google
     year: 2022
     venue: CoRL
     arxiv: "2204.01691"
 
-  - folder: foundation_model/robotics/llm_planning/22_CodeAsPolicies
+  - folder: foundation_model/robotics/families/Google_RT_Series/22_CodeAsPolicies
     title: "Code as Policies: Language Model Programs for Embodied Control"
     authors: Liang et al., Google
     year: 2022
     venue: ICRA
     arxiv: "2209.07753"
 
-  - folder: foundation_model/robotics/llm_planning/22_InnerMonologue
+  - folder: foundation_model/robotics/families/Google_RT_Series/22_InnerMonologue
     title: "Inner Monologue: Embodied Reasoning through Planning with Language Models"
     authors: Huang et al., Google
     year: 2022
@@ -445,7 +445,7 @@ robotics_policy_learning:
       - name: decision-transformer
         url: https://github.com/kzl/decision-transformer.git
 
-  - folder: foundation_model/robotics/policy_learning/22_RT1
+  - folder: foundation_model/robotics/families/Google_RT_Series/22_RT1
     title: "RT-1: Robotics Transformer for Real-World Control at Scale"
     authors: Brohan et al., Google
     year: 2022
@@ -462,7 +462,7 @@ robotics_policy_learning:
       - name: act
         url: https://github.com/tonyzhaozh/act.git
 
-  - folder: foundation_model/robotics/policy_learning/23_OpenXEmbodiment
+  - folder: foundation_model/robotics/families/Google_RT_Series/23_OpenXEmbodiment
     title: "Open X-Embodiment: Robotic Learning Datasets and RT-X Models"
     authors: Open X-Embodiment Collaboration
     year: 2023
@@ -472,7 +472,7 @@ robotics_policy_learning:
       - name: open_x_embodiment
         url: https://github.com/google-deepmind/open_x_embodiment.git
 
-  - folder: foundation_model/robotics/policy_learning/23_RT2
+  - folder: foundation_model/robotics/families/Google_RT_Series/23_RT2
     title: "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control"
     authors: Brohan et al., Google
     year: 2023
@@ -483,7 +483,7 @@ robotics_policy_learning:
 # Robotics - VLA (3 papers)
 # ============================================================
 robotics_vla:
-  - folder: foundation_model/robotics/vla/23_PaLME
+  - folder: foundation_model/robotics/families/Google_RT_Series/23_PaLME
     title: "PaLM-E: An Embodied Multimodal Language Model"
     authors: Driess et al., Google/TU Berlin
     year: 2023
@@ -513,8 +513,8 @@ robotics_vla:
 # ============================================================
 # Robotics - Generative Policy (3 papers)
 # ============================================================
-robotics_generative_policy:
-  - folder: foundation_model/robotics/generative_policy/24_DiffusionPolicy
+robotics_families:
+  - folder: foundation_model/robotics/policy_learning/24_DiffusionPolicy
     title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
     authors: Chi et al., Columbia/Stanford
     year: 2024
@@ -524,7 +524,7 @@ robotics_generative_policy:
       - name: diffusion_policy
         url: https://github.com/real-stanford/diffusion_policy.git
 
-  - folder: foundation_model/robotics/generative_policy/24_pi0
+  - folder: foundation_model/robotics/families/pi_Series/24_pi0
     title: "pi_0: A Vision-Language-Action Flow Model for General Robot Control"
     authors: Black, Pertsch et al., Physical Intelligence
     year: 2024
@@ -535,7 +535,7 @@ robotics_generative_policy:
       - name: pi-data-sharing
         url: https://github.com/Physical-Intelligence/pi-data-sharing.git
 
-  - folder: foundation_model/robotics/generative_policy/25_GR00T_N1
+  - folder: foundation_model/robotics/families/GR00T_Series
     title: "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots"
     authors: NVIDIA
     year: 2025
@@ -587,48 +587,48 @@ robotics_world_model:
 # Surveys
 # ============================================================
 surveys_cv:
-  - folder: foundation_model/surveys/CV/23_ViTSurvey_TPAMI.md
+  - folder: foundation_model/surveys/CV
     title: "A Survey on Vision Transformer"
     authors: Han et al., Huawei/Sydney
     year: 2023
     venue: IEEE TPAMI
     arxiv: "2012.12556"
 
-  - folder: foundation_model/surveys/CV/24_SelfSupervised_Survey_TPAMI.md
+  - folder: foundation_model/surveys/CV
     title: "A Survey on Self-Supervised Learning"
     authors: Gui et al., Southeast/Sydney
     year: 2024
     venue: IEEE TPAMI
     arxiv: "2301.05712"
 
-  - folder: foundation_model/surveys/CV/24_VLM_Survey_TPAMI.md
+  - folder: foundation_model/surveys/CV
     title: "Vision-Language Models for Vision Tasks: A Survey"
     authors: Zhang et al., NTU
     year: 2024
     venue: IEEE TPAMI
     arxiv: "2304.00685"
 
-  - folder: foundation_model/surveys/CV/24_VideoLLM_Survey_TCSVT.md
+  - folder: foundation_model/surveys/CV
     title: "Video Understanding with Large Language Models: A Survey"
     authors: Tang et al., Rochester/HKU
     year: 2024
     venue: IEEE TCSVT
     arxiv: "2312.17432"
 
-  - folder: foundation_model/surveys/CV/25_DepthFM_Survey.md
+  - folder: foundation_model/surveys/CV
     title: "Towards Depth Foundation Model"
     authors: Xu et al., ZJU/Shanghai AI Lab
     year: 2025
     arxiv: "2507.11540"
 
-  - folder: foundation_model/surveys/CV/25_MIM_Survey_IJCV.md
+  - folder: foundation_model/surveys/CV
     title: "Masked Image Modeling: A Survey"
     authors: Hondru et al., Bucharest/Trento
     year: 2025
     venue: IJCV
     arxiv: "2408.06687"
 
-  - folder: foundation_model/surveys/CV/24_NeRF_3DGS_SLAM_Survey.pdf
+  - folder: foundation_model/surveys/CV
     title: "How NeRFs and 3D Gaussian Splatting are Reshaping SLAM"
     authors: Tosi et al., ETH Zurich/Bologna
     year: 2024
@@ -819,7 +819,7 @@ manip:
       - name: repo
         url: https://github.com/MandiZhao/dexmachina.git
 
-  - folder: manip/24_ManipTrans
+  - folder: manip/dataset/robot_hand/dynamic/24_ManipTrans
     title: "ManipTrans: Dexterous Bimanual Manipulation Transfer"
     year: 2024
     repos:
@@ -833,7 +833,7 @@ manip:
       - name: ObjDexEnvs
         url: https://github.com/cypypccpy/ObjDexEnvs.git
 
-  - folder: manip/25_DexCanvas
+  - folder: manip/25_DexTrack
     title: "DexCanvas: Dexterous Motion Tracking"
     year: 2025
     repos:
