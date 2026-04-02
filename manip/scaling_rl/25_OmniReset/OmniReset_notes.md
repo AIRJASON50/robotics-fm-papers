@@ -27,7 +27,8 @@ Massively parallel RL 在灵巧操作上遇到 **exploration saturation**:
 | Reward | Task-agnostic: r_reach + r_dist + r_success + r_smooth | 所有任务共享同一 reward, 权重固定 |
 | 探索 | gSDE (state-dependent exploration) | Reaching 阶段大探索, insertion 阶段精调 -- 自适应 |
 | Scale | 4096 并行 env, 4x L40S GPU | Ablation: 512->4096 性能持续提升, 大 batch 防 catastrophic forgetting |
-| Sim-to-real | Two-stage: Train (ideal dynamics) -> Finetune (sysid + ADR curriculum) | 论文说"no curriculum"仅指 Stage 1; sim2real 实际需要 finetune |
+| 控制器 | **OSC (末端笛卡尔位控)**, 不是关节 PD | Policy 输出 6D EE pose delta → OSC 通过 Jacobian 转力矩 (500Hz). 论文明确说 joint PD 效果差很多 (jamming). 注意: 这对灵巧手不适用 — 多指接触需要关节级控制 |
+| Sim-to-real | Two-stage: Train (ideal dynamics, 即默认物理参数无 DR) -> Finetune (sysid + ADR) | Stage 1 不 clip torque (自由探索); Stage 2 用 PACE 辨识 UR7e 摩擦/延迟后在辨识值周围随机化 |
 | Distillation | 80K expert rollouts -> ResNet-18 + MLP RGB policy | 瓶颈: RGB policy ~50% vs state expert ~100% |
 
 ## 这篇论文之后发生了什么
