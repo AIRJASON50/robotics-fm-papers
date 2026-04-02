@@ -3,91 +3,102 @@
 # Re-clone with: ./scripts/setup.sh
 # ============================================
 
+# -- CV repos --
+foundation_model/CV/0_backbone/20_ViT/vision_transformer/
+foundation_model/CV/1_generation/20_DDPM/diffusion/
+foundation_model/CV/1_generation/22_FlowMatching/flow_matching/
+foundation_model/CV/1_generation/23_DiT/DiT/
+foundation_model/CV/2_vl_alignment/21_CLIP/CLIP/
+
 # -- LLM repos --
-foundation_model/LLM/GPT_Series/19_GPT2/code/
-foundation_model/LLM/24_Qwen/qwen_repo/
-foundation_model/LLM/25_KimiK2/kimik2_repo/
+foundation_model/LLM/families/GPT_Series/19_GPT2/code/
+foundation_model/LLM/families/deepseek/24_DeepSeekV2/repo/
+foundation_model/LLM/families/kimi/25_KimiAudio/repo/
+foundation_model/LLM/families/kimi/25_KimiCLI/repo/
+foundation_model/LLM/families/kimi/25_KimiK15/repo/
+foundation_model/LLM/families/kimi/25_KimiK2/kimik2_repo/
+foundation_model/LLM/families/kimi/25_MoBA/repo/
+foundation_model/LLM/families/kimi/25_Moonlight/repo/
+foundation_model/LLM/families/kimi/26_KimiK25/repo/
+foundation_model/LLM/families/llama/24_Llama3/repo/
+foundation_model/LLM/families/qwen/24_Qwen/qwen_repo/
+foundation_model/LLM/families/qwen/25_Qwen3/repo/
 
-# -- methods repos --
-foundation_model/methods/20_DDPM/diffusion/
-foundation_model/methods/20_ViT/vision_transformer/
-foundation_model/methods/21_CLIP/CLIP/
-foundation_model/methods/21_DecisionTransformer/decision-transformer/
-foundation_model/methods/22_FlowMatching/flow_matching/
-foundation_model/methods/23_ACT/act/
-foundation_model/methods/23_DiT/DiT/
-foundation_model/methods/23_DreamerV3/dreamerv3/
-foundation_model/methods/23_OpenXEmbodiment/open_x_embodiment/
-foundation_model/methods/24_DiffusionPolicy/diffusion_policy/
-foundation_model/methods/24_Octo/octo/
-foundation_model/methods/24_OpenVLA/openvla/
-foundation_model/methods/24_pi0/openpi/
-foundation_model/methods/24_pi0/pi-data-sharing/
-foundation_model/robotics/generative_policy/GR00T_Series/vla_wbc/Isaac-GR00T/
-foundation_model/robotics/generative_policy/GR00T_Series/world_model/25_DreamGen/GR00T-Dreams/
-foundation_model/robotics/generative_policy/GR00T_Series/world_model/26_DreamZero/dreamzero/
+# -- Robotics repos (subfolder repos) --
+foundation_model/robotics/policy_learning/21_DecisionTransformer/decision-transformer/
+foundation_model/robotics/policy_learning/23_ACT/act/
+foundation_model/robotics/policy_learning/24_DiffusionPolicy/diffusion_policy/
+foundation_model/robotics/vla/24_Octo/octo/
+foundation_model/robotics/vla/24_OpenVLA/openvla/
+foundation_model/robotics/world_model/23_DreamerV3/dreamerv3/
+foundation_model/robotics/families/Google_RT_Series/23_OpenXEmbodiment/open_x_embodiment/
+foundation_model/robotics/families/pi_Series/24_pi0/openpi/
+foundation_model/robotics/families/pi_Series/24_pi0/pi-data-sharing/
+foundation_model/robotics/families/GR00T_Series/vla_wbc/Isaac-GR00T/code/
+foundation_model/robotics/families/GR00T_Series/vla_wbc/SONIC/code/
+foundation_model/robotics/families/GR00T_Series/world_model/25_DreamGen/GR00T-Dreams/
+foundation_model/robotics/families/GR00T_Series/world_model/26_DreamZero/dreamzero/
 
-# -- surveys repos --
-foundation_model/surveys/24_AwesomeSurvey/Awesome-Robotics-Foundation-Models/
+# -- Surveys repos --
+foundation_model/surveys/robotics/24_AwesomeSurvey/Awesome-Robotics-Foundation-Models/
 
 # 25_AwesomeWorldModels: folder IS repo, keep only our files
-foundation_model/surveys/25_AwesomeWorldModels/*
-!foundation_model/surveys/25_AwesomeWorldModels/*_notes.md
-!foundation_model/surveys/25_AwesomeWorldModels/A_Comprehensive_Survey_on_World_Models_for_Embodied_AI.md
-!foundation_model/surveys/25_AwesomeWorldModels/README_clean.md
-!foundation_model/surveys/25_AwesomeWorldModels/slides/
+foundation_model/surveys/robotics/25_AwesomeWorldModels/*
+!foundation_model/surveys/robotics/25_AwesomeWorldModels/*_notes.md
+!foundation_model/surveys/robotics/25_AwesomeWorldModels/A_Comprehensive_Survey_on_World_Models_for_Embodied_AI.md
+!foundation_model/surveys/robotics/25_AwesomeWorldModels/README_clean.md
+!foundation_model/surveys/robotics/25_AwesomeWorldModels/slides/
 
-# -- humanoid repos (subfolder repos) --
-humanoid/18_DeepMimic/DeepMimic/
-humanoid/23_PHC/PHC/
-humanoid/24_H2O/human2humanoid/
-humanoid/25_BeyondMimic/whole_body_tracking/
-humanoid/25_FPO/code/
-humanoid/25_HDMI/HDMI/
-humanoid/25_SONIC/GR00T-WBC/
+# -- Humanoid repos (subfolder repos) --
+humanoid/motion_tracking/18_DeepMimic/DeepMimic/
+humanoid/motion_tracking/23_PHC/PHC/
+humanoid/motion_tracking/25_BeyondMimic/whole_body_tracking/
+humanoid/motion_tracking/25_SONIC/GR00T-WBC/
+humanoid/teleoperation/24_H2O/human2humanoid/
+humanoid/teleoperation/25_FPO/code/
+humanoid/video_world_model/25_HDMI/HDMI/
 
-# -- humanoid repos (folder IS repo, keep only our md files) --
-humanoid/25_ASAP/*
-!humanoid/25_ASAP/*.md
-humanoid/25_ASAP/README.md
+# -- Humanoid repos (folder IS repo, keep only our md files) --
+humanoid/sim2real/25_ASAP/*
+!humanoid/sim2real/25_ASAP/*.md
+humanoid/sim2real/25_ASAP/README.md
 
-humanoid/25_OmniRetarget/*
-!humanoid/25_OmniRetarget/*.md
-humanoid/25_OmniRetarget/README.md
-humanoid/25_OmniRetarget/CODE_OF_CONDUCT.md
-humanoid/25_OmniRetarget/CONTRIBUTING.md
-humanoid/25_OmniRetarget/CONTRIBUTORS.md
+humanoid/teleoperation/25_OmniRetarget/*
+!humanoid/teleoperation/25_OmniRetarget/*.md
+humanoid/teleoperation/25_OmniRetarget/README.md
+humanoid/teleoperation/25_OmniRetarget/CODE_OF_CONDUCT.md
+humanoid/teleoperation/25_OmniRetarget/CONTRIBUTING.md
+humanoid/teleoperation/25_OmniRetarget/CONTRIBUTORS.md
 
-humanoid/25_RWM/*
-!humanoid/25_RWM/*.md
-humanoid/25_RWM/README.md
+humanoid/teleoperation/25_TWIST2/*
+!humanoid/teleoperation/25_TWIST2/*.md
+humanoid/teleoperation/25_TWIST2/README.md
 
-humanoid/25_TWIST2/*
-!humanoid/25_TWIST2/*.md
-humanoid/25_TWIST2/README.md
+humanoid/video_world_model/25_RWM/*
+!humanoid/video_world_model/25_RWM/*.md
+humanoid/video_world_model/25_RWM/README.md
 
 humanoid/Humanoid-Locomotion-Survey/*
 !humanoid/Humanoid-Locomotion-Survey/*.md
 humanoid/Humanoid-Locomotion-Survey/README.md
 
-# -- manip repos --
-manip/23_ArtiGrasp/artigrasp/
-manip/23_PhysHOI/PhysHOI/
-manip/24_BiDexHD/BiDexHD/
-manip/24_DexMachina/repo/
-manip/24_ManipTrans/repo/
-manip/24_ObjDexEnvs/ObjDexEnvs/
-manip/25_DexCanvas/code/
-manip/25_DexCanvas/dexcanvas_data/
-manip/25_DexTrack/DexTrack_code/
-manip/25_OmniReset/UWLab/
-manip/25_SimToolReal/simtoolreal/
-manip/26_Dex4D/Dex4D-Hardware/
-manip/26_Dex4D/Dex4D-Simulation/
-manip/26_Dex4D/Dex4D-Vision/
-manip/26_DexLatent/DexLatent/
-manip/26_HumDex/HumDex/
-manip/26_UltraDexGrasp/UltraDexGrasp/
+# -- Manip repos (subfolder repos) --
+manip/traditional_rl/23_ArtiGrasp/artigrasp/
+manip/traditional_rl/23_PhysHOI/PhysHOI/
+manip/traditional_rl/24_ObjDexEnvs/ObjDexEnvs/
+manip/human2robot/24_BiDexHD/BiDexHD/
+manip/human2robot/24_DexMachina/repo/
+manip/human2robot/25_DexTrack/DexTrack_code/
+manip/human2robot/26_HumDex/HumDex/
+manip/scaling_rl/25_OmniReset/UWLab/
+manip/sim2real/25_SimToolReal/simtoolreal/
+manip/sim2real/26_Dex4D/Dex4D-Hardware/
+manip/sim2real/26_Dex4D/Dex4D-Simulation/
+manip/sim2real/26_Dex4D/Dex4D-Vision/
+manip/fm_manip/26_DexLatent/DexLatent/
+manip/fm_manip/26_UltraDexGrasp/UltraDexGrasp/
+
+# -- Manip QiHaoZhi repos --
 manip/QiHaoZhi/24_NeuralFeels/code/
 manip/QiHaoZhi/from_human_demo/25_AINA/code/
 manip/QiHaoZhi/from_human_demo/25_HOP/code/
@@ -100,6 +111,31 @@ manip/QiHaoZhi/sim2real_other/24_TwistingLids/twisting-lids/
 manip/QiHaoZhi/sim2real_other/26_HandelBot/code/
 manip/QiHaoZhi/teleop_bc/24_HATO/code/
 manip/QiHaoZhi/teleop_bc/25_MinBC/code/
+
+# -- Manip dataset repos (subfolder repos) --
+manip/dataset/robot_hand/dynamic/24_ManipTrans/repo/
+manip/dataset/robot_hand/dynamic/24_DexMimicGen/dexmimicgen/
+manip/dataset/hand_object/dynamic/manipulation/22_ARCTIC/arctic/
+manip/dataset/hand_object/dynamic/manipulation/25_DexCanvas/code/
+manip/dataset/hand_object/dynamic/manipulation/25_DexCanvas/dexcanvas_data/
+manip/dataset/hand_object/dynamic/manipulation/25_GigaHands/GigaHands/
+manip/dataset/hand_object/dynamic/pick_and_place/24_HOT3D/hot3d/
+manip/dataset/hand_only/24_DexCap/DexCap/
+
+# -- Manip dataset repos (folder IS repo) --
+manip/dataset/hand_only/25_EgoDex/*
+!manip/dataset/hand_only/25_EgoDex/*.md
+manip/dataset/hand_only/25_EgoDex/README.md
+manip/dataset/hand_only/25_EgoDex/CONTRIBUTING.md
+manip/dataset/hand_only/25_EgoDex/CODE_OF_CONDUCT.md
+
+manip/dataset/robot_hand/dynamic/24_RealDex/*
+!manip/dataset/robot_hand/dynamic/24_RealDex/*.md
+manip/dataset/robot_hand/dynamic/24_RealDex/README.md
+
+manip/dataset/robot_hand/static/22_DexGraspNet/*
+!manip/dataset/robot_hand/static/22_DexGraspNet/*.md
+manip/dataset/robot_hand/static/22_DexGraspNet/README.md
 
 # ============================================
 # html2aitext_convert (tool has own repo)

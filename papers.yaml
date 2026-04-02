@@ -833,8 +833,8 @@ manip:
       - name: ObjDexEnvs
         url: https://github.com/cypypccpy/ObjDexEnvs.git
 
-  - folder: manip/human2robot/25_DexTrack
-    title: "DexCanvas: Dexterous Motion Tracking"
+  - folder: manip/dataset/hand_object/dynamic/manipulation/25_DexCanvas
+    title: "DexCanvas: Dexterous Manipulation Tracking"
     year: 2025
     repos:
       - name: code

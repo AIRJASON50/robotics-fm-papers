@@ -62,7 +62,13 @@ Humanoid 有 AMASS (100M 帧全身动捕)。灵巧手没有同等规模的数据
 | PhysHOI (2023) | 全身(含手指)人-物交互的物理模仿, 提出 Contact Graph Reward 解决接触稀疏问题 |
 | ObjDexEnvs (2024) | 两层架构: Transformer planner 生成腕部轨迹 + PPO controller 学指尖动作, 利用腕部运动跨越 embodiment gap |
 
-**与你的关联**: 这是你当前的主力范式。三篇论文展示了 PPO 在灵巧操作中的三种典型用法 -- 端到端训练(ArtiGrasp)、模仿奖励(PhysHOI)、层次化控制(ObjDexEnvs)。ObjDexEnvs 的"腕部规划 + 指尖 RL"分层思路在后续工作中被反复验证。
+**与你的关联**: 这是你当前的主力范式。三篇论文展示了 PPO 在灵巧操作中的三种典型架构:
+
+- **单一策略直通** (ArtiGrasp): 观测 → 一个策略网络 → 动作, 中间不做模块分解。策略同时学习手指控制和腕部跟随, 靠 curriculum (先固定物体单手训→再自由物体双手协调) 降低学习难度。注意: "直通"指网络架构, 不是没有仿真器 -- 训练在 RaiSim 中用 PPO 完成。
+- **模仿奖励** (PhysHOI): 用人类动作参考计算 reward (Contact Graph Reward), 替代手工 reward 设计。
+- **层次化控制** (ObjDexEnvs): 上层 Transformer 规划腕部轨迹 → 下层 PPO 学指尖动作, 模块化分解。
+
+ObjDexEnvs 的"腕部规划 + 指尖 RL"分层思路在后续工作中被反复验证。
 
 **Takeaway**: Reward shaping 和 curriculum 是传统 RL 的生命线, 但也是其可扩展性的天花板 -- 每增加一个任务, 就要重新调一套 reward。
 
