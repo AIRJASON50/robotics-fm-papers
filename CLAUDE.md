@@ -46,7 +46,7 @@ paper/
 │   └── dataset/                   #   手部数据集库 (hand_object/robot_hand/hand_only)
 ├── html2aitext_convert/           # arxiv → markdown 工具 (DO NOT modify)
 ├── papers.yaml                    # 全库清单
-├── scripts/setup.sh               # 一键 clone
+├── scripts/setup.sh               # 部署脚本 (默认拉论文, --repos 拉代码仓库)
 ├── README.md                      # 项目说明
 └── CLAUDE.md                      # 本文件
 ```

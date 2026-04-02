@@ -1,6 +1,9 @@
 #!/bin/bash
 # setup.sh - Clone all code repositories and fetch arxiv papers
-# Usage: ./scripts/setup.sh [--repos-only | --papers-only]
+# Usage: ./scripts/setup.sh [--repos | --all]
+#   (default)  fetch arxiv papers only (notes + markdown)
+#   --repos    clone code repositories only
+#   --all      fetch papers + clone repos
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -139,8 +142,8 @@ PYEOF
 # ============================================================
 # Main
 # ============================================================
-case "${1:-all}" in
-    --repos-only)  clone_repos ;;
-    --papers-only) fetch_papers ;;
-    all|*)         clone_repos; echo; fetch_papers ;;
+case "${1:-}" in
+    --repos)       clone_repos ;;
+    --all)         clone_repos; echo; fetch_papers ;;
+    *)             fetch_papers ;;
 esac

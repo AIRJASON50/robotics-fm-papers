@@ -1,6 +1,6 @@
 # ============================================
 # Cloned third-party code repositories
-# Re-clone with: ./scripts/setup.sh
+# Re-clone with: ./scripts/setup.sh --repos
 # ============================================
 
 # -- CV repos --
