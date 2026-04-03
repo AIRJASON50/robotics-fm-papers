@@ -208,9 +208,23 @@ cv_generation:
     venue: ICLR
     arxiv: "1312.6114"
 
-  - folder: foundation_model/CV/1_generation/20_DDPM
+  # -- Diffusion Family (in diffusion_family/ subdirectory) --
+  - folder: foundation_model/CV/1_generation/diffusion_family/15_DiffusionThermodynamics
+    title: "Deep Unsupervised Learning using Nonequilibrium Thermodynamics"
+    authors: Sohl-Dickstein et al.
+    year: 2015
+    arxiv: "1503.03585"
+
+  - folder: foundation_model/CV/1_generation/diffusion_family/19_ScoreMatching
+    title: "Generative Modeling by Estimating Gradients of the Data Distribution"
+    authors: Song & Ermon
+    year: 2019
+    venue: NeurIPS
+    arxiv: "1907.05600"
+
+  - folder: foundation_model/CV/1_generation/diffusion_family/20_DDPM
     title: "Denoising Diffusion Probabilistic Models"
-    authors: Ho et al., Google
+    authors: Ho, Jain, Abbeel (UC Berkeley)
     year: 2020
     venue: NeurIPS
     arxiv: "2006.11239"
@@ -218,7 +232,14 @@ cv_generation:
       - name: diffusion
         url: https://github.com/hojonathanho/diffusion.git
 
-  - folder: foundation_model/CV/1_generation/22_FlowMatching
+  - folder: foundation_model/CV/1_generation/diffusion_family/20_DDIM
+    title: "Denoising Diffusion Implicit Models"
+    authors: Song et al.
+    year: 2020
+    venue: ICLR
+    arxiv: "2010.02502"
+
+  - folder: foundation_model/CV/1_generation/diffusion_family/22_FlowMatching
     title: "Flow Matching for Generative Modeling"
     authors: Lipman et al., Meta
     year: 2022
@@ -228,14 +249,7 @@ cv_generation:
       - name: flow_matching
         url: https://github.com/facebookresearch/flow_matching.git
 
-  - folder: foundation_model/CV/1_generation/22_LDM
-    title: "High-Resolution Image Synthesis with Latent Diffusion Models"
-    authors: Rombach et al.
-    year: 2022
-    venue: CVPR
-    arxiv: "2112.10752"
-
-  - folder: foundation_model/CV/1_generation/23_DiT
+  - folder: foundation_model/CV/1_generation/diffusion_family/23_DiT
     title: "Scalable Diffusion Models with Transformers"
     authors: Peebles & Xie
     year: 2023
@@ -244,6 +258,13 @@ cv_generation:
     repos:
       - name: DiT
         url: https://github.com/facebookresearch/DiT.git
+
+  - folder: foundation_model/CV/1_generation/22_LDM
+    title: "High-Resolution Image Synthesis with Latent Diffusion Models"
+    authors: Rombach et al.
+    year: 2022
+    venue: CVPR
+    arxiv: "2112.10752"
 
 # ============================================================
 # CV - Vision-Language Alignment (4 papers)
