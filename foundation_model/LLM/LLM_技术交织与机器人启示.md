@@ -269,11 +269,11 @@ GR00T N1 用 120Hz DiT 做动作生成, 正是因为标准 Transformer attention
 
 | 论文 | 年份 | 为什么重要 | 本库位置 |
 |------|------|-----------|---------|
-| **SayCan** (Google) | 2022 | GPT planning + CLIP affordance → robot execution, "LLM 指挥 robot" 的第一个 milestone | `robotics/families/Google_RT_Series/22_SayCan/` |
-| **Code-as-Policies** (Google) | 2022 | GPT 直接生成 robot control code, 不训练 policy | `robotics/families/Google_RT_Series/22_CodeAsPolicies/` |
-| **Inner Monologue** (Google) | 2022 | LLM 作为 robot 内心独白, 闭环语言反馈 | `robotics/families/Google_RT_Series/22_InnerMonologue/` |
+| **SayCan** (Google) | 2022 | GPT planning + CLIP affordance → robot execution, "LLM 指挥 robot" 的第一个 milestone | 已移除 (概念在 RT family notes 中) |
+| **Code-as-Policies** (Google) | 2022 | GPT 直接生成 robot control code, 不训练 policy | 已移除 (概念在 RT family notes 中) |
+| **Inner Monologue** (Google) | 2022 | LLM 作为 robot 内心独白, 闭环语言反馈 | 已移除 (概念在 RT family notes 中) |
 | **LLaVA** (UW-Madison) | 2023 | 开源 VLM 训练范式 (visual instruction tuning), OpenVLA 的灵感来源 | `CV/2_vl_alignment/23_LLaVA/` |
-| **Voyager** (NVIDIA) | 2023 | GPT-4 做 open-ended agent: code generation + skill library + self-verification | `robotics/families/Google_RT_Series/23_Voyager/` |
+| **Voyager** (NVIDIA) | 2023 | GPT-4 做 open-ended agent: code generation + skill library + self-verification | 已移除 (非主线) |
 
 这些论文代表 **LLM-as-planner 路线** (直接用 LLM 做 robot 大脑), 与本库已有的 **VLA 路线** (LLM 架构迁移到 robot) 互补:
 

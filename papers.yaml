@@ -424,26 +424,8 @@ cv_video:
 # Robotics - LLM Planning (4 papers)
 # ============================================================
 robotics_google_rt:
-  - folder: foundation_model/robotics/families/Google_RT_Series/22_SayCan
-    title: "Do As I Can, Not As I Say: Grounding Language in Robotic Affordances"
-    authors: Ahn et al., Google
-    year: 2022
-    venue: CoRL
-    arxiv: "2204.01691"
 
-  - folder: foundation_model/robotics/families/Google_RT_Series/22_CodeAsPolicies
-    title: "Code as Policies: Language Model Programs for Embodied Control"
-    authors: Liang et al., Google
-    year: 2022
-    venue: ICRA
-    arxiv: "2209.07753"
 
-  - folder: foundation_model/robotics/families/Google_RT_Series/22_InnerMonologue
-    title: "Inner Monologue: Embodied Reasoning through Planning with Language Models"
-    authors: Huang et al., Google
-    year: 2022
-    venue: CoRL
-    arxiv: "2207.05608"
 
   - folder: foundation_model/robotics/llm_planning/23_Voyager
     title: "Voyager: An Open-Ended Embodied Agent with Large Language Models"
@@ -504,12 +486,6 @@ robotics_policy_learning:
 # Robotics - VLA (3 papers)
 # ============================================================
 robotics_vla:
-  - folder: foundation_model/robotics/families/Google_RT_Series/23_PaLME
-    title: "PaLM-E: An Embodied Multimodal Language Model"
-    authors: Driess et al., Google/TU Berlin
-    year: 2023
-    venue: ICML
-    arxiv: "2303.03378"
 
   - folder: foundation_model/robotics/vla/24_Octo
     title: "Octo: An Open-Source Generalist Robot Policy"

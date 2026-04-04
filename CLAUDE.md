@@ -151,7 +151,7 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 
 | 内容 | 位置 |
 |------|------|
-| **Google RT Series** (9 篇): SayCan→RT-1→RT-2→PaLME→OpenX→AutoRT→RT-H | families/Google_RT_Series/ |
+| **Google RT Series (3 篇): RT-1→RT-2→OpenXEmbodiment | families/Google_RT_Series/ |
 | **PI Series** (7 篇): DROID→pi_0→FAST→HiRobot→pi_0.5→pi\*0.6→MEM | families/pi_Series/ |
 | **GR00T Series** (6 篇): N1→N1.5→SONIC→DreamGen→N1.6→DreamZero | families/GR00T_Series/ |
 | 方法论文: DT, ACT, DiffusionPolicy, DROID | policy_learning/ |
