@@ -30,9 +30,39 @@ PI 的论文本质上是这三个人的研究方向的工程化整合。
 
 ## 2. 完整演进: 每一步解决了什么问题
 
+### 从 RT-2 到 pi_0: 为什么需要重新设计架构
+
+RT-2 验证了"VLM 的互联网 pattern 可以迁移到 robot"这个核心假设, 但架构有三个根本问题:
+
+```
+RT-2 的问题 (架构层面):
+
+1. 动作 = 语言 token → 离散化精度差 (256 bins ≈ 2.8° 误差)
+   原因: VLM 输出头是 softmax 分类器, 只能从词表中选 token
+   → 不能输出连续浮点数, 被迫把动作编码为离散 bin index
+
+2. 无法冻结 VLM → 灾难性遗忘风险
+   原因: 动作和语言共用同一个输出头
+   → 冻结 VLM = 冻结输出头 = 不能输出动作
+   → 只能整体 fine-tune, 可能破坏 VLM 的视觉语言 pattern
+
+3. 55B 太大 → 推理 1-3Hz → 不能实时控制
+   原因: 整个 VLM 参与每一步推理
+
+pi_0 的解法: 加一个独立的 Action Expert
+
+  RT-2:  VLM (55B) → 语言输出头 → 离散动作 token
+  pi_0:  VLM (3B, 可冻结) → 表征 → Action Expert (300M) → Flow Matching → 连续动作
+
+  一个改动解决三个问题:
+    独立输出头 → 可以输出连续值 (精度解决)
+    VLM 和 Action Expert 参数分离 → 可以冻结 VLM (遗忘解决)
+    VLM 缩小到 3B + Action Expert 只有 300M → 14Hz (速度解决)
+```
+
 ### Phase 1: 建立基础 -- pi_0 (2024.10)
 
-**要解决的问题**: 能不能做一个通用的机器人 policy, 一个模型控制多种机器人做多种任务?
+**要解决的问题**: 在 RT-2 验证的"VLM→robot"假设基础上, 能不能解决架构问题, 做一个真正可部署的通用 VLA?
 
 **解法**: VLM (PaliGemma, 3B) + Flow Matching Action Expert
 

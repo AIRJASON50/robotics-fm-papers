@@ -118,10 +118,11 @@ L_simple = E_{t, x_0, epsilon} [ || epsilon - epsilon_theta(sqrt(alpha_bar_t) * 
 
 ### 训练细节
 
-- U-Net backbone (类 PixelCNN++), 35.7M params (CIFAR10), 114M (256x256)
-- Group normalization, Swish activation
-- Timestep t 通过 Transformer sinusoidal positional embedding 注入每个 residual block
-- Self-attention 仅在 16x16 分辨率
+- U-Net backbone (U-Net = 像素到像素的 CNN 架构, U 形 encoder-decoder + skip connections, 原为医学图像分割设计 (2015); 在 DDPM 中用来做噪声预测: 输入加噪图片 → 输出同尺寸的噪声预测图, 每个像素位置预测该位置加了多少噪声。**U-Net 就是 DDPM 的全部网络 — 没有 encoder, 没有 discriminator, 没有 latent space, 只有这一个像素到像素的变换器**)
+- 35.7M params (CIFAR10), 114M (256x256)
+- Group normalization (GN, 分组归一化 — 类似 BatchNorm 但不依赖 batch size), Swish activation (激活函数, x * sigmoid(x))
+- Timestep t 通过 Transformer sinusoidal positional embedding (正弦位置编码) 注入每个 residual block → 同一个网络处理所有噪声程度, 靠 t 区分
+- Self-attention 仅在 16x16 分辨率 (U-Net 原版没有 attention, DDPM 加的)
 - Adam, lr=2e-4, EMA decay 0.9999
 - CIFAR10: batch 128, ~800K steps (~10.6 hrs on TPU v3-8)
 

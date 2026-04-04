@@ -5,9 +5,9 @@
 
 # -- CV repos --
 foundation_model/CV/0_backbone/20_ViT/vision_transformer/
-foundation_model/CV/1_generation/20_DDPM/diffusion/
-foundation_model/CV/1_generation/22_FlowMatching/flow_matching/
-foundation_model/CV/1_generation/23_DiT/DiT/
+foundation_model/CV/1_generation/diffusion_family/20_DDPM/diffusion/
+foundation_model/CV/1_generation/diffusion_family/22_FlowMatching/flow_matching/
+foundation_model/CV/1_generation/diffusion_family/23_DiT/DiT/
 foundation_model/CV/2_vl_alignment/21_CLIP/CLIP/
 
 # -- LLM repos --

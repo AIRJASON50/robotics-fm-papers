@@ -44,19 +44,19 @@ You study CS (NLP/CV) foundation models to understand:
 
 ---
 
-## Level 2 -> Level 3 Exam: Generative Policy + RL Frontier Understanding
+## Level 2 -> Level 3 Exam: Vision-Language + 生成模型原理
 
-**Scope**: CLIP, diffusion/flow matching, Diffusion Policy, and the RL-to-generative-policy transition
+**Scope**: ViT, CLIP, DDPM, Flow Matching, DiT 的原理和对机器人的意义
 
-1. Your current PPO policy outputs a Gaussian distribution over joint torques. Diffusion Policy outputs a full action chunk via iterative denoising. Describe a concrete dexterous manipulation scenario where the Gaussian assumption catastrophically fails but Diffusion Policy succeeds. Then describe a scenario where your PPO approach is strictly better.
+1. ViT 和 CLIP 都用了 ViT 架构, 但训练目标不同。(a) 各自的训练目标是什么? (b) 同一个 ViT 架构, 为什么 SigLIP 预训练的比 ImageNet 预训练的对机器人更有用? (c) 你要为灵巧手选 vision backbone, 在什么场景下选从头训 ResNet-18, 什么场景下选 SigLIP ViT + LoRA?
 
-2. pi_0 chose flow matching over DDPM for action generation (10 integration steps vs 100+ denoising steps). If you deployed a diffusion-based policy on your dexterous hand at 50Hz control frequency, calculate the time budget per action and explain whether DDPM or flow matching would meet it. What engineering tradeoffs does this force?
+2. 从流形的角度, AE/VAE 和 DDPM 分别在做什么? (a) 各自的几何本质是什么? (b) 为什么 VAE 生成模糊而 DDPM 生成清晰? (c) Robotics 中如何组合这两种范式?
 
-3. CLIP aligned vision and language through contrastive learning. Your dexterous hand needs to follow language instructions ("flip the pen", "rotate the cube 90 degrees"). If you fine-tune a CLIP-based VLM backbone for your manipulation policy, what happens to the spatial precision of visual features -- and how do RT-2, pi_0, and GR00T N1 each solve this problem differently?
+3. DDPM 的去噪网络 (a) 输入什么、输出什么、loss 是什么? (b) 训练时为什么不需要跑 1000 步加噪? (c) 推理时为什么必须跑 1000 步? (d) 训练和推理的这种不对称性是怎么设计出来的?
 
-4. R3M and VIP showed that human videos can provide reward signals for robot learning, replacing hand-crafted reward functions. You currently spend weeks designing reward terms for each new dexterous task. Concretely, how would you replace your reward engineering pipeline with a VIP-style approach? What would you lose compared to your current shaped rewards?
+4. Flow Matching 相比 DDPM 改了什么? (a) 为什么直线路径比弯曲路径需要的步数少? (b) DDPM 是 SDE 而 Flow Matching 是 ODE, 这个区别意味着什么? (c) 为什么 2024 年之后的 VLA 工作几乎都选 Flow Matching?
 
-5. Decision Transformer recasts RL as sequence modeling -- conditioning on desired return to generate actions. You have millions of PPO rollouts (with returns) from your sim training. Could you train a Decision Transformer on this data as a replacement for your PPO policy? What would you gain, what would you lose, and when would this approach make sense for dexterous manipulation?
+5. 生成模型的演化链 AE→VAE→GAN→DDPM→Flow Matching 中, 每一步解决了上一步的什么问题? 各自的训练目的和训练产物 (encoder/decoder/去噪网络) 分别是什么? 在 robotics 中哪些被继承了?
 
 ---
 
