@@ -79,4 +79,7 @@ humanoid_landscape.md          Level 1: 预训练 + 规模化       pi_family_no
 | RL 怎么做 VLA 的 post-training | PI family notes, 搜索 "pi\*0.6" |
 | VLA 之后是什么 (世界模型) | `CS2Robotics_Roadmap.md` Level 4 + DreamZero notes |
 | 考试题测试我的理解 | `foundation_model/note/level_exams.md` |
+| RL 的思想源头和完整脉络 | `foundation_model/foundations/RL/RL_foundations.md` |
+| State vs Observation 的精确定义 | `foundation_model/foundations/RL/state_vs_observation.md` |
+| Bellman 方程的直觉理解 | `foundation_model/foundations/RL/57_BellmanEquation/note.md` |
 | 这个 repo 所有论文的清单 | `papers.yaml` 或 `CLAUDE.md` |

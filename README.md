@@ -83,7 +83,7 @@ Level 4: 下一步和开放问题
 ```
 paper/
 ├── foundation_model/          # CS → Robotics FM 知识库
-│   ├── foundations/ (9)       #   Transformer, PPO, SAC, Adam, GAN, ...
+│   ├── foundations/           #   Transformer, GAN, Adam, BN, LN, RL/ (Bellman→Q-Learning→PPO→sim2real)
 │   ├── LLM/ (5 families)     #   GPT, Kimi, Qwen, DeepSeek, Llama
 │   ├── CV/ (24 papers)        #   backbone, generation, VL, 3D, SSL, video
 │   ├── robotics/ (3 families) #   RT, PI, GR00T + 方法论文

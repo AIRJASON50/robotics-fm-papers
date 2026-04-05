@@ -46,12 +46,6 @@ foundations:
     year: 2016
     arxiv: "1607.06450"
 
-  - folder: foundation_model/foundations/17_PPO
-    title: "Proximal Policy Optimization Algorithms"
-    authors: Schulman et al., OpenAI
-    year: 2017
-    arxiv: "1707.06347"
-
   - folder: foundation_model/foundations/17_Transformer
     title: "Attention Is All You Need"
     authors: Vaswani et al., Google
@@ -59,12 +53,61 @@ foundations:
     venue: NeurIPS
     arxiv: "1706.03762"
 
-  - folder: foundation_model/foundations/18_SAC
+  # -- RL Family (foundations/RL/) --
+  - folder: foundation_model/foundations/RL/57_BellmanEquation
+    title: "On the Theory of Dynamic Programming"
+    authors: Richard Bellman
+    year: 1952
+    venue: PNAS
+
+  - folder: foundation_model/foundations/RL/89_QLearning
+    title: "Q-Learning"
+    authors: Watkins & Dayan
+    year: 1992
+    venue: Machine Learning
+
+  - folder: foundation_model/foundations/RL/92_REINFORCE
+    title: "Simple Statistical Gradient-Following Algorithms for Connectionist Reinforcement Learning"
+    authors: Ronald Williams
+    year: 1992
+    venue: Machine Learning
+
+  - folder: foundation_model/foundations/RL/15_DQN
+    title: "Human-level Control through Deep Reinforcement Learning"
+    authors: Mnih et al., DeepMind
+    year: 2015
+    venue: Nature
+
+  - folder: foundation_model/foundations/RL/17_PPO
+    title: "Proximal Policy Optimization Algorithms"
+    authors: Schulman et al., OpenAI
+    year: 2017
+    arxiv: "1707.06347"
+
+  - folder: foundation_model/foundations/RL/17_DomainRandomization
+    title: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World"
+    authors: Tobin et al.
+    year: 2017
+    arxiv: "1703.06907"
+
+  - folder: foundation_model/foundations/RL/18_SAC
     title: "Soft Actor-Critic: Off-Policy Maximum Entropy Deep RL"
     authors: Haarnoja et al., UC Berkeley
     year: 2018
     venue: ICML
     arxiv: "1801.01290"
+
+  - folder: foundation_model/foundations/RL/19_OpenAIDactyl
+    title: "Solving Rubik's Cube with a Robot Hand"
+    authors: OpenAI
+    year: 2019
+    arxiv: "1910.07113"
+
+  - folder: foundation_model/foundations/RL/21_RMA
+    title: "RMA: Rapid Motor Adaptation for Legged Robots"
+    authors: Kumar et al., UC Berkeley
+    year: 2021
+    arxiv: "2107.04034"
 
 # ============================================================
 # LLM - NLP Foundations (5 papers)
