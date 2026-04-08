@@ -147,12 +147,10 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 
 | 内容 | 位置 |
 |------|------|
-| **Google RT Series (3 篇): RT-1→RT-2→OpenXEmbodiment | families/Google_RT_Series/ |
+| **Google RT Series** (3 篇): RT-1→RT-2→OpenXEmbodiment | families/Google_RT_Series/ |
 | **PI Series** (3 核心 + 4 支撑): pi_0→pi_0.5→pi\*0.6 (DROID/FAST/HiRobot/MEM 蒸馏至 family notes) | families/pi_Series/ |
 | **GR00T Series** (6 篇): N1→N1.5→SONIC→DreamGen→N1.6→DreamZero | families/GR00T_Series/ |
-| 方法论文: DT, ACT, DiffusionPolicy, DROID | policy_learning/ |
-| VLA 基线: Octo, OpenVLA | vla/ |
-| 视觉表征: R3M, VIP | visual_repr/ |
+| 方法论文: ACT, DiffusionPolicy | policy_learning/ |
 | 世界模型: DreamerV3, UniSim | world_model/ |
 
 ### surveys/ (14 篇)

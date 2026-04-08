@@ -444,33 +444,10 @@ cv_video:
     arxiv: "2203.12602"
 
 # ============================================================
-# Robotics - LLM Planning (4 papers)
-# ============================================================
-robotics_google_rt:
-
-
-
-  - folder: foundation_model/robotics/llm_planning/23_Voyager
-    title: "Voyager: An Open-Ended Embodied Agent with Large Language Models"
-    authors: Wang et al., NVIDIA
-    year: 2023
-    venue: NeurIPS Spotlight
-    arxiv: "2305.16291"
-
-# ============================================================
-# Robotics - Policy Learning (5 papers)
+# Robotics - Policy Learning + RT Family
+# Deleted: Voyager (llm_planning), Decision Transformer, DROID (distilled to PI notes)
 # ============================================================
 robotics_policy_learning:
-  - folder: foundation_model/robotics/policy_learning/21_DecisionTransformer
-    title: "Decision Transformer: Reinforcement Learning via Sequence Modeling"
-    authors: Chen et al., UC Berkeley
-    year: 2021
-    venue: NeurIPS
-    arxiv: "2106.01345"
-    repos:
-      - name: decision-transformer
-        url: https://github.com/kzl/decision-transformer.git
-
   - folder: foundation_model/robotics/families/Google_RT_Series/22_RT1
     title: "RT-1: Robotics Transformer for Real-World Control at Scale"
     authors: Brohan et al., Google
@@ -506,32 +483,8 @@ robotics_policy_learning:
     arxiv: "2307.15818"
 
 # ============================================================
-# Robotics - VLA (3 papers)
-# ============================================================
-robotics_vla:
-
-  - folder: foundation_model/robotics/vla/24_Octo
-    title: "Octo: An Open-Source Generalist Robot Policy"
-    authors: Ghosh et al., UC Berkeley
-    year: 2024
-    venue: RSS
-    arxiv: "2405.12213"
-    repos:
-      - name: octo
-        url: https://github.com/octo-models/octo.git
-
-  - folder: foundation_model/robotics/vla/24_OpenVLA
-    title: "OpenVLA: An Open-Source Vision-Language-Action Model"
-    authors: Kim et al., Stanford
-    year: 2024
-    venue: CoRL
-    arxiv: "2406.09246"
-    repos:
-      - name: openvla
-        url: https://github.com/openvla/openvla.git
-
-# ============================================================
-# Robotics - Generative Policy (3 papers)
+# Robotics - Families + Generative Policy
+# Deleted: Octo, OpenVLA (VLA baselines, superseded by PI/RT analysis)
 # ============================================================
 robotics_families:
   - folder: foundation_model/robotics/policy_learning/24_DiffusionPolicy
@@ -565,25 +518,8 @@ robotics_families:
         url: https://github.com/NVIDIA/Isaac-GR00T.git
 
 # ============================================================
-# Robotics - Visual Representation (2 papers)
-# ============================================================
-robotics_visual_repr:
-  - folder: foundation_model/robotics/visual_repr/22_R3M
-    title: "R3M: A Universal Visual Representation for Robot Manipulation"
-    authors: Nair et al., Stanford/Meta AI
-    year: 2022
-    venue: CoRL
-    arxiv: "2203.12601"
-
-  - folder: foundation_model/robotics/visual_repr/23_VIP
-    title: "VIP: Towards Universal Visual Reward and Representation via Value-Implicit Pre-Training"
-    authors: Ma et al., UPenn/Meta AI
-    year: 2023
-    venue: ICLR Spotlight
-    arxiv: "2210.00030"
-
-# ============================================================
 # Robotics - World Model (2 papers)
+# Deleted: R3M, VIP (visual_repr, superseded by SigLIP/DINOv2 in CV/)
 # ============================================================
 robotics_world_model:
   - folder: foundation_model/robotics/world_model/23_DreamerV3

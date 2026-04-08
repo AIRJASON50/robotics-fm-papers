@@ -86,7 +86,7 @@ paper/
 │   ├── foundations/           #   5 第一原理: NN Origins, Representation, Transfer, Transformer + RL/
 │   ├── LLM/ (5 families)     #   GPT, Kimi, Qwen, DeepSeek, Llama
 │   ├── CV/ (24 papers)        #   backbone, generation, VL, 3D, SSL, video
-│   ├── robotics/ (3 families) #   RT, PI, GR00T + 方法论文
+│   ├── robotics/              #   RT/PI/GR00T 三大家族 + ACT/DiffusionPolicy + 世界模型
 │   └── surveys/ (14)
 ├── humanoid/ (4 themes)       # motion_tracking, teleoperation, sim2real, video_wm
 ├── manip/ (5 themes)          # traditional_rl, human2robot, scaling_rl, sim2real, fm_manip
