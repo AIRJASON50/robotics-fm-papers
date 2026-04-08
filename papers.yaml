@@ -3,48 +3,28 @@
 # Use `./scripts/setup.sh` to fetch papers and clone repos
 
 # ============================================================
-# Foundations - Universal ML (9 papers)
+# Foundations - First Principles (5 directories + RL)
+# Deleted/archived: GAN, Adam, BatchNorm, LayerNorm (not first-principle level)
 # ============================================================
 foundations:
-  - folder: foundation_model/foundations/10_TransferLearning
-    title: "A Survey on Transfer Learning"
-    authors: Pan & Yang
-    year: 2010
-    venue: IEEE TKDE
+  - folder: foundation_model/foundations/NeuralNetwork_Origins
+    title: "Neural Network Origins: Backpropagation, Universal Approximation, Mixture of Experts"
+    authors: Rumelhart+Hinton (1986), Cybenko (1989), Jacobs+Hinton (1991)
+    year: 1986
+    note: "Three foundational papers: MLP+backprop, UAT, MoE. See note.md for complete analysis."
 
-  - folder: foundation_model/foundations/12_RepresentationLearning
+  - folder: foundation_model/foundations/RepresentationLearning
     title: "Representation Learning: A Review and New Perspectives"
     authors: Bengio et al.
     year: 2013
     venue: IEEE TPAMI
     arxiv: "1206.5538"
 
-  - folder: foundation_model/foundations/14_GAN
-    title: "Generative Adversarial Networks"
-    authors: Goodfellow et al.
-    year: 2014
-    venue: NeurIPS
-    arxiv: "1406.2661"
-
-  - folder: foundation_model/foundations/15_Adam
-    title: "Adam: A Method for Stochastic Optimization"
-    authors: Kingma & Ba
-    year: 2015
-    venue: ICLR
-    arxiv: "1412.6980"
-
-  - folder: foundation_model/foundations/15_BatchNorm
-    title: "Batch Normalization: Accelerating Deep Network Training"
-    authors: Ioffe & Szegedy, Google
-    year: 2015
-    venue: ICML
-    arxiv: "1502.03167"
-
-  - folder: foundation_model/foundations/16_LayerNorm
-    title: "Layer Normalization"
-    authors: Ba, Kiros, Hinton
-    year: 2016
-    arxiv: "1607.06450"
+  - folder: foundation_model/foundations/TransferLearning_Origins
+    title: "Transfer Learning Origins: Lifelong Learning, Multitask Learning, Feature Transferability"
+    authors: Thrun (1996), Caruana (1997), Yosinski+Bengio (2014), Pan&Yang (2010)
+    year: 1996-2014
+    note: "Four papers tracing transfer learning from psychology to pre-train+fine-tune paradigm."
 
   - folder: foundation_model/foundations/17_Transformer
     title: "Attention Is All You Need"

@@ -129,6 +129,38 @@ Learning:      来自机器学习 — 从经验中自动改进
   本质就一句话: 好的行为被强化, 坏的被抑制, 从而学会决策
 ```
 
+## "强化"和"学习"分别指什么
+
+```
+Reinforcement (强化) = R = 环境返回的标量评价信号
+
+  Williams 1992 原文 (p.231):
+    "The evaluation consists of the scalar REINFORCEMENT SIGNAL r,
+     which we assume is broadcast to all units in the network.
+     At this point each unit performs an appropriate modification
+     of its weights."
+
+  → reinforcement 在论文中就是那个数字 r, 不是抽象概念
+
+R 和 V 的关系:
+  R: 环境给的即时评分 (外部信号, 每步或终点才有)
+  V: "从这个状态开始的预期总 R" (内部估计, agent 自己维护)
+  V 是对未来所有 R 的压缩/总结
+
+Learning (学习) = 用 R 更新内部表征使决策改进
+
+  Bellman (1957): 有 R 的概念, 但 V 是精确计算的, 不是学的
+    → 这是 optimization/planning, 不是 learning
+
+  TD/Q-Learning (1988-1989): V 从实际拿到的 R 中估计
+    → 必须试错 → 每次拿到 R → 更新 V/Q → 逐步逼近
+    → 这才是 learning: 权重在变 = 在学
+
+  "强化学习" = 用环境的评分信号 (R) 通过试错来学习 (更新 V/policy)
+  → Bellman 有"强化"(R) 但没有"学习"(V 是算的)
+  → RL 两者都有: 从实际的 R 中学习 V
+```
+
 ---
 
 ## RL 的数学框架 (Sutton & Barto 形式化)
@@ -210,6 +242,70 @@ PPO 用 Advantage 做策略更新
 pi*0.6 的 RECAP 也是基于 Advantage 的离线 RL
 ```
 
+### GAE: 把 Bellman、TD、Monte Carlo 统一成一个公式
+
+GAE (Generalized Advantage Estimation, Schulman 2016) 是 PPO 的核心组件, 也是理解整个 RL 脉络的最佳切入点。
+
+```
+公式: A_t = δ_t + (γλ)·δ_{t+1} + (γλ)²·δ_{t+2} + ...
+其中: δ_t = r_t + γ·V(s_{t+1}) - V(s_t)   ← TD error (单步预测误差)
+
+δ_t: "这一步实际比预期好多少" (近处的 δ 更可信, 远处的不确定)
+A_t: 多个 δ 的加权和 = "这个动作综合来看比平均好多少" (Actor 用它更新 policy)
+```
+
+```
+γ 和 λ 的区别:
+  γ (gamma, 默认 0.99): 在 δ 内部, 定义"这个问题关心多远的未来"
+    → V(s) 本身怎么算 → 问题的性质, 几乎不调
+  λ (lambda, 默认 0.95): 在 δ 外部, 定义"学习信号看多远"
+    → 多少步的 δ 聚合成 A → 算法的选择, 可调
+  分成两个参数的原因: V 的时间尺度和 A 的信号范围可以独立控制
+    γ=0.99: Critic 看得远 (长期规划)
+    λ=0.5:  但 Actor 只看近处信号 (Critic 不准时不传太远)
+```
+
+```
+λ 统一了 RL 的三种方法:
+  λ=0:    A=δ_t               → 纯 TD Learning (1988, Sutton)
+  λ=0.95: A=δ+0.94δ'+0.88δ"... → PPO 默认 (折中)
+  λ=1:    A=G_t-V(s_t)        → 纯 Monte Carlo (1960s)
+
+  → GAE 不是新方法, 是用一个参数 λ 把所有旧方法统一成一个连续谱
+  → "Generalized" = 广义的, 包含所有特殊情况
+```
+
+```
+GAE 和 RL 脉络中每个 milestone 的关系:
+
+  Bellman (1957):   V(s) = r + γ·V(s') 的递归结构
+                    → GAE 的 (γλ)^l 幂次衰减就是 Bellman 递归展开的直接结果
+
+  TD Learning (1988): δ = r + γV(s') - V(s) 的单步更新
+                    → GAE 的 δ_t 就是 TD error, GAE 把多个 δ 加权聚合
+
+  Monte Carlo:      用真实总回报 G_t 更新
+                    → GAE 在 λ=1 时退化为 G_t - V(s_t)
+
+  Q-Learning (1989): 学 Q(s,a) 而非 V(s)
+                    → GAE 用 V(s) 估 Advantage, Q-Learning 直接估 Q
+                    → 两条路线在 Actor-Critic 中汇合
+
+  REINFORCE (1992):  ∇J = E[∇log π · G_t] 用完整回报
+                    → PPO 把 G_t 替换为 GAE 的 A_t → 减方差
+
+  DQN (2013):       用 NN 近似 Q
+                    → GAE 中的 V(s) 也是 NN (Critic) 近似的
+
+  PPO (2017):       Actor 用 clip(ratio, 1±ε) · A_t 更新
+                    → A_t 就是 GAE 算出来的
+                    → Critic 用 δ_t 更新 V(s)
+                    → GAE 是 PPO 的 Actor 和 Critic 之间的桥梁
+
+  SAC (2018):       off-policy, 不用 GAE, 用 TD error 直接更新 Q
+                    → 但 TD error 的概念和 GAE 的 δ 完全一样
+```
+
 ### On-Policy vs Off-Policy
 
 ```
@@ -268,196 +364,69 @@ RL (强化学习):
 
 ---
 
-## 发展脉络 (Milestone Only)
+## 发展脉络
 
-```
-=== 理论根基 (1957-1992) ===
-(详细描述见上方"两条线的合流"章节, 这里只做索引)
-
-1957  Bellman 方程                                   → RL/57_BellmanEquation/
-      序贯决策的递归求解, RL 的数学基础。需要完整环境模型。
-
-1988  TD Learning (Sutton)
-      从"下一步的估计"修正"当前的估计", 不需要环境模型, 不必等最终结果。
-      心理学 (试错学习) 和数学 (Bellman 递归) 的合流点。
-
-1989  Q-Learning (Watkins)                           → RL/89_QLearning/
-      在 TD 基础上学 Q(s,a) 而非 V(s), 直接选最优动作, 完全不需要模型。
-      第一个实用的 model-free RL 算法。局限: 表格, 放不下高维状态。
-
-1992  REINFORCE (Williams)                           → RL/92_REINFORCE/
-      跳过 value function, 直接优化 policy。天然支持连续动作空间。
-      开创 policy gradient 路线 (PPO 的直系祖先)。局限: 梯度方差大。
-
-1997  TD-Gammon (Tesauro)
-      NN + TD Learning 下西洋双陆棋达到世界冠军水平。
-      比 DQN 早 16 年, 但当时无法推广 (NN 太小, 无 GPU)。
-
-至此两条技术路线成型:
-  Value-based: Bellman → TD → Q-Learning (离散动作, 表格)
-  Policy-based: REINFORCE (连续动作, 但不稳定)
-  → 1990s-2000s 两条路线各自发展, 在 Actor-Critic 中汇合
-
-### 从 Bellman 到 PPO 始终在做同一件事
-
-```
-RL 的 70 年, 核心从来没变:
-
-  state → 估 value → 用 value 决策
+### 贯穿 70 年的核心: state → 估 value → 用 value 决策
 
 变化的只有两件事:
-  1. state 从什么变成了什么:
-     Bellman: state = index (迷宫第几格, 棋盘第几种局面)
-     Q-Learning: state = 同样是 index (表格的行)
-     DQN: state = 高维感知数据 (像素 210×160×3)
-     PPO: state = 连续向量 (关节角 + 物体位姿)
-     
-  2. value 怎么估:
-     Bellman: 精确计算 (需要完整环境模型)
-     Monte Carlo: 跑完整条路, 用真实终点分数 (不需要模型, 但慢)
-     TD: 走一步, 用旧估计代替未来 (快, 但一开始不准)
-     Q-Learning: 表格存每个 (state, action) 的 value (实用, 但装不下)
-     DQN: NN 压缩 Q 表格 (高维也能估)
-     PPO: Critic NN 估 V(s), Actor NN 用 V 信号优化策略
 
-Watkins Q-Learning 原文 (1992, p.281) 的描述:
-  "the agent observes its current state x_n,
-   selects and performs an action a_n,
-   observes the subsequent state y_n,
-   receives an immediate payoff r_n"
-  → 从一开始就是: 观测 state → 决策 → 执行 → 获得反馈
+| 时代 | state 是什么 | value 怎么估 |
+|------|-------------|-------------|
+| Bellman (1957) | index (迷宫第几格) | 精确计算 (需完整环境模型) |
+| Monte Carlo (1960s) | index | 跑完整条路, 用真实终点分数 |
+| TD (1988) | index | 走一步, 用旧估计代替未来 |
+| Q-Learning (1989) | index | 表格存每个 (s,a) 的 value |
+| DQN (2013) | 高维感知 (像素) | NN 压缩 Q 表格 |
+| PPO (2017) | 连续向量 (关节角+位姿) | Critic NN 估 V, Actor NN 用 V 信号优化策略 |
 
-Q-Learning 的 state 只是 index (表格的行索引), 没有"内容":
-  state 本身没有结构 → 只是编号 → 所有信息在 value 表里
-  到 DQN 时 state 变成像素 → state 本身有丰富 pattern
-  → NN 的作用 = 从高维 state 中压缩出 value
-  → 和 ViT/CLIP 做的事本质相同: 从数据中压缩出有用的映射
+State 和 Value 从来就是两个东西: state = "我在哪" (索引/感知), value = "在这里值多少分" (评分)。表格时代看起来混在一起是因为 state 太简单 (只是编号), NN 时代区别变明显 (state 是高维输入, value 是标量输出)。NN 从高维 state 中压缩出 value, 和 ViT/CLIP 做的事本质相同。
 
-State 和 Value 从来就是两个东西:
-  state = "我在哪" (索引/位置/感知)
-  value = "在这里值多少分" (评分)
-  表格时代看起来混在一起, 是因为 state 太简单 (只是个编号)
-  NN 时代区别变明显: state 是高维输入, value 是标量输出
-```
+(Watkins Q-Learning 原文 (1992, p.281): "the agent observes its current state x_n, selects and performs an action a_n, observes the subsequent state y_n, receives an immediate payoff r_n" — 从一开始就是 观测 state → 决策 → 执行 → 获得反馈)
 
-=== 从表格到神经网络, 从离散到连续 (2013-2018) ===
+### 阶段 1: 理论根基 (1957-1992)
 
-2013  DQN (Mnih et al., DeepMind)                    → foundations/15_DQN/
-      来源: 2013 NIPS Workshop 论文; 2015 Nature 正式版 (引用 30,000+)
-      问题: Q-Learning 表格放不下高维状态 (Atari: 210x160x3 像素)
-      贡献: CNN 近似 Q 函数 + 两个关键工程技巧:
-            (1) Experience Replay: 打破数据时序相关性, 一条经验可多次学习
-            (2) Target Network: 定期同步参数, 避免"自己追自己"的训练发散
-            用完全相同的网络和超参数在 7 个 Atari 游戏上, 6 个超越此前方法, 3 个超越人类
-      意义: 第一次 NN + RL 大规模成功, 引爆 Deep RL 领域
-      局限: 输出所有离散动作的 Q 值 → 无法处理连续动作空间 (机器人需要)
+详细描述见上方"两条线的合流"章节, 这里只做索引。
 
-2017  PPO (Schulman et al., OpenAI)                   → foundations/17_PPO/
-      问题: Policy gradient 更新步长太大策略会崩溃;
-            TRPO (2015) 用 KL 约束保证稳定, 但需要二阶优化, 实现复杂
-      贡献: 计算新旧策略概率比 r_t = pi_new/pi_old, 直接 clip 到 [1-eps, 1+eps]
-            取 clipped 和 unclipped 的 min → 悲观下界, 只允许保守改进
-            同一批数据可跑多个 epoch (通常 3-10), 大幅提高利用率
-      意义: "简单 + 鲁棒 + 可并行" → 成为 RL 默认算法
-            RLHF (ChatGPT) 用 PPO; IsaacGym 机器人训练几乎全部使用 PPO
+| 年份 | 里程碑 | 做了什么 | 局限 | 文件 |
+|------|-------|---------|------|------|
+| 1957 | Bellman 方程 | 序贯决策的递归求解 | 需要完整环境模型 | `RL/57_BellmanEquation/` |
+| 1988 | TD Learning (Sutton) | 从经验中一步步近似 V, 不需要模型 | 只估 V(s), 不直接给动作 | |
+| 1989 | Q-Learning (Watkins) | 直接估 Q(s,a), 不需要模型 | 表格, 高维放不下 | `RL/89_QLearning/` |
+| 1992 | REINFORCE (Williams) | 跳过 value, 直接优化 policy | 梯度方差大 | `RL/92_REINFORCE/` |
+| 1997 | TD-Gammon (Tesauro) | NN + TD 下棋达世界冠军 | NN 太小无法推广 | |
 
-2018  SAC (Haarnoja et al., Berkeley)                 → foundations/18_SAC/
-      问题: On-policy (PPO) 数据利用率低, 需要大规模并行;
-            Off-policy (DDPG) 用确定性策略, 探索不足, 训练不稳定
-      贡献: Off-policy + 最大熵: J(pi) = sum E[r + alpha * H(pi)]
-            不仅最大化奖励, 还要"尽可能随机地行动" → 探索与利用自动平衡
-            双 Q 网络 (取 min 防过高估计), 随机策略 (输出高斯分布), 自动 temperature
-      意义: 连续控制任务的样本效率最优选择之一; 真机在线 RL 首选
+至此两条技术路线成型: Value-based (Bellman→TD→Q-Learning) 和 Policy-based (REINFORCE), 后在 Actor-Critic 中汇合。
 
-=== RL 进入机器人 (2017-2021) ===
+### 阶段 2: Deep RL 革命 (2013-2018)
 
-2017  Domain Randomization (Tobin et al.)
-      问题: 仿真训练的策略到真机就崩 (sim-real gap)
-      贡献: 随机化仿真的视觉/物理参数 → 策略对 gap 鲁棒
-      意义: sim-to-real 的标准方法, 至今仍是基线
+| 年份 | 里程碑 | 问题 | 贡献 | 文件 |
+|------|-------|------|------|------|
+| 2013 | DQN (DeepMind) | Q 表格放不下高维状态 | CNN 近似 Q + Experience Replay + Target Network | `RL/15_DQN/` |
+| 2017 | PPO (OpenAI) | Policy gradient 步长太大会崩 | Clip ratio 限制更新幅度, 简单稳定 | `RL/17_PPO/` |
+| 2018 | SAC (Berkeley) | On-policy 数据利用率低 | Off-policy + 最大熵, 探索利用自动平衡 | `RL/18_SAC/` |
 
-2019  OpenAI Rubik's Cube (OpenAI)
-      问题: 能不能纯仿真训练解决真实灵巧操控?
-      贡献: 大规模 DR + PPO → 真机单手解魔方
-      意义: 证明 sim-to-real 灵巧操控可行
+核心贡献不是新理论, 而是让 1990 年代的理论在深度学习时代真正可用。
 
-2021  RMA (Kumar et al., Berkeley)
-      问题: DR 需要猜参数范围, 不够精确
-      贡献: Teacher 用特权信息 → Student 用历史观测推断环境参数
-      意义: Teacher-Student distillation 成为 sim-to-real 标准范式
+### 阶段 3: RL 进入机器人 (2017-2021)
 
-=== FM 时代的 RL (2022-) ===
+| 年份 | 里程碑 | 问题 | 贡献 | 文件 |
+|------|-------|------|------|------|
+| 2017 | Domain Randomization (Tobin) | 仿真到真机就崩 | 随机化仿真参数, 策略对 gap 鲁棒 | `RL/17_DomainRandomization/` |
+| 2019 | OpenAI Rubik's Cube | 能不能纯仿真训灵巧操控? | 大规模 DR + PPO → 真机单手解魔方 | `RL/19_OpenAIDactyl/` |
+| 2021 | RMA (Berkeley) | DR 需要猜参数范围 | Teacher 用特权信息 → Student 用历史推断 | `RL/21_RMA/` |
 
-2022  RLHF / InstructGPT (Ouyang et al., OpenAI)
-      RL 的新角色: 不训策略, 而是做 post-training 对齐
-      RL 从 "training" 退到 "fine-tuning"
+RL 从游戏走向物理世界。
 
-2025  OmniReset (UW + NVIDIA)
-      RL 的新用法: diverse resets + sparse reward + 大规模并行
-      证明 RL + scale 在 manipulation 中也有涌现行为
+### 阶段 4: FM 时代的 RL (2022-)
 
-2025  SONIC (NVIDIA)
-      RL 的新定位: PPO 训 universal motion tracker
-      不是学技能, 而是学"追踪任意参考动作"
+| 年份 | 里程碑 | RL 的新角色 |
+|------|-------|-----------|
+| 2022 | RLHF / InstructGPT | RL 做 LLM 的 post-training 对齐 |
+| 2025 | OmniReset | diverse resets + sparse reward + 大规模并行 → 涌现 |
+| 2025 | SONIC | PPO 训 universal motion tracker (学追踪, 不学技能) |
+| 2025 | pi*0.6 | offline RL 做 VLA post-training (从失败中学) |
 
-2025  pi*0.6 (Physical Intelligence)
-      RL 的最新角色: offline RL 做 VLA post-training
-      BC 只用成功 demo → offline RL 用所有数据 (含失败)
-```
-
-## "强化"和"学习"分别指什么
-
-```
-Reinforcement (强化) = R = 环境返回的标量评价信号
-
-  Williams 1992 原文 (p.231):
-    "The evaluation consists of the scalar REINFORCEMENT SIGNAL r,
-     which we assume is broadcast to all units in the network.
-     At this point each unit performs an appropriate modification
-     of its weights."
-
-  → reinforcement 在论文中就是那个数字 r
-  → 不是抽象概念, 是具体的评分信号
-
-R 和 V 的关系:
-  R: 环境给的即时评分 (外部信号, 每步或终点才有)
-  V: "从这个状态开始的预期总 R" (内部估计, agent 自己维护)
-  V 是对未来所有 R 的压缩/总结
-
-Learning (学习) = 用 R 更新内部表征使决策改进
-
-  Bellman (1957): 有 R 的概念, 但 V 是精确计算的, 不是学的
-    → 这是 optimization/planning, 不是 learning
-    → 给定完整环境模型 → 算出 V → 不需要试错
-
-  TD/Q-Learning (1988-1989): V 从实际拿到的 R 中估计
-    → 必须试错 → 每次拿到 R → 更新 V/Q → 逐步逼近
-    → 这才是 learning: 权重在变 = 在学
-
-  "强化学习" = 用环境的评分信号 (R) 通过试错来学习 (更新 V/policy)
-  → Bellman 有"强化"(R) 但没有"学习"(V 是算的)
-  → RL 两者都有: 从实际的 R 中学习 V
-```
-
----
-
-## 贯穿 70 年的核心思想
-
-```
-RL 从 Bellman 到 PPO, 核心思想始终是同一个:
-
-  "给每个状态算一个 value, 用 value 指导当前决策, 而不是穷尽到最后一步"
-
-  Bellman (1957):  环境已知 → 精确算 value → 查表决策
-  TD (1988):       环境未知 → 从经验中近似 value → 边走边更新
-  Q-Learning (1989): 估 Q(s,a) = 每个动作的 value → 不需要环境模型
-  DQN (2013):      用 NN 估 Q → 高维状态也能估
-  PPO (2017):      Critic (NN) 估 V(s) + Actor (NN) 用 V 信号优化策略
-                   → Actor-Critic = Bellman 的 "先算 value 再决策" 的 NN 版本
-
-  变化的是: "value 怎么算" (精确→近似→NN)
-  不变的是: "用 value 把全局问题变成局部决策"
-```
+RL 从"完整的学习系统"变为"更大 pipeline 中的一个阶段"。
 
 ## 演化总结: RL 的 70 年主线
 

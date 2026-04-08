@@ -37,7 +37,7 @@ humanoid_landscape.md          Level 1: 预训练 + 规模化       pi_family_no
 
 | Level | 核心问题 | 读什么 | 时间 |
 |-------|---------|--------|------|
-| 0 | 什么模式可以从 CS 迁移到 Robotics? | 表征学习 (Bengio) + Transformer | 3h |
+| 0 | 什么模式可以从 CS 迁移到 Robotics? | NN Origins + 表征学习 (Bengio) + 迁移学习 (Thrun/Caruana/Yosinski) + Transformer | 3h |
 | 1 | 怎么做大规模预训练? | GPT 系列 + Scaling Laws + MAE + DINOv2 + CV 演进图谱 | 8h |
 | 2 | 怎么从 RL 走向生成式 Policy? | CLIP + DDPM + Flow Matching + Diffusion Policy + ACT + DT + R3M/VIP | 12h |
 | 3 | 完整的 Robot FM 长什么样? | RT/PI/GR00T 三份 family notes + pi_0/SONIC/GR00T N1 精读 | 12h |

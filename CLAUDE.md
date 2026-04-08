@@ -110,19 +110,15 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 
 ## Paper Index
 
-### foundations/ (9 篇)
+### foundations/ (5 个第一原理目录 + RL 子目录)
 
 | Folder | Paper | Year |
 |--------|-------|------|
-| 10_TransferLearning | A Survey on Transfer Learning (Pan & Yang, IEEE TKDE) | 2010 |
-| 12_RepresentationLearning | Representation Learning (Bengio, IEEE TPAMI) | 2013 |
-| 14_GAN | Generative Adversarial Networks (Goodfellow, NeurIPS) | 2014 |
-| 15_Adam | Adam Optimizer (Kingma & Ba, ICLR) | 2015 |
-| 15_BatchNorm | Batch Normalization (Ioffe & Szegedy, ICML) | 2015 |
-| 16_LayerNorm | Layer Normalization (Ba, Kiros, Hinton) | 2016 |
-| 17_PPO | Proximal Policy Optimization (Schulman, OpenAI) | 2017 |
+| NeuralNetwork_Origins | **Backpropagation+MLP (Rumelhart+Hinton), Universal Approximation (Cybenko), MoE (Jacobs+Hinton)** | 1986-1991 |
+| RepresentationLearning | Representation Learning (Bengio, IEEE TPAMI) | 2013 |
+| TransferLearning_Origins | **Thrun (终身学习), Caruana (多任务共享表征), Yosinski (特征可迁移性), Pan&Yang (分类体系)** | 1996-2014 |
 | 17_Transformer | Attention Is All You Need (Vaswani, NeurIPS) | 2017 |
-| 18_SAC | Soft Actor-Critic (Haarnoja, ICML) | 2018 |
+| RL/ | Bellman→Q-Learning→REINFORCE→DQN→PPO→SAC→DR→Dactyl→RMA (9 篇) | 1952-2021 |
 
 ### LLM/ (5 NLP 基础 + 5 模型家族)
 
@@ -152,7 +148,7 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | 内容 | 位置 |
 |------|------|
 | **Google RT Series (3 篇): RT-1→RT-2→OpenXEmbodiment | families/Google_RT_Series/ |
-| **PI Series** (7 篇): DROID→pi_0→FAST→HiRobot→pi_0.5→pi\*0.6→MEM | families/pi_Series/ |
+| **PI Series** (3 核心 + 4 支撑): pi_0→pi_0.5→pi\*0.6 (DROID/FAST/HiRobot/MEM 蒸馏至 family notes) | families/pi_Series/ |
 | **GR00T Series** (6 篇): N1→N1.5→SONIC→DreamGen→N1.6→DreamZero | families/GR00T_Series/ |
 | 方法论文: DT, ACT, DiffusionPolicy, DROID | policy_learning/ |
 | VLA 基线: Octo, OpenVLA | vla/ |

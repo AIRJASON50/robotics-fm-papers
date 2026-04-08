@@ -36,7 +36,7 @@ humanoid/                       扩展视野 -- 全身控制
   └── humanoid_landscape.md     全景 + 研究者脉络
 
 foundation_model/               方法论来源 -- CS 怎么做 FM
-  ├── foundations/ (9)          通用 ML 基础
+  ├── foundations/ (5 第一原理 + RL)  NN Origins, Representation, Transfer, Transformer, RL
   ├── LLM/ (5 families)        LLM 如何 scale + align + 产品化
   ├── CV/ (24 papers)           视觉表征 + 生成模型 + 视频理解
   ├── robotics/ (3 families)    RT/PI/GR00T 三大 robotics FM 家族
@@ -83,7 +83,7 @@ Level 4: 下一步和开放问题
 ```
 paper/
 ├── foundation_model/          # CS → Robotics FM 知识库
-│   ├── foundations/           #   Transformer, GAN, Adam, BN, LN, RL/ (Bellman→Q-Learning→PPO→sim2real)
+│   ├── foundations/           #   5 第一原理: NN Origins, Representation, Transfer, Transformer + RL/
 │   ├── LLM/ (5 families)     #   GPT, Kimi, Qwen, DeepSeek, Llama
 │   ├── CV/ (24 papers)        #   backbone, generation, VL, 3D, SSL, video
 │   ├── robotics/ (3 families) #   RT, PI, GR00T + 方法论文

@@ -237,3 +237,69 @@ Flow Matching: hidden → 迭代去噪 → 一个动作向量 (连续, 能采样
   4. 训练时不破坏 VLM → 参数独立 (MoE 式分离)
   5. 推理够快 → flow matching 10 步 > DDPM 1000 步
 ```
+
+### pi_0 的完整输入输出
+
+```
+输入 (全部变成 token 丢进同一个 Transformer):
+  图像: 2-3 个相机 RGB → SigLIP ViT 编码 → spatial tokens
+  语言: 指令文字 → Gemma tokenizer → text tokens
+  本体感觉: 关节角 q_t → 线性投影 → state token
+  噪声动作: 随机噪声 A^τ → 线性投影 → action tokens (flow matching 的起点)
+
+输出:
+  action chunk: 50 步动作, 每步 7-20 维连续向量
+  → 经过 10 次 forward pass (flow matching 10 步去噪) 生成
+
+推理时 KV cache:
+  image/text/state tokens 在 10 步中不变 → 缓存, VLM 只算 1 次
+  action tokens 每步变化 → Action Expert 算 10 次
+  → VLM 不是推理瓶颈
+```
+
+### pi_0 的 Expert 分离: 不只是 FFN, QKV 也分开
+
+```
+每一层 Transformer:
+  Attention: 所有 token 一起算 score (跨模态交互)
+    但 QKV 权重分两组:
+      W_Q_vlm, W_K_vlm, W_V_vlm → VLM tokens 用
+      W_Q_act, W_K_act, W_V_act → Action tokens 用
+  
+  FFN: 分两组 (并行, 不是串联)
+    VLM FFN:    image/text tokens → VLM 的 FFN
+    Action FFN: action tokens → Action Expert 的 FFN
+
+  冻结 VLM 时:
+    VLM 的 QKV + FFN → 全部不动
+    Action Expert 的 QKV + FFN → 全部更新
+    → 梯度只流过 Action Expert, 不动 VLM
+```
+
+### 用户 insight: 多模态 = 多组 Expert
+
+"N 个模态就有 N 组 QKV + FFN" — 这是 MoE 思想的本质:
+- 不同模态的数据有不同的 pattern → 用不同的权重压缩各自的 pattern
+- 通过 Attention 共享信息 (跨组 QKV 做 attention score)
+- VLM 的 image + text + proprioception 共用一组是因为经过 PaliGemma 预训练已在同一表征空间
+- Action 是全新模态 (VLM 没见过) → 需要独立一组
+- 如果加触觉 → 可能需要第三组
+
+---
+
+## 4. pi_0.5: 泛化不是靠一个技巧, 而是系统性数据工程
+
+pi_0.5 之前被简化为"只有 Knowledge Insulation"——实际上是五个层面的系统级改进:
+
+```
+1. 异构数据共训练: 97.6% 数据不是目标机器人的
+   (其他机器人 + web 数据 + 语义预测 + 口头指令)
+2. 两阶段训练: pre-train 用离散 token, post-train 切 flow matching
+3. 同一模型层级推理: 先预测子任务 (ℓ̂), 再根据子任务出动作 (chain-of-thought 式)
+4. Knowledge Insulation: 底层冻结 + 数据混合双重保护
+5. 人类口头监督: 比遥操作更容易的数据采集方式
+
+核心教训: 泛化 = 数据工程, 不是算法创新
+  → 97.6% 非目标数据能帮到目标任务, 因为视觉语言理解是共享的
+  → 和 Open X 的逻辑一致: 动作不通用, 但视觉语言通用
+```
