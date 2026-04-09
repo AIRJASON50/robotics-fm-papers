@@ -428,6 +428,29 @@ RL 从游戏走向物理世界。
 
 RL 从"完整的学习系统"变为"更大 pipeline 中的一个阶段"。
 
+### 隐藏的第二条线: 强化信号怎么进入学习系统
+
+上面四个阶段讲的是"RL 解决什么问题", 但还有一条被忽视的线: **reinforcement signal 以什么方式驱动学习**。
+
+详见独立文档: `RL/reinforcement_signal_evolution.md` (基于 14 篇原始论文考证)
+
+```
+经典 RL 中, reward 同时扮演两种角色:
+  评价器: "这个动作好还是坏" (Bellman 只需要这个)
+  梯度缩放器: "好多少 → 梯度多大" (policy gradient 绑定了这个)
+
+FM 时代最有意思的变化: 这两种角色开始被拆开
+  RL 被前移到 evaluator / relabeling 这边 (value function 做评价)
+  actor 训练则后退成条件 SL (advantage 做输入条件, 不做梯度乘子)
+
+两个深层脉络:
+  1. Bitter Lesson: dense reward shaping = 人类先验 → 模型够大时成为冗余
+  2. 分布雕刻: pre-training 给了粗坯, RL 不再是从零搜索, 而是在已有分布上雕刻
+     → 搜索需要方向+步长 (精确 reward)
+     → 雕刻只需要保留/去掉 (二值 +/-)
+     → pre-training 质量决定了 RL 信号可以多粗糙
+```
+
 ## 演化总结: RL 的 70 年主线
 
 ```

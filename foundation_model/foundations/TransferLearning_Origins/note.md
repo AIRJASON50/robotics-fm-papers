@@ -233,6 +233,114 @@ Yosinski 2014 (Bengio 是共同作者):
 
 ---
 
+## 迁移的本质: 从 Mapping 到 Distribution Shaping
+
+"在 data 多的地方学, data 少的地方 fine-tune" — 这个认知从 Thrun 1996 到 RECAP 2025 一直成立。但 "fine-tune" 在不同时代含义发生了根本转变。
+
+### 两种迁移机制
+
+```
+Mapping (特征映射):
+  学一个函数 f: input → representation
+  迁移时复用这个函数, 只改输出端
+  Yosinski 2014 的核心发现: 浅层映射通用, 深层映射特定
+  → 冻结浅层 + 微调深层 = 复用通用映射 + 适配新任务
+
+Distribution Shaping (分布雕刻):
+  学一个行为分布 P(action | observation)
+  迁移时不改映射, 在分布上标记"保留/去掉"
+  RECAP 的做法: P(a|s) → P(a|s, "+") 和 P(a|s, "-") → 推理时选 "+"
+  → 不改函数, 切分布
+```
+
+### 两者在不同层工作, 不矛盾
+
+```
+底层 (VLM backbone): mapping
+  image → "这是一个杯子" (特征映射, Yosinski 意义上的迁移)
+  pi_0 冻结 VLM = 冻结这个 mapping
+  → Thrun 的"哪些特征重要"的知识直接复用
+
+顶层 (action generation): distribution shaping
+  "看到杯子" → "怎么抓" (行为分布)
+  RECAP 的 +/- 条件化 = 在这个分布上雕刻
+  → 不改 mapping, 改分布的形状
+
+配合关系:
+  好的 mapping → 有意义的表征空间 → 行为分布可按好/坏切分 → shaping 有效
+  差的 mapping → 混乱的表征空间 → 好坏动作混在一起 → shaping 无从下手
+  → mapping 是 shaping 的前提
+```
+
+### 历史重心转移
+
+```
+2014-2022: mapping 主导
+  问题: 模型不认识物体, 不理解语言 → 需要迁移特征
+  解法: pre-train features → fine-tune 映射终点
+  代表: Yosinski, GPT fine-tune, ViT fine-tune, HORA (RMA 迁移 mapping)
+
+2023-2025: distribution shaping 兴起
+  问题: 模型已经认识物体 (VLM 解决了), 但行为不够精确
+  解法: pre-train 行为分布 → 在分布上雕刻
+  代表: RECAP, PenSpin Stage 3, DPO
+
+转变原因:
+  当 mapping 层的问题基本解决 (VLM 认识所有物体):
+  → 瓶颈从"怎么看"转移到"怎么做"
+  → "怎么做"的知识以分布形式存在 (多模态: 同一状态有多种合理动作)
+  → 改进方式自然从"调映射"变成"雕分布"
+```
+
+### 两条独立路线的殊途同归
+
+```
+QiHaoZhi (灵巧手, 单任务极致难度):
+  HORA (2022): PPO + RMA → 纯 mapping 迁移 (feature-level transfer)
+    → 粗圆柱体成功, 笔旋转失败 → mapping 不够
+  PenSpin (2024): oracle 分布 → 筛选成功轨迹 → BC fine-tune
+    → 进入 distribution shaping 范式
+    → oracle 分布是粗坯, 45 条真机成功数据是雕刻刀
+
+PI (VLA, 多任务泛化):
+  pi_0 (2024): VLM mapping 迁移 + BC pre-training → 行为分布
+  RECAP (2025): +/- 条件标注 → distribution shaping
+    → pre-trained 分布是粗坯, advantage conditioning 是雕刻刀
+
+两者独立撞到同一面墙:
+  RL 单独做不到 (探索效率太低)
+  BC 单独做不到 (被 demo 分布锁死)
+  解法: 先造不完美的 oracle/pre-trained 分布 → 再用 SL-based 方法雕刻
+
+共同模式:
+  oracle (粗坯) → transfer → sculpt (精雕)
+  → 不是纯 RL 也不是纯 BC, 是 transfer + distribution shaping
+
+  QiHaoZhi: oracle = sim PPO with privileged info → 筛选成功 → BC
+  PI: oracle = pre-trained VLA → advantage 标注 → conditional SL
+  PenSpin 的 45 条筛选 ≈ RECAP 的 "+" 标签 (都是从不完美分布中选好的部分)
+```
+
+### Fine-tune 含义的升级
+
+```
+旧认知 (仍然正确):
+  "data 多的地方学习 → data 少的地方 fine-tune"
+
+升级后:
+  "data 多的地方学习" → 既学 mapping (特征), 也学分布 (行为)
+  "data 少的地方 fine-tune" → 两种含义:
+    mapping fine-tune: 调映射终点 (Yosinski: 改最后几层)
+    distribution shaping: 在已有分布上雕刻 (RECAP: +/- 条件化)
+
+  前沿趋势:
+    mapping 层越来越少需要 fine-tune (VLM 直接复用)
+    distribution shaping 成为 fine-tune 的主要形式
+    → "fine-tune" 从 "改函数" 变成 "雕分布"
+```
+
+---
+
 ## 本目录文件索引
 
 ```
