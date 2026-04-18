@@ -183,3 +183,24 @@ __pycache__/
 .pytest_cache/
 wandb/
 .DS_Store
+
+# -- Retargeting repos --
+manip/retargeting/optimization/23_AnyTeleop/dex-retargeting/
+manip/retargeting/optimization/24_CMU_KinematicRetarget/kinematic-motion-retargeting/
+manip/retargeting/optimization/24_ContactRetarget/extrinsic_manipulation/
+manip/retargeting/optimization/24_QuasiSim/QuasiSim/
+manip/retargeting/optimization/25_SPIDER/spider/
+manip/retargeting/learning/25_GeoRT/GeoRT/
+manip/retargeting/theory/IM/23_Zhang/code/
+
+# -- Humanoid retargeting repos --
+humanoid/retargeting/25_GMR/
+
+# -- Manip FM repos --
+manip/fm_manip/25_DexGraspVLA/DexGraspVLA/
+manip/fm_manip/26_PAM/PAM/
+manip/fm_manip/26_UniDex/UniDex/
+
+# -- Other repos --
+foundation_model/foundations/17_Transformer/transformer-explainer/
+foundation_model/robotics/policy_learning/25_SpatialForcing/Spatial-Forcing/

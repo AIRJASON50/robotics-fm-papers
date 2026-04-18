@@ -150,7 +150,7 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | **Google RT Series** (3 篇): RT-1→RT-2→OpenXEmbodiment | families/Google_RT_Series/ |
 | **PI Series** (3 核心 + 4 支撑): pi_0→pi_0.5→pi\*0.6 (DROID/FAST/HiRobot/MEM 蒸馏至 family notes) | families/pi_Series/ |
 | **GR00T Series** (6 篇): N1→N1.5→SONIC→DreamGen→N1.6→DreamZero | families/GR00T_Series/ |
-| 方法论文: ACT, DiffusionPolicy | policy_learning/ |
+| 方法论文: ACT, DiffusionPolicy, SpatialForcing | policy_learning/ |
 | 世界模型: DreamerV3, UniSim | world_model/ |
 
 ### surveys/ (14 篇)
@@ -160,7 +160,7 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | CV (7) | ViT(TPAMI), SSL(TPAMI), VLM(TPAMI), Depth, MIM(IJCV), Video(TCSVT), NeRF+3DGS |
 | Robotics (7) | FMRobotics(IJRR), GeneralPurpose, LangCondManip, LanguageGrounding, WorldModels, DynamicsModels, RobotScalingLaws |
 
-### humanoid/ (12 项目, 4 主题)
+### humanoid/ (13 项目, 5 主题)
 
 详见 `humanoid/humanoid_landscape.md`
 
@@ -168,6 +168,7 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 |------|------|
 | motion_tracking/ | DeepMimic → PHC → BeyondMimic → SONIC (→GR00T) |
 | teleoperation/ | H2O, FPO, OmniRetarget, TWIST2 |
+| retargeting/ | GMR (非均匀局部缩放 + 两阶段 diff-IK, 17+ 机器人) |
 | sim2real/ | ASAP |
 | video_world_model/ | HDMI, RWM |
 
@@ -181,6 +182,6 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | human2robot/ | BiDexHD, DexMachina, DexTrack, HumDex |
 | scaling_rl/ | OmniReset |
 | sim2real/ | SimToolReal, Dex4D |
-| fm_manip/ | RLToken (PI), DexLatent (XL-VLA), UltraDexGrasp |
+| fm_manip/ | RLToken (PI), DexGraspVLA, DexLatent (XL-VLA), UltraDexGrasp, UniDex, PAM |
 | QiHaoZhi/ | 研究者 family (齐浩之) |
 | dataset/ | 手部数据集库 (hand_object / robot_hand / hand_only) |

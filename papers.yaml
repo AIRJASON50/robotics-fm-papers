@@ -497,6 +497,15 @@ robotics_families:
       - name: diffusion_policy
         url: https://github.com/real-stanford/diffusion_policy.git
 
+  - folder: foundation_model/robotics/policy_learning/25_SpatialForcing
+    title: "Spatial Forcing: Implicit Spatial Representation Alignment for VLA Model"
+    authors: Li et al., OpenHelix
+    year: 2025
+    arxiv: "2510.12276"
+    repos:
+      - name: Spatial-Forcing
+        url: https://github.com/OpenHelix-Team/Spatial-Forcing.git
+
   - folder: foundation_model/robotics/families/pi_Series/24_pi0
     title: "pi_0: A Vision-Language-Action Flow Model for General Robot Control"
     authors: Black, Pertsch et al., Physical Intelligence
@@ -827,6 +836,33 @@ manip:
         url: https://github.com/Dex4D/Dex4D-Simulation.git
       - name: Dex4D-Vision
         url: https://github.com/Dex4D/Dex4D-Vision.git
+
+  - folder: manip/fm_manip/25_DexGraspVLA
+    title: "DexGraspVLA: A Vision-Language-Action Framework Towards General Dexterous Grasping"
+    authors: Zhong et al., PKU
+    year: 2025
+    arxiv: "2502.20900"
+    repos:
+      - name: DexGraspVLA
+        url: https://github.com/Psi-Robot/DexGraspVLA.git
+
+  - folder: manip/fm_manip/26_UniDex
+    title: "UniDex: Universal Dexterous Hand Control from Egocentric Human Videos"
+    authors: Zhang, Xu et al., Tsinghua/THU
+    year: 2026
+    arxiv: "2603.22264"
+    repos:
+      - name: UniDex
+        url: https://github.com/unidex-ai/UniDex.git
+
+  - folder: manip/fm_manip/26_PAM
+    title: "PAM: A Pose-Appearance-Motion Engine for Sim-to-Real HOI Video Generation"
+    authors: Gao et al., THU
+    year: 2026
+    arxiv: "2603.22193"
+    repos:
+      - name: PAM
+        url: https://github.com/GasaiYU/PAM.git
 
   - folder: manip/fm_manip/26_DexLatent
     title: "DexLatent: Dexterous Manipulation via Latent Representations"

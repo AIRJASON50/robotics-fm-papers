@@ -251,3 +251,4 @@ FPO (2025) + OmniRetarget (2025) + TWIST2 (2025)
 | 10 | SONIC | `25_SONIC` | A | Universal motion tracking at scale | G1 |
 | 11 | TWIST2 | `teleoperation/25_TWIST2` | B | VR-based data collection for VLA | G1 |
 | 12 | Survey | `Humanoid-Locomotion-Survey/` | -- | 三大范式 + 五大趋势的元分析 | -- |
+| 13 | GMR | `retargeting/25_GMR` | A+B | 非均匀局部缩放 + 两阶段 diff-IK, 17+ 机器人 | G1 |
