@@ -13,7 +13,7 @@
 
 | 维度 | 老路线图判断 | 2026 Q2 新发现 / 修正 |
 | --- | --- | --- |
-| **Robot 在 LLM 时间线的位置** | InstructGPT 到 ChatGPT 之间 | **GPT-3.5 到 GPT-4 之间** — pi_0.7 的 compositional generalization 已涌现 |
+| **Robot 在 LLM 时间线的位置** | InstructGPT 到 ChatGPT 之间 (单一判断) | **拆成三轴看**: 能力接近 GPT-3 到 GPT-3.5 (pi_0.7 有 compositional generalization 的"strong signs", 不是 full emergence); 产品化仍在 pre-ChatGPT; 研究收敛度还在 BERT-vs-GPT 之争的早期。展望方向仍指向 GPT-4/o1 级 |
 | **迁移路径** | 4 条 (token / 视觉 / 生成 / 世界模型) | **+4 条** (CoT→action thinking, 长上下文 attention, AI feedback→robot reward, 人类 video→robot policy) |
 | **Robot family 数量** | 3 家 (RT / PI / GR00T) | **4 家** — 加 **Gemini Robotics** (复用 Gemini frontier + Embodied Thinking + 90% MuJoCo 评估) |
 | **VLA RL 的角色** | RL 从 training 退到 post-training | **VLA 层 RL 也在退潮** — pi_0.7 用 metadata-conditioned BC 替代 pi*0.6 RECAP, 效果同档但简单 10 倍 |
@@ -86,16 +86,27 @@ LLM 时间线:                              Robotics 对应:
       (million-token context, 300-agent
        swarm, recursive self-improvement)
 
->>> Robotics 2026.Q2 ≈ LLM 的 GPT-3.5 到 GPT-4 之间 <<<
->>> 不再是 "InstructGPT 到 ChatGPT" — compositional generalization 已涌现 (pi_0.7) <<<
->>> 但 "ChatGPT 时刻" (真正产品化) 还没到 — Computer Use 是最接近的类比 <<<
+>>> 能力轴: Robotics 2026.Q2 ≈ LLM 的 GPT-3 到 GPT-3.5 之间 (保守判断) <<<
+>>> 产品化轴: 仍在 pre-ChatGPT (lab-scale, 无消费级产品爆发) <<<
+>>> 研究收敛轴: 4 家打 4 种赌注, 像 BERT vs GPT 之争的 2018-2019 年 <<<
+>>> 展望方向 (可乐观): 6-12 个月内能力轴有望触达 GPT-4/o1 级 <<<
 ```
 
-**关键时间对应的更新 (2026.04)**:
-- 之前说 "Robotics 今天 ≈ InstructGPT 到 ChatGPT 之间" — 这个判断在 pi_0.7 出现后过时了
-- **pi_0.7 (2026.04) 首次展示真正的 compositional generalization** = robot 版的 GPT-3 in-context learning
-- **GR00T N1.7 (2026.04) 给出第一条明确的 dexterity scaling law** = robot 版的 Kaplan/Chinchilla
-- **Gemini Robotics 1.5 (2025.10) 把 LLM 的 thinking/CoT 范式下沉到 action 层**, 同期也给出 90%+ MuJoCo 评估闭环
+**三轴错位的理由**:
+
+| 轴 | 当前位置 (保守判断) | 证据 |
+| --- | --- | --- |
+| 能力 | GPT-3 到 GPT-3.5 之间 | pi_0.7 compositional generalization 是 "strong signs" 不是 full emergence (未见任务 60-80% vs 训练任务 >90%); Embodied Thinking 只有 Gemini 一家做; Relative EEF 刚起步 |
+| 产品化 | pre-ChatGPT | 无 1 亿用户级产品, 部署仍限于实验室, 推理成本高 (pi_0.7 依赖云端 API, N1.7 训练需 800 GPU × 120 h) |
+| 研究收敛 | 更早期 (BERT-vs-GPT 时代) | 4 家主线架构完全不同 (PI prompt / NVIDIA 数据 / Google frontier / Kimi agent swarm), 没有"Transformer 配方"这种全行业共识 |
+
+**关键时间对应的更新 (2026.04) — 保守表述**:
+- 老 roadmap 说 "Robotics 今天 ≈ InstructGPT 到 ChatGPT 之间" — 这个单一判断合并了多个轴, 不够精确
+- **pi_0.7 (2026.04) 有 compositional generalization 的迹象**, 但未见任务成功率仍 60-80% — 只是接近 GPT-3 的 in-context learning 起步, 不是完整涌现
+- **GR00T N1.7 (2026.04) 给出第一条明确的 dexterity scaling law** — 这是 robot 版的 Kaplan/Chinchilla, 理论层面的正式坐标
+- **Gemini Robotics 1.5 (2025.10) 把 thinking/CoT 下沉到 action 层** — 范式的第一次出现, 但仅限 Google 一家, 没形成行业共识
+
+**展望方向 (可以乐观)**: 6-12 个月内, 若 pi_0.7 metadata 范式 / GR00T 人类 video scaling / Gemini Embodied Thinking 三条路线之一出现**全行业跟进**, 能力轴有望跨入 GPT-4 级。但产品化轴仍受限于硬件成本 + 安全监管 + 用例匮乏, ChatGPT 式爆发可能仍需 2-3 年。
 
 ---
 
@@ -377,7 +388,7 @@ Google 在 RT 团队出走后**重新入局**, 不再训独立 robotics-specific
 | 4.2 | **Robot Scaling Laws** | `surveys/robotics/25_RobotScalingLaws/` | Robotics 的 power-law 验证 + 数据瓶颈 | 1.5h | robot 的 scaling 比 LLM 更高效但数据更贵 |
 | 4.3 | **FM in Robotics Survey** (IJRR) | `surveys/robotics/23_FMRobotics/` | perception / decision / control 三层分类 | 2h | 全局视野: FM 在 robot 中的应用全景 |
 | 4.4 | **World Models Survey** | `surveys/robotics/25_AwesomeWorldModels/` | 世界模型分类学 | 1.5h | DreamZero 的上下文: 这个方向有多大 |
-| 4.5 | **pi_0.7 论文 + family Phase 7** *NEW* | `robotics/families/pi_Series/26_pi07/` + family notes Phase 7 | **Diverse Prompting + compositional generalization 涌现 + verbal coaching** | 2h | **2026 最大 robotics 突破** — 改变你对 robot RL 的判断 |
+| 4.5 | **pi_0.7 论文 + family Phase 7** *NEW* | `robotics/families/pi_Series/26_pi07/` + family notes Phase 7 | **Diverse Prompting + compositional generalization 的 strong signs + verbal coaching** | 2h | **2026 最值得关注的 robotics 进展之一** — 改变你对 robot RL 的判断 (但注意: 未见任务成功率 60-80%, 仍是雏形) |
 | 4.6 | **Gemini Robotics 1.5 论文** *NEW* | `Google_RT_Series/Gemini_Robotics/25_GR15/` | **Embodied Thinking + Motion Transfer + 90% MuJoCo 评估** | 2h | action 层 CoT + 你能直接用的 MuJoCo 评估范式 |
 | 4.7 | **GR00T N1.7 报告** *NEW* | `robotics/families/GR00T_Series/vla_wbc/Isaac-GR00T/26_N17/` | **Dexterity scaling law (1k→20k h = 2x)** | 1h | 第一条机器人 scaling law, 改变数据采集策略 |
 | **选读** | **DeepSeek V3.2 + V4** *MAJOR UPDATE* | `LLM/families/deepseek/{25_DeepSeekV32,26_DeepSeekV4}/` | **DSA (V3.2) + CSA+HCA + mHC + Muon + FP4 (V4) + 1M context** | 2h | **长上下文 attention 路线对 robot long-horizon 直接迁移** |
@@ -385,25 +396,41 @@ Google 在 RT 团队出走后**重新入局**, 不再训独立 robotics-specific
 | 选读 | Llama 5 / Qwen3.5 / Kimi K2.6 | 各家 family notes | dense vs MoE, GDN, agent swarm | 各 30min | 长上下文三种赌注的对比 |
 | 选读 | **其他 surveys** | `surveys/CV/` + `surveys/robotics/` | 按需查阅 | 各 1h | 查缺补漏 |
 
-**Level 4 Takeaway** (2026 Q2 重大更新): Robotics 的下一步**已经发生了几条路线分岔**:
+**Level 4 Takeaway** (2026 Q2 重大更新): Robotics 的下一步**出现了几条路线分岔的早期信号** (保守说法: 尚未形成共识, 但方向明确):
 
-1. **WAM 替代 VLA** (DreamZero: 想象→做, 而非 看→做) — 仍是中长期方向
-2. **数据飞轮**:
-   - 自主采集 > 人工遥操作 (老观点)
-   - **NEW: 人类 video > robot teleop** (GR00T N1.7 dexterity scaling law)
-   - **NEW: verbal coaching > teleop** (pi_0.7, 用语言教不用遥操作)
-3. **RL 的角色再次变化**:
-   - 老观点: RL 从 training 退到 post-training
-   - **NEW**: 在 VLA 层 RL 可能被 metadata-conditioned BC 替代 (pi_0.7), **但在 WBC/locomotion 层仍是主力 (SONIC, RLT)**
-   - **你的 RL + sim2real 经验仍然有用, 但适用范围从 "VLA + WBC" 收窄到 "WBC + 在线精调 (RLT)"**
-4. **NEW: Embodied Thinking 是新范式** (Gemini Robotics 1.5)
-   - LLM 的 chain-of-thought 下沉到 action 层
-   - 与 pi_0.7 的 metadata + CFG 是同思想的不同实现
-5. **NEW: 长上下文 attention 革命** (DeepSeek V3.2/V4 + Qwen3.5 + Llama 5)
-   - 1M-5M context 已经在 LLM 普及, robot long-horizon 的工程瓶颈即将消失
-   - 三条不同路线: 保留 softmax + 稀疏 (DeepSeek) vs 75% 线性 (Qwen3.5) vs dense + 5M (Llama 5)
-6. **NEW: Computer Use 是 LLM-to-VLA 的中间形态** (Claude 3.5+)
-   - 虚拟环境上的 VLA 已经产品化, 是真实 VLA 的练手场和数据来源
+**当前保守判断 (现在看到的)** + **方向乐观展望 (可能走向的)** 分开列:
+
+**1. WAM 替代 VLA** (DreamZero: 想象→做, 而非 看→做)
+- 现在: 仍是中长期方向, 只有 GR00T N2 一家押注
+- 展望 (可乐观): 世界模型训练成本下降 + 视频生成质量持续提升, 1-2 年内可能成为第二主流架构
+
+**2. 数据飞轮** — 两条新范式**雏形**已出现, 但未被广泛复制
+- 老观点: 自主采集 > 人工遥操作
+- **NEW**: 人类 video > robot teleop (GR00T N1.7 dexterity scaling law, **但只有 NVIDIA 一家验证**)
+- **NEW**: verbal coaching > teleop (pi_0.7 air fryer/toaster 任务, **但只有 PI 一家在做**)
+- 展望 (可乐观): 若两条路线在 6-12 个月内被其他团队独立复现, data collection 成本可能降一个数量级
+
+**3. RL 的角色再次变化** — 判断需要非常小心
+- 老观点: RL 从 training 退到 post-training
+- **观察到的信号**: pi_0.7 用 metadata-conditioned BC 在几个任务上匹配了 pi*0.6 RECAP 的效果
+- **但不等于**: RL 被替代 — 范围有限, 证据单一 (PI 自己对比), 在 WBC/locomotion 层 RL 仍是唯一可行训法
+- 展望 (可乐观): 你的 RL + sim2real 经验**仍然是核心竞争力**, 适用范围是 **WBC + 在线精调 + sim2real 闭环**, 这些是 metadata conditioning 替代不了的
+
+**4. NEW: Embodied Thinking 是值得关注的新方向** (而不是"新范式已确立")
+- Gemini Robotics 1.5 第一次做 action 层 CoT
+- pi_0.7 的 metadata + CFG 和 GR00T 的 RL Token 是另外两种不同实现
+- 现在: 3 家 3 种方案, 没有行业共识
+- 展望 (可乐观): 6-12 个月内可能看到一种方案跑出来, 成为类似 LLM o1 的全行业范式
+
+**5. NEW: 长上下文 attention 革命** (LLM 侧)
+- 现在: DeepSeek V3.2/V4 + Qwen3.5 + Llama 5 已经把 1M-5M context 做成 LLM 标配
+- 但 robot 侧**还没开始迁移** — robot long-horizon 的 attention 工程瓶颈仍在
+- 展望 (可乐观): 这条路迁移到 robot 是**低挂果实** — 三条路线 (DSA / GDN / dense + 5M) 已经被 LLM 验证, robot VLA backbone 直接 plugin 理论上应该能 work
+
+**6. NEW: Computer Use 是 LLM-to-VLA 的中间形态** (Claude 3.5+)
+- 现在: Anthropic Opus 4.7 的 Computer Use 可以自主点鼠标+输入键盘完成 UI 任务
+- 这本质是**虚拟环境上的 VLA**, 动作空间是 click/type 而不是关节角
+- 展望 (可乐观): 真实 VLA 可以先在虚拟环境训练 (便宜 × 可规模化), 再迁移到物理机器人 — 完整路径待验证
 
 ---
 
@@ -518,7 +545,7 @@ foundation_model/
 | GR00T Family (2025-26) | 分层系统: VLA (大脑) + SONIC (小脑) + DreamZero (想象), **N1.7 给出 dexterity scaling law**, 全栈开源 |
 | **Gemini Robotics (2025-26)** *NEW* | **第四个 robotics FM 主线**: 复用 Gemini frontier + Embodied Thinking + agentic orchestrator + 90% MuJoCo 评估 |
 | SONIC (2025) | **你最该精读的**: motion tracking at scale = 人形的统一可扩展目标 |
-| **pi_0.7 (2026.04)** *NEW* | **2026 最大 robotics 突破**: Diverse Prompting → 真正的 compositional generalization 涌现 + 跨 embodiment 匹配人类专家 + verbal coaching 替代遥操作 |
+| **pi_0.7 (2026.04)** *NEW* | **2026 最值得关注的 robotics 进展之一**: Diverse Prompting → compositional generalization 的 strong signs (未见任务 60-80% 仍明显落后 in-distribution >90%) + 跨 embodiment 匹配人类专家零样本 + verbal coaching 替代遥操作的范式雏形 |
 | **GR00T N1.7 (2026.04)** *NEW* | **第一条机器人 dexterity scaling law**: 1k → 20k h 人类 video = 2x 任务完成率 + relative EEF delta 统一人/机器人表征 |
 | **Gemini Robotics 1.5 (2025.10)** *NEW* | **Embodied Thinking 范式**: action 层 chain-of-thought + Motion Transfer 让一个 ckpt 控制 ALOHA/Franka/Apollo + 90%+ 评估在 MuJoCo |
 | **DeepSeek V3.2 + V4 (2025.12-2026.04)** *NEW* | **长上下文 attention 革命**: DSA + CSA+HCA + mHC + Muon + FP4 + 1M context, 直接对 robot long-horizon 有迁移价值 |
