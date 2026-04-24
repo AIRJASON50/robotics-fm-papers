@@ -1,85 +1,97 @@
-# GR00T Family -- NVIDIA Humanoid Robot Foundation Model Overview
+# GR00T Family -- NVIDIA 人形机器人基础模型总览
 
-> **Purpose**: Understand NVIDIA's full-stack approach to humanoid robots -- not individual papers, but how an entire system is built from scratch.
-
----
-
-## 1. NVIDIA's Humanoid Robot Strategy
-
-NVIDIA does not build robots. Its strategy is to be the **operating system for robots** -- providing full-stack software from training to deployment, so hardware vendors (Unitree, Fourier, AGIBot, Galaxea) all adopt NVIDIA's solution.
-
-The stack: Isaac Sim (simulation) -> Isaac Lab (RL training) -> GR00T (foundation model: VLA + WBC) -> Jetson (edge deployment) -> Cosmos (world model). GR00T is the "model layer" in this stack.
+> **目的**: 理解 NVIDIA 的全栈人形机器人方案 -- 不是逐篇论文笔记, 而是看整个系统是怎么从零搭起来的。
 
 ---
 
-## 2. Two Independent Lines: Isaac-GR00T and SONIC
+## 1. NVIDIA 的人形机器人战略
 
-GR00T consists of **two independently developed controllers**, eventually combined:
+NVIDIA **不造机器人**。它的战略是做 **"机器人的操作系统"** -- 提供从训练到部署的全栈软件, 让硬件厂商 (Unitree, Fourier, AGIBot, Galaxea) 都来用 NVIDIA 的方案。
 
-### Isaac-GR00T Line (VLA: See -> Understand -> Plan)
-
-**Team**: NVIDIA GEAR lab (Jim Fan, Yuke Zhu)
-**Role**: High-level decision-making -- understand language + vision, output target action trajectories
-
-**N1 (2025.03) -- First open-source humanoid VLA**
-
-The architecture inherits from RT-2 (see `robotics/policy_learning/`): a frozen VLM encodes vision+language, then an action head (here Flow Matching DiT) generates motor commands. The dual-system design runs the VLM at a slow rate for semantic understanding, and the DiT at a faster rate for smooth motor output. Data pyramid (web video > sim > real) and cross-embodiment (one model, multiple robots) were the key ideas.
-
-*Limitation*: Frozen VLM severely limited language-following ability and zero-shot generalization.
-
-**N1 -> N1.5 (2025.12) -- VLM Adaptation**
-
-- *Problem*: The frozen VLM from N1 could not express task-relevant visual features for manipulation.
-- *Insight*: Two strategies exist for adapting a pretrained VLM -- (a) keep it frozen and add adapter layers, or (b) unfreeze some layers. N1.5 chose strategy (a): add adapter layers between the VLM and DiT, plus a stronger VLM backbone.
-- *New capability*: FLARE training objective -- learn from human egocentric video without action labels, by aligning future visual latents. This turns unlimited human video into a free data source.
-- *Result*: Language-following and real-robot success roughly doubled; novel-object generalization emerged via FLARE.
-
-> **Cross-reference**: PI's "Knowledge Insulation" principle (see `robotics/vla/`) also addresses this VLM freezing dilemma -- they argue freezing preserves pretrained knowledge but limits downstream expressiveness. N1.5's adapter approach is one compromise; N1.6 takes the other path.
-
-**Takeaway**: When VLM freezing limits performance, adapter layers are a lightweight first remedy. But adapters add indirection -- the gradient signal from the action loss reaches the VLM only indirectly.
-
-**N1.5 -> N1.6 (2026.03) -- Direct VLM Unfreezing**
-
-- *Problem*: Adapter layers are indirect and computationally wasteful -- they add parameters without directly improving the VLM's representations.
-- *Insight*: Unfreezing the top layers of the VLM is more effective. Gradients flow directly from the action loss into the VLM, producing better visual features for manipulation with fewer extra parameters.
-- *Other improvements*: Native aspect-ratio images (no more resize/pad information loss); state-relative actions (better sim2real transfer since relative deltas are less sensitive to calibration offsets).
-- *New embodiments*: Bimanual arms, additional humanoid platforms, locomotion support.
-
-**Takeaway**: When adapter indirection is a bottleneck, unfreezing the top VLM layers gives a more direct gradient path. This is the same lesson as LoRA vs full fine-tuning in LLMs -- sometimes the direct approach wins.
-
-**Key Design Decisions Across Versions**:
-
-| Problem | N1 | N1.5 / N1.6 | Why Change |
-|---------|------|--------------|------------|
-| VLM-to-DiT interface | Frozen VLM + cross-attention | Adapter (N1.5) / Unfreeze top layers (N1.6) | Frozen VLM lacks expressiveness |
-| Data scarcity | Data pyramid (sim + real) | FLARE (human video, no action labels) | Human video is unlimited and free |
-| Action representation | Absolute joint angles | State-relative (N1.6) | Absolute values amplify sim2real gap |
-| Image encoding | Resize to fixed resolution | Native aspect ratio (N1.6) | Resizing destroys information |
-
-### SONIC Line (WBC: Motion Tracking -> Joint Control)
-
-**Team**: NVIDIA Research (Zhengyi Luo et al., from PHC lineage)
-**Role**: Low-level execution -- track target motion trajectories, output joint angles
-
-**Core ideas**:
-
-**(1) Motion Tracking as the Universal Scalable Objective**
-
-Previously: each action (walk/run/jump/carry) needs a custom reward function -- this does not scale. SONIC unifies all actions as "track mocap data" with one reward formula. The diversity of behaviors comes from diverse mocap data, not diverse reward engineering.
-
-**(2) Universal Token Space (Cross-Embodiment Transfer)**
-
-Human skeleton and robot skeleton differ. SONIC trains encoders that map both human and robot motions into a shared discrete token space (via FSQ). At inference: human mocap -> human encoder -> shared tokens -> robot decoder -> joint angles. This is implicit motion retargeting without manual skeleton mapping.
-
-**(3) Scaling Laws for Humanoid Control**
-
-Data scaling (more diverse mocap) gives the largest improvement and has not saturated. Model scaling helps but less. Compute scaling affects asymptotic performance, not just training speed. The ranking -- data > model > compute -- mirrors LLM scaling findings (Chinchilla).
+技术栈: Isaac Sim (仿真) -> Isaac Lab (RL 训练) -> GR00T (基础模型: VLA + WBC) -> Jetson (边缘部署) -> Cosmos (世界模型)。GR00T 是这个栈里的 "模型层"。
 
 ---
 
-## 3. How They Combine
+## 2. 两条独立的技术线: Isaac-GR00T 和 SONIC
 
-From N1.5 onward, Isaac-GR00T and SONIC are deployed in series:
+GR00T 由**两个独立开发的控制器**最终合流而成:
+
+### Isaac-GR00T 线 (VLA: 看 -> 理解 -> 规划)
+
+**团队**: NVIDIA GEAR lab (Jim Fan, Yuke Zhu)
+**角色**: 高层决策 -- 理解语言和视觉, 输出目标动作轨迹
+
+**N1 (2025.03) -- 第一个开源人形 VLA**
+
+架构继承自 RT-2 (见 `robotics/policy_learning/`): 冻结的 VLM 编码 vision+language, 动作头 (这里是 Flow Matching DiT) 生成电机指令。双系统设计: VLM 跑慢拍做语义理解, DiT 跑快拍输出平滑动作。数据金字塔 (web video > sim > real) 和 cross-embodiment (一个模型多种机器人) 是核心想法。
+
+*局限*: VLM 冻结导致 language-following 很弱, 零样本泛化差。
+
+**N1 -> N1.5 (2025.12) -- VLM 适配**
+
+- *问题*: N1 的 VLM 冻结后, 视觉特征无法针对 manipulation 任务表达。
+- *洞察*: 适配预训练 VLM 有两条路 -- (a) 保持冻结加 adapter 层, (b) 解冻一些层。N1.5 选了 (a): 在 VLM 和 DiT 之间插 adapter, 并换更强的 VLM backbone。
+- *新能力*: **FLARE** 训练目标 -- 用 human egocentric video 在没有 action label 的情况下学习, 方法是对齐未来视觉 latent。把无限的人类视频变成免费数据源。
+- *结果*: Language-following 和真机成功率大约翻倍; FLARE 带来了 novel-object 泛化。
+
+> **交叉引用**: PI 的 "Knowledge Insulation" 原则 (见 `robotics/vla/`) 处理的是同一个 VLM 冻结困境 -- 他们认为冻结能保护预训练知识但限制下游表达力。N1.5 的 adapter 是一种折中, N1.6 走了相反的路。
+
+**Takeaway**: VLM 冻结成为瓶颈时, adapter 是最轻量的第一剂补救。但 adapter 引入了间接性 -- 动作 loss 的梯度只能间接影响 VLM。
+
+**N1.5 -> N1.6 (2026.03) -- 直接解冻 VLM**
+
+- *问题*: Adapter 层是间接的, 计算也浪费 -- 加了参数但没直接改善 VLM 的表征。
+- *洞察*: 解冻 VLM 的顶层更有效。梯度直接从动作 loss 流进 VLM, 用更少的额外参数产生更适合 manipulation 的视觉特征。
+- *其他改进*: Native aspect-ratio 图像 (不再 resize/pad 丢信息); state-relative actions (相对 delta 对标定偏差不敏感, sim2real 更好)。
+- *新 embodiment*: Bimanual arms, 更多人形平台, locomotion 支持。
+
+**Takeaway**: Adapter 的间接性变成瓶颈时, 解冻 VLM 顶层给出更直接的梯度路径。这和 LLM 里 LoRA vs 全参 fine-tune 的教训一致 -- 有时直接的方法赢。
+
+**N1.6 -> N1.7 (2026.04) -- 人类视频 scaling + 商用开源**
+
+- *问题*: N1.6 主要还是靠 "几千小时 robot teleoperation 数据"。Dexterous manipulation (接触丰富、22 自由度灵巧手) 依然脆弱。Teleop 数据不 scale。
+- *洞察 (核心新主张)*: 人类 egocentric video 是 dexterity 的正确底座。如果把 robot action 表示为 **relative EEF delta** (而不是绝对关节角), 人和机器人就能用同一种表征 -- 可以直接 co-train。
+- *架构变化*: VLM backbone 升级为 **Cosmos-Reason2-2B (Qwen3-VL 架构)**; 32 层 DiT 保持; 完整 ONNX / TensorRT pipeline。
+- *数据变化*: **20,854 小时 EgoScale 人类 egocentric 视频**, 覆盖 20+ 任务类别 (制造/零售/医疗/家居), 加上原有 robot demonstration。大约是 N1.6 预训练数据的 5-10 倍。
+- *Scaling law (标志性科学发现)*: 从 1k 小时扩到 20k 小时人类视频, **dexterous manipulation 的平均任务完成率超过 2 倍**。这是**人形机器人领域第一个明确的 dexterity scaling law** -- 地位类似 LLM 的 Chinchilla。
+- *License*: Apache 2.0 代码 + NVIDIA Open Model License 权重; 明确标注 "factory-floor ready", 直接支持物料处理/包装/质检等工业部署。
+
+**Takeaway**: N1.7 的赌注是 **"对 dexterity 来说, 数据 scaling 战胜算法 tinkering"** -- 而且跨 embodiment 扩展的正确 primitive 不是什么花哨架构, 而是一个能自然对齐人和机器人数据的简单动作表征 (relative EEF delta)。这和 PI 的 "prompt engineering 优先于 data scaling" (见 pi_0.7 family notes, 同月发布) 是**同目标、对立赌注**的两条路线。
+
+**各版本的关键设计决策**:
+
+| 问题 | N1 | N1.5 / N1.6 | N1.7 | 为什么改 |
+|---------|------|--------------|-------|------------|
+| VLM-to-DiT 接口 | 冻结 VLM + cross-attention | Adapter (N1.5) / 解冻顶层 (N1.6) | Cosmos-Reason2-2B (Qwen3-VL) | 更强的 reasoning VLM |
+| 数据稀缺 | Data pyramid (sim + real) | FLARE (人类视频, 无动作标签) | **20K 小时 EgoScale 人类视频** | 首次显式的 dexterity scaling law |
+| 动作表征 | 绝对关节角 | State-relative (N1.6) | **Relative EEF delta** (人机共享) | 统一表征使 co-training 成为可能 |
+| 图像编码 | Resize 到固定分辨率 | Native aspect ratio (N1.6) | Native aspect ratio | Resize 破坏信息 |
+| License | 仅研究 | 仅研究 | **Apache 2.0 + 商用权重** | 工厂部署就绪 |
+
+### SONIC 线 (WBC: 运动跟踪 -> 关节控制)
+
+**团队**: NVIDIA Research (Zhengyi Luo 等, 从 PHC 脉络来的)
+**角色**: 低层执行 -- 跟踪目标运动轨迹, 输出关节角度
+
+**核心思想**:
+
+**(1) Motion Tracking 作为可 scale 的通用目标**
+
+以前: 每个动作 (走/跑/跳/搬) 都要自定义 reward -- 这不 scale。SONIC 把所有动作统一为 "跟踪 mocap 数据", 一套 reward 公式搞定。行为的多样性来自 mocap 数据的多样性, 而不是 reward 工程的多样性。
+
+**(2) Universal Token Space (跨 embodiment 迁移)**
+
+人类骨骼和机器人骨骼不同。SONIC 训练 encoder 把人和机器人的运动都映射到共享的离散 token space (用 FSQ)。推理时: 人类 mocap -> 人 encoder -> 共享 token -> 机器人 decoder -> 关节角。这是一种隐式的 motion retargeting, 不需要手动骨骼映射。
+
+**(3) 人形控制的 Scaling Laws**
+
+数据 scaling (更多样的 mocap) 提升最大, 还没饱和。模型 scaling 有用但次之。计算 scaling 影响的是渐近性能而不只是训练速度。排名 -- data > model > compute -- 和 LLM 的 Chinchilla 发现一致。
+
+---
+
+## 3. 两条线如何合流
+
+从 N1.5 开始, Isaac-GR00T 和 SONIC 以串联方式部署:
 
 ```
 Language instruction
@@ -105,39 +117,39 @@ PD Controller             (hardware-rate: torque control)
 Physical Robot
 ```
 
-**Why not end-to-end?** Each layer trains on fundamentally different data: VLM uses TB-scale internet text+images (no robot needed); DiT uses teleoperation demos (robot needed); SONIC uses human mocap (no robot needed). End-to-end = one model eating three data types with optimization conflicts. Layered = each layer independently optimized on its best data source.
+**为什么不 end-to-end?** 每层训练用的数据从根上就不同: VLM 用 TB 级互联网文本+图像 (不需要机器人); DiT 用遥操作 demo (需要机器人); SONIC 用 human mocap (不需要机器人)。End-to-end = 一个模型吃三类数据, 优化目标互相冲突。分层 = 每层独立用自己最好的数据训。
 
-**Alternative**: Decoupled WBC (also in GR00T-WBC codebase) splits differently -- RL for lower-body gait, IK for upper-body precision. Better end-effector accuracy (e.g., carrying a cup without spilling), worse whole-body coordination.
+**替代方案**: Decoupled WBC (也在 GR00T-WBC 代码库里) 分得不一样 -- 下半身 gait 用 RL, 上半身精度用 IK。末端精度更好 (例如端杯子不洒), 但全身协调性更差。
 
 ---
 
-## 4. World Model Path (DreamGen -> DreamZero)
+## 4. 世界模型路线 (DreamGen -> DreamZero)
 
-Parallel to VLA+WBC, NVIDIA explores the world model path:
+和 VLA+WBC 并行, NVIDIA 还在探索世界模型路线:
 
-### DreamGen (2025.05): World Model for Data Augmentation
+### DreamGen (2025.05): 世界模型做数据增广
 
-Role: auxiliary tool serving VLA training. A small set of real demos is fed to a video world model which synthesizes variations (background, lighting, objects), amplifying data by orders of magnitude. This is an engineering implementation of the data flywheel.
+角色: 服务 VLA 训练的辅助工具。少量真实 demo 喂给 video world model, 合成各种变体 (背景/光照/物体), 把数据放大几个数量级。这是 data flywheel 的工程落地。
 
-### DreamZero (2026.02): World Model = Policy (GR00T N2 Core)
+### DreamZero (2026.02): 世界模型 = Policy (GR00T N2 核心)
 
-Role: next-generation architecture replacing VLA.
+角色: 下一代架构, 替代 VLA。
 
-> **Cross-reference**: DreamZero's WAM (World-Action Model) represents the VLA -> WAM paradigm shift (see `world_model/26_DreamZero/`).
+> **交叉引用**: DreamZero 的 WAM (World-Action Model) 代表 VLA -> WAM 的范式转移 (见 `world_model/26_DreamZero/`)。
 
-**Headline Takeaway: VLA = rote memorization; WAM = understanding principles**
+**核心 Takeaway: VLA = 背答案; WAM = 懂原理**
 
 | | VLA (N1.x) | WAM (N2) |
 |---|---|---|
-| Process | See current frame -> output memorized action | See current frame -> imagine future N frames -> extract action from imagination |
-| Strength | Strong within training distribution | Strong outside training distribution |
-| Analogy | A student who memorizes answers | A student who understands cause-and-effect |
+| 流程 | 看当前帧 -> 输出记住的动作 | 看当前帧 -> 想象未来 N 帧 -> 从想象中抽动作 |
+| 强项 | 训练分布内强 | 训练分布外强 |
+| 类比 | 背答案的学生 | 理解因果的学生 |
 
-WAM's generalization advantage comes from the same insight as LLM chain-of-thought: spending more compute at inference to "think" yields better out-of-distribution performance.
+WAM 的泛化优势和 LLM chain-of-thought 的洞察一致: **推理时多花点算力去 "想"**, OOD 性能更好。
 
 ---
 
-## 5. Complete Timeline
+## 5. 完整时间线
 
 ```
 === Infrastructure (2022-2024) ===
@@ -154,6 +166,7 @@ WAM's generalization advantage comes from the same insight as LLM chain-of-thoug
 === GR00T Gen 2 (2026) ===
 2026.02  DreamZero -- WAM architecture (N2 core)
 2026.03  N1.6 -- VLM unfreezing, native aspect ratio, state-relative actions
+2026.04  N1.7 -- Cosmos-Reason2-2B, 20K h EgoScale video, relative EEF, Apache 2.0
 2026 H2  N2 (announced) -- WAM replaces VLA
 
 === Hardware Partners ===
@@ -162,30 +175,32 @@ Unitree G1, Fourier GR-1, AGIBot Genie-1, Galaxea R1 Pro, Bimanual YAM
 
 ---
 
-## 6. Core Takeaways
+## 6. 核心 Takeaway
 
-| # | Takeaway | Principle | Action Item |
+| # | Takeaway | 原理 | 对你的行动项 |
 |---|----------|-----------|-------------|
-| 1 | **Layered decoupling > end-to-end** | Different layers use different data; optimize independently | Build Layer 1 (tracking), plug in open-source VLM for Layer 3 |
-| 2 | **Motion tracking = scalable universal objective** | One tracking reward handles all behaviors | Do not design per-action reward functions |
-| 3 | **Data > Model > Compute** | Bottleneck is mocap diversity, not model size | Prioritize expanding data, not scaling the network |
-| 4 | **Universal token space** | Shared discrete latent aligns human and robot motions | Can replace manual motion retargeting |
-| 5 | **Sim2Real via domain randomization, not sim fidelity** | Sufficient DR = zero-shot transfer | Invest in DRCfg, not in sim tuning |
-| 6 | **FLARE: learn from human video** | Align future latents; no action labels needed | Human video is a free, unlimited data source |
-| 7 | **VLA = memorize answers; WAM = understand principles** | Imagining futures generalizes better than direct mapping | Watch DreamZero's follow-up closely |
-| 8 | **VLM freezing/unfreezing is a spectrum** | Adapter (indirect) vs unfreeze (direct) -- choose based on data budget and expressiveness need | Start frozen + adapter; unfreeze if plateau |
+| 1 | **分层解耦 > end-to-end** | 不同层用不同数据, 各自独立优化 | 自己实现 Layer 1 (tracking), Layer 3 接开源 VLM |
+| 2 | **Motion tracking = 可 scale 的通用目标** | 一个 tracking reward 覆盖所有行为 | 不要给每个动作单独设计 reward |
+| 3 | **Data > Model > Compute** | 瓶颈是 mocap 多样性, 不是模型大小 | 优先扩数据, 其次再想扩网络 |
+| 4 | **Universal token space** | 共享离散 latent 对齐人和机器人运动 | 可以替代手动 motion retargeting |
+| 5 | **Sim2Real 靠 domain randomization, 不靠仿真保真度** | DR 足够 = zero-shot 迁移 | 把精力花在 DRCfg, 而不是调仿真 |
+| 6 | **FLARE: 从人类视频学** | 对齐未来 latent, 不需要动作标签 | 人类视频是免费无限的数据源 |
+| 7 | **VLA = 背答案; WAM = 懂原理** | "想象未来" 比 "直接映射" 泛化更强 | 紧盯 DreamZero 的后续 |
+| 8 | **VLM 冻结/解冻是个连续谱** | Adapter (间接) vs 解冻 (直接) -- 按数据预算和表达力需求选 | 先用冻结+adapter, 碰到瓶颈再解冻 |
+| 9 | **Dexterity scaling law: 人类视频而不是 teleop (N1.7)** | 1k -> 20k 小时人类 egocentric 视频 = 任务完成率 2 倍 | 停止 scale teleop 数据, 改去 scale ego video |
+| 10 | **Relative EEF delta 统一人和机器人 (N1.7)** | 跨 embodiment 用同一套动作表征就能直接 co-train | 跨 embodiment 迁移时, 选一个天然共享的表征, 而不是要做 retargeting 的表征 |
 
-### Is SONIC the SOTA for humanoid control?
+### SONIC 是人形控制的 SOTA 吗?
 
-**For "humanoid whole-body motion tracking", yes.** But with caveats:
-- Motion tracking SOTA, not general robot SOTA
-- Strong whole-body coordination, but weak end-effector precision (dexterous manipulation is not its strength)
-- Validated on limited hardware; cross-embodiment generalization not fully tested
-- MLP architecture has unknown scaling ceiling compared to Transformer-based approaches
+**对 "人形全身运动跟踪", 是。** 但有几点 caveat:
+- 是 motion tracking 的 SOTA, 不是通用 robot 的 SOTA
+- 全身协调性强, 但末端精度弱 (灵巧操作不是它的强项)
+- 在有限硬件上验证, 跨 embodiment 泛化没完全测试
+- MLP 架构相对于 Transformer 类方案, scaling 上限未知
 
 ---
 
-## 7. File Index
+## 7. 文件索引
 
 ```
 GR00T_Series/
@@ -196,6 +211,7 @@ GR00T_Series/
 |   |   +-- 25_N1/                         #   N1 paper + notes
 |   |   +-- 25_N15/                        #   N1.5 blog report
 |   |   +-- 26_N16/                        #   N1.6 blog report
+|   |   +-- 26_N17/                        #   N1.7 blog report (EgoScale scaling law + Apache 2.0)
 |   +-- SONIC/                             # Cerebellum (WBC)
 |       +-- code/                          #   NVlabs/GR00T-WholeBodyControl repo
 |       +-- SONIC_...md                    #   Paper

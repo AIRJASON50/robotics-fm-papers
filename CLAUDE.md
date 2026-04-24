@@ -128,7 +128,7 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | GPT Series: GPT-1/2/3/4 + RLHF + Codex + WebGPT + InstructGPT | GPT_series_notes.md |
 | Kimi: k1.5, MoBA, Moonlight, Audio, K2, K2.5 | kimi_series_notes.md |
 | Qwen: 1/2/2.5/3/3.5, VL, Audio, Omni | qwen_series_notes.md |
-| DeepSeek: MoE, V2 (MLA), V3, R1 | deepseek_series_notes.md |
+| DeepSeek: MoE, V2 (MLA), V3, R1, V3.2 (DSA), V4 (CSA+HCA, mHC, Muon, FP4) | deepseek_series_notes.md |
 | Llama: 1/2/3/4 | llama_series_notes.md |
 
 ### CV/ (24 篇, 7 方向)
@@ -148,8 +148,8 @@ bash html2aitext_convert/arxiv2md.sh <arxiv_id>
 | 内容 | 位置 |
 |------|------|
 | **Google RT Series** (3 篇): RT-1→RT-2→OpenXEmbodiment | families/Google_RT_Series/ |
-| **PI Series** (3 核心 + 4 支撑): pi_0→pi_0.5→pi\*0.6 (DROID/FAST/HiRobot/MEM 蒸馏至 family notes) | families/pi_Series/ |
-| **GR00T Series** (6 篇): N1→N1.5→SONIC→DreamGen→N1.6→DreamZero | families/GR00T_Series/ |
+| **PI Series** (4 核心 + 4 支撑): pi_0→pi_0.5→pi\*0.6→pi_0.7 (DROID/FAST/HiRobot/MEM 蒸馏至 family notes) | families/pi_Series/ |
+| **GR00T Series** (7 篇): N1→N1.5→SONIC→DreamGen→N1.6→DreamZero→N1.7 | families/GR00T_Series/ |
 | 方法论文: ACT, DiffusionPolicy, SpatialForcing | policy_learning/ |
 | 世界模型: DreamerV3, UniSim | world_model/ |
 

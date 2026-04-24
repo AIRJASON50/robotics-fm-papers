@@ -10,13 +10,16 @@
 - **DeepSeek-Coder-V2**: "DeepSeek-Coder-V2: Breaking the Barrier of Closed-Source Models in Code Intelligence", arXiv:2406.11931, 2024.06
 - **DeepSeek-V3**: "DeepSeek-V3 Technical Report", arXiv:2412.19437, 2024.12
 - **DeepSeek-R1**: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning", arXiv:2501.12948, 2025.01
+- **DeepSeek-V3.2**: "DeepSeek-V3.2: Pushing the Frontier of Open Large Language Models", arXiv:2512.02556, 2025.12
+- **DeepSeek-V4**: "DeepSeek-V4: Towards Highly Efficient Million-Token Context Intelligence", 技术报告 PDF (无 arxiv), 2026.04.24
 
 **关键方法论文** (被 DeepSeek 系列依赖):
 - **DeepSeek-Math**: "DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models", arXiv:2402.03300, 2024.02 (GRPO 的原始来源)
+- **mHC**: "Manifold-Constrained Hyper-Connections", Xie et al. (DeepSeek + Peking University), arXiv:2601.xxxxx, 2026.01 (V4 用作残差连接基础)
 
 **完整 arXiv 列表**:
 
-| 模型 | arXiv | 年份 | 关键创新 |
+| 模型 | arXiv / Source | 年份 | 关键创新 |
 |------|-------|------|---------|
 | DeepSeek LLM (7B/67B) | 2401.02954 | 2024.01 | Dense baseline, scaling law 验证 |
 | DeepSeekMoE (16B/145B) | 2401.06066 | 2024.01 | Fine-grained experts + shared expert isolation |
@@ -25,6 +28,10 @@
 | DeepSeek-Coder-V2 | 2406.11931 | 2024.06 | MoE 代码模型 |
 | DeepSeek-V3 (671B/37B) | 2412.19437 | 2024.12 | FP8, MTP, aux-loss-free, $5.5M (~$5.576M) 训练 |
 | DeepSeek-R1 (671B/37B) | 2501.12948 | 2025.01 | Pure RL reasoning, R1-Zero |
+| DeepSeek-V3.2 (671B/37B) | 2512.02556 | 2025.12 | **DSA** (lightning indexer + top-k), 大规模 GRPO + agentic synthesis |
+| DeepSeek-V3.2-Speciale | 同上 | 2025.12 | IMO/IOI/ICPC/CMO 2025 全部金牌 |
+| **DeepSeek-V4-Flash (284B/13B)** | HF tech report | **2026.04** | **CSA + HCA hybrid attention, mHC, Muon, FP4 QAT, 1M context** |
+| **DeepSeek-V4-Pro (1.6T/49B)** | HF tech report | **2026.04** | 同上 |
 
 ---
 
@@ -71,6 +78,12 @@
 2024.12  *** DeepSeek-V3 (FP8, $5.5M) ***   <-- Phase 2 巅峰
 2025.01  *** DeepSeek-R1 (pure RL reasoning) ***  <-- Phase 3: 推理 + 开源基础设施
 2025.02  开源 FlashMLA / DeepGEMM / 3FS / DualPipe / DeepEP / EPLB
+2025.09  DeepSeek-V3.2-Exp (引入 DSA)
+2025.12  *** DeepSeek-V3.2 + Speciale ***       <-- Phase 4: 长上下文稀疏注意力 + 全 GPT-5 级 RL
+         (Speciale 拿下 IMO/IOI/ICPC/CMO 2025 全部金牌)
+2026.01  mHC paper, Muon × 大模型验证
+2026.04  *** DeepSeek-V4 (1M context, CSA+HCA, mHC, Muon, FP4) ***  <-- Phase 5: 1M context 普及
+         同时开源 V4-Pro (1.6T/49B) 和 V4-Flash (284B/13B), MIT license
 ```
 
 **DeepSeek 的速度**: 从公司成立 (2023.11) 到发布 V3+R1 (2025.01) 只用了约 14 个月。相比之下, OpenAI 从 GPT-1 到 ChatGPT 用了 4 年多。这种速度来自两个因素: (1) 站在全行业的技术积累之上 (后发优势); (2) 幻方量化的 GPU 资源和工程文化。
@@ -163,6 +176,45 @@ DeepSeek-R1 (2025.01): *** 推理模型 ***
   |  DualPipe: pipeline 并行框架
   |  DeepEP: expert parallelism 通信库
   |  EPLB: expert-parallel load balancer
+
+=== Phase 4: 长上下文稀疏注意力 + 全栈 RL (2025 H2) ===
+
+DeepSeek-V3.2-Exp (2025.09): 在 V3.1-Terminus 上做 DSA continued training
+  |  Lightning indexer + top-k token selection
+  |  Stage 1 dense warm-up (2.1B tokens) -> Stage 2 sparse training (943.7B tokens)
+  v
+DeepSeek-V3.2 (2025.12): *** 全栈 GPT-5 级 RL recipe ***
+  |  架构与 Exp 一致
+  |  Specialist distillation (6 个专业方向, 每个先单独 RL)
+  |  Mixed RL (reasoning + agent + alignment 单阶段 GRPO)
+  |  Agentic synthesis: 1800 个环境 + 85K prompt
+  |  Post-training 算力 > 10% 预训练
+  |  V3.2-Speciale: IMO/IOI/ICPC/CMO 2025 全部金牌, 与 Gemini-3.0-Pro 同档
+
+=== Phase 5: 1M Context 普及 (2026 Q2) ===
+
+DeepSeek-V4 (2026.04): *** 长上下文存储革命 ***
+  |  V4-Pro: 1.6T total / 49B activated
+  |  V4-Flash: 284B total / 13B activated
+  |  两者均原生 1M context, MIT license, 同时开源
+  |
+  |  4 个核心架构升级:
+  |  1. Hybrid Attention (CSA + HCA)
+  |     - CSA: 压缩每 m 个 KV 成 1 个 + 在压缩 KV 上做 DSA = 二级稀疏
+  |     - HCA: 极致压缩 (m' >> m) + dense attention, 互补
+  |     - 1M context 下 KV cache 仅 V3.2 的 7-10%
+  |  2. mHC (Manifold-Constrained Hyper-Connections)
+  |     - 残差变换 B_l 约束在 doubly stochastic 流形
+  |     - Sinkhorn-Knopp 投影 (20 iter), 谱范数 ≤ 1
+  |     - 多层堆叠仍稳, 解决 HC 的训练崩溃
+  |  3. Muon Optimizer (替代大部分 AdamW)
+  |     - Hybrid Newton-Schulz orthogonalization (10 iter, 8 fast + 2 stable)
+  |     - 不用 QK-Clip (RMSNorm 对 Q/KV entry 已经防爆)
+  |  4. FP4 QAT (MoE expert + indexer)
+  |     - FP4 × FP8 当前 = FP8 × FP8, 但未来硬件理论快 1/3
+  |  +
+  |  Specialist + on-policy distillation post-training
+  |  Three reasoning modes: Non-Think / Think High / Think Max
 ```
 
 ---
@@ -478,6 +530,134 @@ Stage 4: RL (general)
 
 **对 Robotics 的意义**: R1-Zero 证明了 **纯 RL 可以涌现复杂策略, 不需要人类示范**。这对机器人极其重要 -- 机器人遥操作数据获取成本极高。如果 robot policy 也能通过纯 RL (在 simulation 中) 涌现出复杂操作策略, 就不再需要大量人类示范数据。R1-Zero 的 "aha moment" 也暗示: **给 RL 足够的探索空间 (长上下文/长 episode) + 正确的 reward 信号, 复杂行为可以自发涌现**。
 
+### 3.8 DSA (DeepSeek Sparse Attention) -- V3.2 引入的长上下文革命
+
+**问题**: MLA 已经把 KV cache 压到极致, 但 **attention compute 仍是 O(L²)**。长上下文里这是绝对瓶颈, 阻塞 ultra-long 部署和 RL post-training。
+
+**DSA 的核心思想**: 加一个**便宜的索引器**告诉每个 query 该看哪些 key, 而不是看所有 key。
+
+```
+Lightning Indexer (便宜):
+  I_{t,s} = Σ_j w · ReLU(q^I_{t,j} · k^I_s)
+  - ReLU 而非 softmax  → throughput 高
+  - head 数极少, 全程 FP8
+  - 算力远低于主 attention
+
+Top-k Token Selection:
+  对每个 query, 只把 index score top-k 的 KV 喂给 core attention
+  实际 k = 2048
+
+复杂度: 主 attention O(L·k), indexer O(L²) 但常数极小
+```
+
+**关键约束**: DSA 必须基于 MLA 的 **MQA mode** (不是 MHA), 这样 latent vector 在 query 所有 head 间共享, kernel 才能起飞。
+
+**两阶段训练方法 (复用 V3.1-Terminus 权重)**:
+- Stage 1 dense warm-up: 冻结全模型, 只训 indexer, 用 KL loss 让 indexer 输出对齐主 attention 分布 (2.1B tokens)
+- Stage 2 sparse training: 引入 top-k 选择, 全模型解冻, **indexer input 从计算图 detach** — indexer 只受 KL 监督, 主模型只受 LM loss 监督 (943.7B tokens)
+
+**对 Robotics 的意义**: 长 horizon 视频/状态序列的 attention 同样面临 O(L²)。Lightning indexer + top-k 模式可直接迁移到 long-context VLA, 让 1M 帧观测历史变得可能。
+
+### 3.9 V4 的 Hybrid Attention: CSA + HCA -- 长上下文存储革命
+
+**问题**: 即使有 DSA, 1M context 下 KV cache 还是吃显存。要做到"日常 1M context 可用", 必须从存储和计算两端同时压。
+
+**V4 的解法**: 两类 attention 层交错堆叠 (interleaved hybrid)。
+
+#### CSA (Compressed Sparse Attention) — "压缩 + 稀疏"
+```
+1. Token-Level Compressor: 每 m 个 KV token 压缩成 1 个 entry
+   (每个压缩 entry 由 2m 个原 entry 组成, 相邻块有重叠, 实际压缩比 1/m)
+2. Lightning Indexer + Top-k: 在压缩后的 entry 上跑 DSA
+3. Shared Key-Value MQA: 选中的压缩 entry 同时充当 K 和 V
+4. Sliding Window Branch: 额外保留最近 n_win 个未压缩 token
+5. Grouped Output Projection: head 分 g 组, 各自降维再拼接
+```
+
+CSA = "DSA 的二级稀疏" — 先压缩再稀疏选择, 双重收益。
+
+#### HCA (Heavily Compressed Attention) — "极致压缩 + dense"
+```
+1. 压缩比 m' ≫ m (远大于 CSA)
+2. 不做 top-k 选择, 直接对所有压缩 entry 做 dense attention
+3. 同样有 sliding window 分支保局部
+```
+
+HCA = 粗粒度全局聚合, 与 CSA 互补。
+
+#### 为什么混合
+- CSA 像"放大镜": 细粒度 + 稀疏选择, 适合精准定位远端 token
+- HCA 像"广角镜": 极致压缩 + dense, 适合粗粒度全局聚合
+- 交错使用让模型既看得清细节又看得到全局, 总成本暴降
+
+#### Mixed Precision
+- KV entry 中 RoPE 维度: BF16
+- 其余 KV 维度: FP8
+- **Lightning indexer 全程 FP4**
+- → KV cache 比纯 BF16 减半
+
+#### 1M context 实测数字 (vs DeepSeek-V3.2 baseline)
+
+| | V4-Pro | V4-Flash |
+| --- | --- | --- |
+| Single-token FLOPs | **27%** | **10%** |
+| KV cache size | **10%** | **7%** |
+| KV cache vs BF16 GQA8 baseline | ~2% | ~2% |
+
+#### 其他细节
+- **Partial RoPE**: 只在最后 64 维加 RoPE; output 上加 RoPE with position −i 来对消 KV 兼任 V 带来的 absolute pos embedding
+- **Attention Sink**: 加可学的 sink logit (类似 OpenAI / StreamingLLM trick), 让每 head 的 attention 总和可以不为 1
+- **Query/KV RMSNorm**: 直接对 query 和 KV entry 做 RMSNorm, 自然防 logit 爆炸 (因此 Muon 不再需要 QK-Clip)
+
+### 3.10 mHC (Manifold-Constrained Hyper-Connections) -- V4 的残差稳定性
+
+**HC 的问题**: Hyper-Connections (Zhu et al. 2025) 把残差流宽度从 d 扩到 n_hc·d, 但多层堆叠时数值不稳。
+
+**mHC 的核心创新**: 把残差变换矩阵 B_l 约束在 **doubly stochastic matrices 流形 (Birkhoff polytope) M** 上:
+```
+B_l ∈ M := {M ∈ R^{n×n} | M·1_n = 1_n, 1_n^T·M = 1_n^T, M ≥ 0}
+```
+
+**为什么这样稳定**:
+- B_l doubly stochastic ⇒ 谱范数 ‖B_l‖_2 ≤ 1 ⇒ 残差变换 non-expansive ⇒ 前向反向都稳
+- 集合 M 在矩阵乘法下封闭 ⇒ 多层堆叠仍稳
+- A_l, C_l (输入/输出映射) 用 sigmoid 约束 non-negative + bounded, 防止信号互消
+
+**Sinkhorn-Knopp 投影**: 用 20 次迭代把任意正矩阵投影到 doubly stochastic manifold。
+
+**计算开销**: n_hc 远小于 hidden d, 整体增益远超开销。
+
+**意义**: HC 的训练不稳问题被解决, 残差宽度扩展这个轴第一次真正能 scale。**梁文锋亲自上传到 arxiv** (2026.01), 是 V4 的关键支撑工作。
+
+### 3.11 V4 Muon Optimizer
+
+**配置**:
+- 大部分模块用 **Muon**
+- 例外 (仍用 AdamW): embedding, prediction head, mHC 的 static bias 和 gating, 所有 RMSNorm 模块
+
+**Hybrid Newton-Schulz orthogonalization (10 步, 两阶段)**:
+- 前 8 步: (a, b, c) = (3.4445, -4.7750, 2.0315) — 快速收敛, 把奇异值拉到 1 附近
+- 后 2 步: (a, b, c) = (2, -1.5, 0.5) — 稳定奇异值在 1
+- 不用 QK-Clip (V4 attention 自带 RMSNorm)
+
+**意义**: Muon 是 Kimi K2 (2025) 验证后, V4 第一次在 trillion 级 (1.6T) 模型上规模化使用。
+
+### 3.12 V4 FP4 Quantization-Aware Training
+
+**配置**:
+- MoE expert 权重: FP4
+- Lightning indexer QK 路径: FP4
+- 大部分其他参数: FP8 (继承 V3)
+
+**关键洞察**: FP4 × FP8 在当前硬件上 peak FLOPs 与 FP8 × FP8 相同, 但**未来硬件理论可快 1/3** — 提前为下一代硬件铺路。
+
+### 3.13 V4 MoE 改动
+
+- **Affinity score 激活函数**: 从 V3 的 Sigmoid → **Sqrt(Softplus)**
+- 仍用 auxiliary-loss-free balancing + 序列级轻 balance loss
+- **去掉 routing target node 数量限制**, 重新设计 parallelism 策略
+- **前几层 dense FFN 替换为 Hash Routing MoE** (Roller et al. 2021): 按 token ID 走预定义 hash, deterministic 无路由开销
+
 ---
 
 ## 4. 对 Robotics Foundation Model 的影响
@@ -781,6 +961,13 @@ GPT-1/2 (2018-2019): 定义技术原点
 | **4** | MoE for multi-task | 不同 expert 负责不同技能 | 中 | 多任务 policy 训练试验 |
 | **5** | MTP / action chunking | 多步预测提升规划能力 | 中 | 已在 DiffusionPolicy 中验证 |
 | **6** | R1-Zero (pure RL) | 不依赖人类 demo | 高 | 需要好的 sim + reward 设计 |
+| **7** | **DSA (V3.2)** | 长 horizon 视频/状态 attention 从 O(L²) 降到 O(L·k) | 中 | 长视频/历史的 VLA 直接迁移 |
+| **8** | **Hybrid CSA + HCA (V4)** | 1M context 下 KV cache 降到 baseline 2% | 中-高 | 边缘部署 + ultra-long horizon |
+| **9** | **mHC (V4)** | 大模型残差稳定性, 让深堆叠 robot FM 可 scale | 中 | VLA backbone 直接换残差 |
+| **10** | **Muon (V4)** | 收敛快, 训练稳 | 低 | LLM 已验证, robot FM 直接换 |
+| **11** | **FP4 QAT (V4)** | 边缘部署显存吃紧, FP4 是天然解 | 中 | Jetson 部署的 VLA |
+| **12** | **Specialist + on-policy distill (V4)** | 多技能 specialist 蒸馏回 generalist | 中 | 类似 pi_0.7 的"distill RL specialist 回 generalist"思路 |
+| **13** | **Three reasoning modes (V4)** | think/non-think 对应反应式/规划式行为 | 低 | 自然映射到机器人 dual-mode 控制 |
 
 ### 9.2 DeepSeek 给 Robotics 的最大启示
 
