@@ -11,6 +11,12 @@
 - **InstructGPT**: Ouyang et al., "Training Language Models to Follow Instructions with Human Feedback", NeurIPS 2022, arXiv:2203.02155
 - **ChatGPT**: OpenAI blog, 2022.11 (no formal paper; built on InstructGPT methodology)
 - **GPT-4**: OpenAI, "GPT-4 Technical Report", arXiv:2303.08774, 2023
+- **GPT-4o**: OpenAI blog, 2024.05 (omnimodel: text/image/audio 同一 token stream, end-to-end 训练)
+- **o1**: OpenAI blog + system card, 2024.09 (大规模 RL on reasoning, "thinking before answering")
+- **o3 / o4-mini**: OpenAI blog, 2025.04 (reasoning + tool use 一体, ARC-AGI-1 突破 75%)
+- **GPT-4.5**: OpenAI blog, 2025.02 ("Orion", pre-training scaling 的最后一搏)
+- **GPT-5**: OpenAI System Card, arXiv:2601.03267, 2025.08 (统一 router 架构, 6 个 variant)
+- **GPT-5.x**: 5.0 (08) → 5.1 (11) → 5.2 (12) → 5.3 → 5.4 (2026.03) → 5.5 (2026.04.23), 6 周一代
 
 **代码仓库**: [openai/gpt-2](https://github.com/openai/gpt-2) (GPT-2, TensorFlow, archived) | [openai/human-eval](https://github.com/openai/human-eval) (Codex benchmark)
 
@@ -840,6 +846,109 @@ ChatGPT 没有独立论文, 因为它不是技术突破 -- 它是 **工程整合
 
 2 个月达到 1 亿用户。这个速度说明需求一直存在, 只是之前缺少一个 "足够好 + 足够安全 + 足够易用" 的产品。
 
+### 9.4.5 Phase 6 -- 多模态融合 + Reasoning 范式 + GPT-5 router (2024-2026)
+
+GPT-4 (2023.03) 之后, OpenAI 进入了**完全不公开技术细节**的时代。所有后续模型只发 blog + system card, 没有 architecture/training paper。但从产品和评测可以反推关键创新:
+
+#### Phase 6.1 -- GPT-4 Turbo + GPT-4o: 多模态融合 (2023.11 - 2024.05)
+
+**GPT-4 Turbo (2023.11)**: 128K context, 知识截止延后, 价格 1/3。技术上是 GPT-4 的 inference 优化版, 没有架构变化。
+
+**GPT-4o (2024.05, "omnimodel")**: 第一次把 text + image + audio **共享一个 token stream**, 端到端联合训练, 而不是 GPT-4 时代的"text 模型 + Whisper + DALL-E 三件套拼接"。
+- Audio latency 从 GPT-4 + Whisper 的 ~5 秒降到 ~320ms (接近人类对话延迟)
+- 同一个模型直接生成图像 (后续 GPT-Image-1 / 4o image gen)
+- 推理价格大幅下降, 替代 GPT-4 / GPT-4 Turbo 成为主力 API 模型
+
+**意义**: 多模态从"模块拼接"走到"共享 latent", 这是后续 frontier 模型 (Gemini 1.5 Pro / Claude 3.5) 的标准范式。
+
+#### Phase 6.2 -- o1: 推理范式革命 (2024.09)
+
+**o1 的核心创新**: **大规模 RL on chain-of-thought**, 模型在回答前自动生成 long reasoning trace ("reasoning tokens"), 这部分 token 不返回给用户但参与回答生成。
+
+```
+GPT-4o:  prompt → answer  (直接回答)
+o1:      prompt → [hidden reasoning tokens, 几千到几万 token] → answer
+```
+
+**关键发现**: 
+- Inference-time compute 越多, 性能越好 (test-time scaling law)
+- 在数学/编程/科学等可验证任务上提升巨大 (AIME, Codeforces, GPQA Diamond 等)
+- 但对话式任务、写作等没有显著提升 — 推理 ≠ 通用提升
+
+**与 DeepSeek R1 的对应**: o1 的方法是闭源的, R1-Zero (2025.01) 是开源社区**独立复现**了"纯 RL 涌现 reasoning"的路径, 验证了 o1 范式的本质就是 GRPO + rule-based reward + sufficient compute。
+
+**o1-mini / o1-pro / o3-mini**: 同范式的不同 size + reasoning budget 配置。
+
+#### Phase 6.3 -- o3 / o4-mini: Reasoning + Tool Use 一体 (2025.04)
+
+**o3 / o4-mini (2025.04.16)**: o1 范式的延续, 但加了**原生 tool use**:
+- 模型在 reasoning 过程中可以**主动**调用 web search, code execution, file analysis, image generation 等工具
+- 从"回答问题"升级到"做研究" — Deep Research 产品就是 o3 的封装
+- ARC-AGI-1 上突破 75% (人类水平), 训练 compute 比 o1 多一个数量级
+
+**意义**: Reasoning + agentic tool use 第一次原生集成在一个模型里, 不再是外挂 (区别于 GPT-4 时代的 plugins / function calling)。
+
+#### Phase 6.4 -- GPT-4.5 "Orion": pre-training scaling 的最后一搏 (2025.02)
+
+**GPT-4.5 (代号 Orion)**: 投入巨量 compute 走 pre-training scaling 路线, 不走 reasoning 路线。
+- 在世界知识、写作风格、emotional intelligence 上有提升
+- 在 coding/math/reasoning 等可验证任务上**不如 o1**
+- 推理和服务成本极高, 后来在 GPT-5 发布后被废弃
+
+**结论**: pre-training scaling 不再是 frontier 进步的主要轴, **reasoning + RL** 才是。GPT-4.5 是这个转折的最后一个 pre-training-only frontier 模型。
+
+#### Phase 6.5 -- GPT-5: 统一 router 架构 (2025.08)
+
+**GPT-5 不是单个模型, 是一个 system**, system card 在 arXiv:2601.03267:
+
+```
+用户 prompt
+   ↓
+Real-time Router
+   - 根据对话类型/复杂度/工具需求/显式意图决定
+   - "think hard about this" → 强制走 thinking
+   - 用户切换模型行为持续训练 router
+   ↓
+6 个 variant 之一:
+  gpt-5-main         (替代 GPT-4o, 快速通用)
+  gpt-5-main-mini    (替代 GPT-4o-mini)
+  gpt-5-thinking     (替代 o3, 复杂推理)
+  gpt-5-thinking-mini
+  gpt-5-thinking-nano
+  gpt-5-pro          (顶配, 长 thinking)
+```
+
+**关键改进 vs o3**:
+- **同等性能下 reasoning token 减少 50-80%** — 推理变得便宜
+- 所有 variant 共享同一个 base, 不再像 GPT-4o + o3 那样是两套独立模型
+- Router 是**真正的产品创新** — 用户不需要选模型, 系统自动选
+
+#### Phase 6.6 -- GPT-5.x 加速迭代 (2025.08 → 2026.04)
+
+| 版本 | 发布 | 关键变化 |
+| --- | --- | --- |
+| GPT-5.0 | 2025.08 | 初版 |
+| GPT-5.1 | 2025.11 | "Adaptive reasoning" — 自动调整 thinking 深度 |
+| GPT-5.2 | 2025.12 | 编程能力大幅提升 |
+| GPT-5.3 | 2026.01 | 内部版本, ChatGPT Plus 上线 |
+| GPT-5.4 | 2026.03.05 | 33% 事实错误下降 vs 5.2, 内置 computer use |
+| GPT-5.4 mini/nano | 2026.03.17 | 小尺寸变体 |
+| **GPT-5.5** | **2026.04.23** | "智能且最直观", agentic coding/computer use 大涨 |
+
+**6 周一代**, 速度比 V3 → V3.2 → V4 (DeepSeek) 还快。OpenAI 进入了**持续迭代**模式而不是大版本号跳跃。
+
+#### 这一阶段的核心 takeaway
+
+1. **范式转换**: pre-training scaling (GPT-1 → GPT-4.5) → reasoning + RL scaling (o1 → o3 → GPT-5 thinking)
+2. **多模态融合**: 模块拼接 → 共享 token stream (GPT-4o)
+3. **Tool use 原生化**: 从 plugins 到 reasoning 中间的 native tool call (o3)
+4. **System over Model**: GPT-5 不是模型, 是 router-orchestrated system; 用户体验单一接口
+5. **DeepSeek R1 验证**: o1 的"秘密"被开源复现, 本质是 GRPO + rule reward + compute, **没有 secret sauce**
+6. **GPT-5 减少 reasoning token**: 推理成本是 o 系列的最大瓶颈, 5 解决了这个问题, reasoning 终于可日常使用
+7. **6 周迭代节奏**: frontier 进入"小步快跑", 大版本号让位于持续改进
+
+---
+
 ### 9.5 GPT-4: 从 open research 到 competitive moat
 
 **2023.03 -- GPT-4 Technical Report: 信息量最少的一篇**
@@ -887,11 +996,21 @@ Phase 4 -- 产品爆发 (2022-2023): 技术积累的商业变现
   收入: ChatGPT Plus ($20/month) + API + Enterprise
 
 Phase 5 -- 生态竞争 (2024+): 平台化
-  GPT-4o, o1: 持续迭代
+  GPT-4o (2024.05): 多模态融合 (text/image/audio 共享 token stream)
+  o1 (2024.09): 推理范式革命 (reasoning tokens, test-time scaling)
   GPT Store, Plugins, function calling: 平台生态
   gpt-oss (2025): 开源小模型, 扩大生态 (应对 Llama/Qwen 竞争)
   成本: 数十亿美元级
   收入: 年化 ~$5B+ (2024 估算)
+
+Phase 6 -- Reasoning + System (2025+): 范式转换 + 持续迭代
+  GPT-4.5 "Orion" (2025.02): pre-training scaling 最后一搏, 后被废弃
+  o3 / o4-mini (2025.04): reasoning + native tool use, ARC-AGI-1 突破 75%
+  GPT-5 (2025.08): 6 个 variant + real-time router, reasoning token -50~80%
+  GPT-5.0 → 5.5 (2025.08 → 2026.04): 6 周一代, 不再大版本号跳跃
+  关键: 推理 ≠ 通用提升; 推理成本是新瓶颈; pre-training scaling 让位于 RL scaling
+  成本: 数百亿美元级
+  收入: 年化 ~$10B+ (2025 估算)
 ```
 
 每一篇论文都不是孤立的学术研究, 而是整体战略的一个环节:
@@ -903,6 +1022,11 @@ Phase 5 -- 生态竞争 (2024+): 平台化
 - **InstructGPT** = 产品可用性突破
 - **ChatGPT** = 商业引爆点
 - **GPT-4** = 竞争壁垒
+- **GPT-4o** = 多模态融合 + 降价获客
+- **o1** = reasoning 范式立牌
+- **o3** = reasoning + tool 产品化 (Deep Research)
+- **GPT-4.5** = pre-training 路线的终结
+- **GPT-5** = router + system 抽象, 一次部署多个 variant
 
 ---
 

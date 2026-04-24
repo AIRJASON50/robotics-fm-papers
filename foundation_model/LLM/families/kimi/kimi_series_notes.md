@@ -10,6 +10,7 @@
 - **Kimi-Audio**: "Kimi-Audio Technical Report", arXiv:2504.18425, 2025.04
 - **Kimi K2**: "Kimi K2: Open Agentic Intelligence", arXiv:2507.20534, 2025.07
 - **Kimi K2.5**: "Kimi K2.5: Visual Agentic Intelligence", arXiv:2602.02276, 2026.01
+- **Kimi K2.6**: 无独立 arxiv (基于 K2.5 架构), 2026.04.21 (preview 04.13), **300 sub-agent swarm × 4000 步 orchestration, SWE-Bench Pro 58.6 开源最佳**
 - **Kimi CLI**: Terminal coding agent (工程项目, 无论文), 2025.10
 
 ---
@@ -49,6 +50,7 @@
 2025.07  Kimi K2 ----------- 1T MoE 开源 (对标 Claude 4 / GPT-4.1)
 2025.10  Kimi CLI ---------- 终端编码智能体 (对标 Claude Code)
 2026.01  Kimi K2.5 --------- 多模态 agentic (对标 GPT-5.2)
+2026.04  Kimi K2.6 --------- 300-agent swarm × 4000 步, SWE-Bench Pro 58.6 (preview→GA 8 天)
 ```
 
 ### 1.3 Kimi 的技术借鉴图谱
@@ -246,6 +248,23 @@ Audio input
 #### 2.7 Kimi CLI -- 产品落地
 
 类似 Claude Code 的终端编码智能体, 支持 ACP (Agent Client Protocol) 和 MCP (Model Context Protocol)。是 K2/K2.5 agentic 能力的产品化形态。
+
+#### 2.8 Kimi K2.6 -- 300-agent Swarm + Long-horizon Coding (2026.04.21)
+
+**定位**: K2.5 架构骨架上的**能力扩展**, 不是新架构换代。
+
+**关键新能力**:
+- **Long-Horizon Coding**: 12 小时自主 coding session, 跨 Rust/Go/Python, 跨 front-end/DevOps/性能优化
+- **300 个子 agent 并行 × 4000 步 orchestration** (PARL 的极致放大)
+- **Preview → GA 仅 8 天** (2026.04.13 → 04.21), 行业最快迭代节奏
+- 保留 K2 架构: MLA + MuonClip + INT4 native + 256K context + MoonViT 400M
+
+**benchmark 亮点 (开源最佳)**:
+- SWE-Bench Pro **58.6** (超过 GPT-5.4 的 57.7)
+- AIME 2026: 96.4, GPQA-Diamond: 90.5
+- BrowseComp w/ Agent Swarm: **86.3**
+
+**意义**: K2 → K2.5 (架构+视觉) → K2.6 (能力+agent swarm), 证明一个好的 MoE + MLA + MuonClip base 可以持续做 post-training 扩展, 不需要每代都换架构。这条路径对机器人 FM 的启示: **稳定 VLA backbone 上做 skill-level fine-tune** 是可行演进路线。详见 `26_KimiK26/kimik26_notes.md`。
 
 ---
 

@@ -10,6 +10,9 @@
 - **Qwen2.5**: "Qwen2.5 Technical Report", arXiv:2412.15115, 2024.12
 - **Qwen2.5-VL**: "Qwen2.5-VL Technical Report", arXiv:2502.13923, 2025.02
 - **Qwen3**: "Qwen3 Technical Report", arXiv:2505.09388, 2025.05
+- **Qwen3.5**: 无独立 arxiv (GitHub + HF blog), 2026.02.16, 首发 Qwen3.5-397B-A17B (MoE), Hybrid Attention (GDN + sparse softmax)
+- **Qwen3.5-Omni**: "Qwen3.5-Omni Technical Report", arXiv:2604.15804, 2026.04.21
+- **Qwen3.6-Plus** / Qwen3.5-Omni-Plus / Realtime: 闭源 API (2026.04)
 
 **完整 arXiv 列表** (含专项):
 
@@ -30,6 +33,9 @@
 | Qwen3-Omni | 2509.17765 | 2025 |
 | Qwen3-VL | 2511.21631 | 2025 |
 | Qwen3-Coder-Next | 2603.00729 | 2026 |
+| **Qwen3.5 base (397B-A17B MoE)** | (无 arxiv) | 2026.02 |
+| **Qwen3.5-Omni** | **2604.15804** | **2026.04** |
+| Qwen3.6-Plus (闭源) | -- | 2026.04 |
 
 ---
 
@@ -59,7 +65,9 @@
 2025.03  QwQ-32B (推理模型, 32B 匹配 DeepSeek-R1 671B)
 2025.04  *** Qwen3 (36T tokens, thinking/non-thinking 统一) ***
 2025.07  Kimi K2 / Qwen3-Coder
-2026.02  *** Qwen3.5 (混合注意力, 201 种语言) ***
+2026.02  *** Qwen3.5 base (Hybrid Attention: GDN + sparse softmax, 397B-A17B MoE) ***
+2026.04  Qwen3.5-Omni (256K context, ARIA streaming TTS, 113 语言 ASR)
+2026.04  Qwen3.6-Plus (闭源 API, 旗舰)
 ```
 
 ### 1.2 Qwen 的战略定位: 中国的 Llama
@@ -252,6 +260,41 @@ Stage 4: General RL
 - budget = 0: 完全不思考, 最快
 - budget = 高: 深度推理, 最准
 - budget = 中: 平衡
+
+### 3.4.5 Qwen3.5 的 Hybrid Attention: Gated DeltaNet + sparse softmax (核心新架构)
+
+**Qwen3.5 (2026.02) 的核心转变**: 从标准 GQA 走向**混合注意力架构** — 这是 Qwen 系列近年最大的架构跳跃。
+
+```
+60 层 Transformer, 每层都是 MoE FFN
+重复模式: 3 层 Gated DeltaNet (GDN)  →  1 层 Gated Attention (标准 softmax + GQA + RoPE)
+→ 75% 层线性注意力, 25% 层标准 softmax
+MoE: 397B total / 17B activated, 512 experts (10 routed + 1 shared)
+```
+
+**为什么这样混**:
+- 完全线性 (Mamba/RWKV) 的弱点: 表达力不够, 长程检索差
+- 完全 softmax 的弱点: O(L²), 长上下文吃不消
+- Qwen3.5 的赌注: **每 4 层一个 full attention 层**锚住表达力, 其余 3 层用 GDN 加速 + 降 KV cache I/O
+- 解码速度比 Qwen3-Max **快 8.6x ~ 19x**, 长上下文增益更大
+
+**与 DeepSeek V3.2/V4 的路线对比** (同期不同赌注):
+
+| 方案 | 团队 | 长上下文压力转移到哪里 |
+| --- | --- | --- |
+| DSA (V3.2) | DeepSeek | 保留 softmax, 加 lightning indexer + top-k |
+| CSA + HCA (V4) | DeepSeek | 压缩 KV (1/m, 1/m') + 二级稀疏 |
+| **Hybrid GDN + sparse softmax** (Qwen3.5) | **Alibaba** | **75% 层换成线性注意力** |
+
+根本差异: DeepSeek 走 "保留 softmax 但稀疏化 + 压缩", Qwen3.5 走 "大部分层换成线性, 少数层保留 softmax"。两条路都成立, 是**同一问题的不同赌注**。
+
+**Qwen3.5-Omni (2026.04) 继承同一架构**:
+- 256K context, 10 小时音频, 400 秒 720P 视频 (1 FPS)
+- Thinker-Talker 双端都用 Hybrid MoE
+- **ARIA (Adaptive Rate Interleave Alignment)**: streaming TTS 的 text/speech token rate 对齐新方案
+- 新 emergent 能力: **Audio-Visual Vibe Coding** — 直接从音视频指令写可执行代码
+
+详见 `26_Qwen35/qwen35_notes.md`。
 
 ### 3.5 MoE 演进
 
